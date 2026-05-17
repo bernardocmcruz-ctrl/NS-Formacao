@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadador-Salvador — Guia de Estudo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ocean:#0a3d62;--surf:#2e86c1;--rr:#c0392b;--ro:#e67e22;--ry:#f1c40f;--card:rgba(255,255,255,0.07);--cb:rgba(255,255,255,0.13);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#0a3d62;color:#fff;overflow-x:hidden;}
+.bg{position:fixed;inset:0;background:linear-gradient(155deg,#0a2744 0%,#0a3d62 45%,#0e4f7a 75%,#155a8a 100%);z-index:0;}
+.app{position:relative;z-index:1;}
+
+/* SIDEBAR */
+.sb{position:fixed;left:0;top:0;bottom:0;width:228px;background:rgba(6,20,38,0.97);border-right:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.badge{display:inline-block;background:var(--rr);color:#fff;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-bottom:7px;}
+.sb-logo h1{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;line-height:1.1;}
+.sb-logo p{font-size:9.5px;color:rgba(255,255,255,0.35);margin-top:3px;}
+.ng{font-size:8.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.22);padding:15px 16px 4px;}
+.ni{display:flex;align-items:center;gap:8px;padding:7.5px 16px;cursor:pointer;font-size:12px;color:rgba(255,255,255,0.5);border-left:2px solid transparent;transition:all .16s;text-decoration:none;}
+.ni:hover{background:rgba(255,255,255,0.04);color:#fff;}
+.ni.active{background:rgba(192,57,43,0.12);color:#fff;border-left-color:var(--rr);}
+.ni .ic{font-size:14px;width:16px;text-align:center;flex-shrink:0;}
+.nn{margin-left:auto;font-size:9px;color:rgba(255,255,255,0.18);}
+.sb-foot{margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.05);}
+.sb-foot p{font-size:9.5px;color:rgba(255,255,255,0.18);line-height:1.5;}
+
+/* MAIN */
+.main{margin-left:228px;min-height:100vh;padding:28px 32px 60px;}
+.sec{display:none;}.sec.active{display:block;}
+
+/* SECTION HEADER */
+.sh{margin-bottom:26px;}
+.sh-tag{display:inline-flex;align-items:center;gap:6px;font-size:8.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ro);margin-bottom:8px;}
+.sh-tag::before{content:'';width:16px;height:2px;background:var(--ro);display:inline-block;}
+.sh h2{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;line-height:1;}
+.sh p{margin-top:8px;font-size:13.5px;color:rgba(255,255,255,0.48);max-width:600px;line-height:1.65;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+
+/* CARD */
+.c{background:var(--card);border:1px solid var(--cb);border-radius:12px;padding:16px 18px;transition:transform .16s,border-color .16s;}
+.c:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.2);}
+.c h3{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:#fff;margin-bottom:6px;}
+.c .lb{font-size:8.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:4px;display:block;}
+.c p{font-size:13px;color:rgba(255,255,255,0.66);line-height:1.6;}
+.c ul{margin-top:6px;padding:0;list-style:none;}
+.c ul li{font-size:12.5px;color:rgba(255,255,255,0.66);line-height:1.7;padding-left:12px;position:relative;}
+.c ul li::before{content:'›';position:absolute;left:0;color:var(--ro);font-weight:700;}
+.ca{border-left:3px solid var(--rr);}
+.cb2{border-left:3px solid var(--ro);}
+.cc{border-left:3px solid var(--ry);}
+.cd{border-left:3px solid #5dade2;}
+.ce{border-left:3px solid #58d68d;}
+.cr{background:rgba(192,57,43,0.13);border-color:rgba(192,57,43,0.26);}
+.co{background:rgba(230,126,34,0.1);border-color:rgba(230,126,34,0.26);}
+.cy{background:rgba(241,196,15,0.08);border-color:rgba(241,196,15,0.26);}
+.cbl{background:rgba(93,173,226,0.09);border-color:rgba(93,173,226,0.26);}
+.cg{background:rgba(88,214,141,0.09);border-color:rgba(88,214,141,0.26);}
+
+/* ALERTS */
+.al{border-radius:10px;padding:12px 15px;font-size:12.5px;line-height:1.6;display:flex;gap:10px;align-items:flex-start;margin-bottom:11px;}
+.ai{font-size:17px;flex-shrink:0;margin-top:1px;}
+.danger{background:rgba(192,57,43,0.17);border:1px solid rgba(192,57,43,0.35);color:#f1948a;}
+.warning{background:rgba(230,126,34,0.13);border:1px solid rgba(230,126,34,0.3);color:#f0b27a;}
+.info{background:rgba(46,134,193,0.13);border:1px solid rgba(46,134,193,0.27);color:#85c1e9;}
+.success{background:rgba(88,214,141,0.1);border:1px solid rgba(88,214,141,0.27);color:#82e0aa;}
+
+/* TIMELINE */
+.tl{position:relative;padding:4px 0;}
+.tl::before{content:'';position:absolute;left:76px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--rr),transparent);}
+.tli{display:flex;gap:18px;margin-bottom:16px;align-items:flex-start;}
+.tly{width:76px;flex-shrink:0;text-align:right;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--rr);padding-right:20px;position:relative;line-height:1.1;}
+.tly::after{content:'';position:absolute;right:-5px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--rr);border:2px solid #0a3d62;}
+.tlb{background:var(--card);border:1px solid var(--cb);border-radius:10px;padding:11px 14px;flex:1;}
+.tlb h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.tlb p{font-size:11.5px;color:rgba(255,255,255,0.55);line-height:1.5;}
+
+/* HIERARCHY */
+.hc{background:var(--card);border:1px solid var(--cb);border-radius:10px;padding:12px 15px;margin-bottom:7px;}
+.hc h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.hc p{font-size:11.5px;color:rgba(255,255,255,0.5);line-height:1.4;}
+.h1{border-left:3px solid #e74c3c;}
+.h2{border-left:3px solid #e67e22;margin-left:16px;}
+.h3{border-left:3px solid #f1c40f;margin-left:32px;}
+.h4{border-left:3px solid #58d68d;margin-left:48px;}
+
+/* STEPS */
+.steps{list-style:none;}
+.steps li{display:flex;align-items:flex-start;gap:11px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.steps li:last-child{border-bottom:none;}
+.sn{width:25px;height:25px;border-radius:50%;background:var(--rr);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px;}
+.sn.b{background:#2e86c1;}.sn.o{background:#e67e22;}.sn.g{background:#27ae60;}
+.st{flex:1;font-size:13px;color:rgba(255,255,255,0.76);line-height:1.5;}
+.st strong{color:#fff;font-weight:700;}
+
+/* STAT */
+.stat{background:var(--card);border:1px solid var(--cb);border-radius:12px;padding:16px;text-align:center;}
+.big{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--ro);letter-spacing:1px;line-height:1;margin-bottom:3px;}
+.sub{font-size:10.5px;color:rgba(255,255,255,0.42);line-height:1.4;}
+
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:12.5px;}
+.dt th{text-align:left;padding:8px 11px;font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.32);border-bottom:1px solid rgba(255,255,255,0.08);}
+.dt td{padding:10px 11px;color:rgba(255,255,255,0.7);border-bottom:1px solid rgba(255,255,255,0.04);line-height:1.45;vertical-align:top;}
+.dt tr:hover td{background:rgba(255,255,255,0.025);}
+
+/* PILL */
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;}
+.pr{background:rgba(192,57,43,0.2);color:#f1948a;}
+.pb{background:rgba(46,134,193,0.2);color:#85c1e9;}
+.pg{background:rgba(88,214,141,0.15);color:#82e0aa;}
+.po{background:rgba(230,126,34,0.17);color:#f0b27a;}
+.py{background:rgba(241,196,15,0.15);color:#f9e79f;}
+
+/* MAT CARD */
+.mat{background:var(--card);border:1px solid var(--cb);border-radius:12px;overflow:hidden;}
+.mh{padding:11px 15px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:9px;}
+.mic{font-size:20px;flex-shrink:0;}
+.mh h4{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.5px;color:#fff;}
+.mh .tg{margin-left:auto;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:2px;flex-shrink:0;}
+.tob{background:rgba(192,57,43,0.22);color:#f1948a;}
+.tcp{background:rgba(230,126,34,0.18);color:#f0b27a;}
+.mb{padding:11px 15px;}
+.mb p{font-size:12px;color:rgba(255,255,255,0.62);line-height:1.55;margin-bottom:4px;}
+.mb .sp{font-size:10.5px;color:rgba(255,255,255,0.37);font-style:italic;}
+
+/* CHAIN */
+.chain{display:flex;align-items:center;overflow-x:auto;padding:6px 0;gap:0;}
+.cn{background:var(--card);border:1px solid var(--cb);border-radius:10px;padding:10px 12px;text-align:center;min-width:86px;flex-shrink:0;}
+.cn .ci{font-size:20px;margin-bottom:4px;}
+.cn .cl{font-size:10px;font-weight:700;color:#fff;line-height:1.3;}
+.ca2{font-size:16px;color:var(--ro);padding:0 4px;flex-shrink:0;}
+
+/* LAW */
+.lc{background:var(--card);border:1px solid var(--cb);border-radius:12px;overflow:hidden;margin-bottom:9px;}
+.lh{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:11px;flex-wrap:wrap;}
+.ln{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--ro);flex-shrink:0;}
+.lt{font-size:12.5px;font-weight:700;color:#fff;flex:1;}
+.ld{font-size:9.5px;color:rgba(255,255,255,0.32);flex-shrink:0;}
+.lb2{padding:11px 16px;font-size:12px;color:rgba(255,255,255,0.62);line-height:1.6;}
+
+/* CLIMA */
+.clim{border-radius:12px;padding:15px 17px;border:1px solid;}
+.clim h4{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;margin-bottom:7px;}
+.clim ul{list-style:none;padding:0;}
+.clim ul li{padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12.5px;color:rgba(255,255,255,0.72);line-height:1.5;}
+.clim ul li:last-child{border-bottom:none;}
+
+/* FLAG */
+.flag{border-radius:12px;padding:14px 16px;border:1px solid;}
+.fswatch{width:44px;height:28px;border-radius:4px;margin-bottom:9px;border:1px solid rgba(255,255,255,0.1);}
+
+.div{height:1px;background:rgba(255,255,255,0.06);margin:20px 0;}
+.h3t{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:10px;color:rgba(255,255,255,0.72);}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,0.02);}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.11);border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="app">
+
+<nav class="sb">
+  <div class="sb-logo">
+    <div class="badge">ISN — 2ª Ed.</div>
+    <h1>NADADOR<br>SALVADOR</h1>
+    <p>Guia de Estudo Completo</p>
+  </div>
+
+  <div class="ng">Institucional</div>
+  <a class="ni active" onclick="show('isn')"><span class="ic">⚓</span>ISN — História<span class="nn">01</span></a>
+  <a class="ni" onclick="show('hierarquia')"><span class="ic">🏛️</span>Hierarquia<span class="nn">02</span></a>
+  <a class="ni" onclick="show('legal')"><span class="ic">⚖️</span>Enquadramento Legal<span class="nn">03</span></a>
+
+  <div class="ng">Profissão</div>
+  <a class="ni" onclick="show('ns')"><span class="ic">🦺</span>O Nadador-Salvador<span class="nn">04</span></a>
+  <a class="ni" onclick="show('carreira')"><span class="ic">📈</span>Carreira e Módulos<span class="nn">05</span></a>
+  <a class="ni" onclick="show('material')"><span class="ic">🛟</span>Material e Equipamento<span class="nn">06</span></a>
+
+  <div class="ng">Ambiente</div>
+  <a class="ni" onclick="show('praias')"><span class="ic">🌊</span>Praias e Condições<span class="nn">07</span></a>
+  <a class="ni" onclick="show('clima')"><span class="ic">⛅</span>Condições Climatéricas<span class="nn">08</span></a>
+  <a class="ni" onclick="show('banhistas')"><span class="ic">🏊</span>Conselhos a Banhistas<span class="nn">09</span></a>
+
+  <div class="ng">Emergência Médica</div>
+  <a class="ni" onclick="show('anatomia')"><span class="ic">🫀</span>Anatomia e Afogamento<span class="nn">10</span></a>
+  <a class="ni" onclick="show('siem')"><span class="ic">🚑</span>SIEM — Emergência<span class="nn">11</span></a>
+  <a class="ni" onclick="show('sbv')"><span class="ic">❤️</span>SBV e RCP<span class="nn">12</span></a>
+  <a class="ni" onclick="show('pls')"><span class="ic">🔄</span>Posição Lateral (PLS)<span class="nn">13</span></a>
+
+  <div class="ng">Recursos</div>
+  <a class="ni" onclick="show('apps')"><span class="ic">📱</span>Apps e Ferramentas<span class="nn">14</span></a>
+
+  <div class="sb-foot"><p>Manual Técnico NS<br>2ª Edição — ISN / Marinha</p></div>
+</nav>
+
+<main class="main">
+
+<!-- 01 ISN -->
+<section class="sec active" id="isn">
+<div class="sh"><div class="sh-tag">Capítulo 01</div><h2>INSTITUTO DE SOCORROS A NÁUFRAGOS</h2><p>Fundado em 1892, o ISN é o organismo regulador da atividade de salvamento aquático em Portugal, integrado na Marinha desde 1957.</p></div>
+<div class="al danger" style="margin-bottom:20px;"><div class="ai">💀</div><div><strong style="color:#f1948a;display:block;margin-bottom:3px;">Afogamentos em Portugal</strong>Em média <strong style="color:#fff;">129 afogamentos mortais por ano</strong> em Portugal. É a 3ª causa de morte acidental no país. Razão pela qual a presença de NS é obrigatória nos espaços balneares concessionados.</div></div>
+<div class="tl">
+  <div class="tli"><div class="tly">1800</div><div class="tlb"><h4>1.ª Embarcação Salva-vidas em Portugal</h4><p>Instalada na Barra do Douro, Porto — primeiro recurso de salvamento aquático organizado em Portugal.</p></div></div>
+  <div class="tli"><div class="tly">1892</div><div class="tlb"><h4>Fundação do RISN — Rainha D. Amélia</h4><p>Real Instituto de Socorros a Náufragos, criado como instituição privada com fins humanitários. Assiste qualquer indivíduo, independentemente de nacionalidade.</p></div></div>
+  <div class="tli"><div class="tly">1909</div><div class="tlb"><h4>1.º Serviço de Assistência a Banhistas</h4><p>Inaugurado na Praia da Trafaria — primeiro posto de vigilância de praia em Portugal.</p></div></div>
+  <div class="tli"><div class="tly">1910</div><div class="tlb"><h4>Implantação da República → ISN</h4><p>Perde o título real. Passa a designar-se Instituto de Socorros a Náufragos.</p></div></div>
+  <div class="tli"><div class="tly">1956</div><div class="tlb"><h4>1.º Curso Oficial de Nadadores-Salvadores</h4><p>O ISN inicia a formação técnica certificada de NS, sistematizando os requisitos da profissão.</p></div></div>
+  <div class="tli"><div class="tly">1957</div><div class="tlb"><h4>O Estado integra o ISN na Marinha</h4><p>O ISN é formalmente integrado na orgânica da Marinha Portuguesa, sob tutela do Ministério da Defesa Nacional.</p></div></div>
+</div>
+<div class="div"></div>
+<div class="g3">
+  <div class="c ca"><span class="lb">Missão</span><h3>Fins Humanitários</h3><p>Assiste qualquer indivíduo em tempo de paz ou guerra, sem distinção de nacionalidade ou condição.</p></div>
+  <div class="c cb2"><span class="lb">Âmbito</span><h3>Regulação Nacional</h3><p>Órgão regulador competente para o reconhecimento das qualificações profissionais dos NS.</p></div>
+  <div class="c cd"><span class="lb">Certifica</span><h3>Três Pilares</h3><ul><li>Nadadores-Salvadores</li><li>Entidades formadoras</li><li>Materiais de salvamento</li></ul></div>
+</div>
+</section>
+
+<!-- 02 HIERARQUIA -->
+<section class="sec" id="hierarquia">
+<div class="sh"><div class="sh-tag">Capítulo 02</div><h2>HIERARQUIA E COMPETÊNCIAS</h2><p>Cadeia de comando do ISN e responsabilidades por tipo de espaço aquático.</p></div>
+<div class="g2">
+  <div>
+    <div class="h3t">Cadeia de Comando</div>
+    <div class="hc h1"><h4>🏛️ MDN — Ministério da Defesa Nacional</h4><p>Tutela governamental máxima das Forças Armadas e da Autoridade Marítima.</p></div>
+    <div class="hc h2"><h4>⚓ AMN — Autoridade Marítima Nacional</h4><p>Comando central. Exercido pelo Chefe do Estado-Maior da Armada.</p></div>
+    <div class="hc h3"><h4>🔷 DGAM — Direção-Geral da Autoridade Marítima</h4><p>Direção técnica e administrativa. O ISN depende diretamente desta Direção.</p></div>
+    <div class="hc h4"><h4>🛟 ISN — Instituto de Socorros a Náufragos</h4><p>Certifica NS, entidades formadoras e materiais de salvamento.</p></div>
+  </div>
+  <div>
+    <div class="h3t">Competência por Espaço</div>
+    <div class="c ca" style="margin-bottom:9px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">🌊</span><span class="lb" style="margin:0;">Praias Marítimas</span></div><h3 style="font-size:14px;">Capitania do Porto</h3><p>Fiscaliza e regulamenta praias marítimas concessionadas.</p></div>
+    <div class="c cb2" style="margin-bottom:9px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">🏞️</span><span class="lb" style="margin:0;">Lagos e Rios</span></div><h3 style="font-size:14px;">APA — Agência Portuguesa do Ambiente</h3><p>Praias lacustres e fluviais.</p></div>
+    <div class="c cc" style="margin-bottom:9px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">🏊</span><span class="lb" style="margin:0;">Piscinas</span></div><h3 style="font-size:14px;">ISN</h3><p>Regulação e certificação dos dispositivos de segurança.</p></div>
+    <div class="c cd"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:18px;">🎢</span><span class="lb" style="margin:0;">Parques Aquáticos</span></div><h3 style="font-size:14px;">IPDJ</h3><p>Instituto Português do Desporto e Juventude.</p></div>
+  </div>
+</div>
+<div class="div"></div>
+<div class="al info"><div class="ai">ℹ️</div><div><strong style="color:#85c1e9;">Dispositivos de Segurança (Lei 68/2014):</strong> 2 NS por frente de praia. Se extensão ≥100m → 1 NS por cada 50m. Durante almoço (11h30–13h30) → mínimo 1 NS presente. Com dispositivo de 6+ NS → obrigatório ter NS Coordenador.</div></div>
+</section>
+
+<!-- 03 LEGAL -->
+<section class="sec" id="legal">
+<div class="sh"><div class="sh-tag">Capítulo 03</div><h2>ENQUADRAMENTO LEGAL</h2><p>Os principais diplomas que regulam a atividade de Nadador-Salvador — número, data e o que cada um mudou.</p></div>
+<div class="lc"><div class="lh"><div class="ln">Lei 44/2004</div><div class="lt">Regime Jurídico da Assistência a Banhistas</div><div class="ld">19 Ago 2004</div></div><div class="lb2">Define o regime jurídico da assistência nos locais destinados a banhistas. Obrigatoriedade de vigilância nas praias concessionadas. Alterada pelo DL n.º 100/2005 e DL n.º 135/2009.</div></div>
+<div class="lc"><div class="lh"><div class="ln">DL 96A/2006</div><div class="lt">Regime Contraordenacional — Assistência a Banhistas</div><div class="ld">02 Jun 2006</div></div><div class="lb2">Estabelece as coimas para quem transgride as regras de assistência a banhistas — banhistas, concessionários e NS. <strong style="color:#fff;">Crucial saber as consequências do incumprimento.</strong></div></div>
+<div class="lc"><div class="lh"><div class="ln">DR 16/2008</div><div class="lt">Licenciamento e Materiais de Assistência</div><div class="ld">2008</div></div><div class="lb2">Regula o acesso e condições de licenciamento da atividade de assistência a banhistas e define os materiais e equipamentos obrigatórios de salvamento.</div></div>
+<div class="lc"><div class="lh"><div class="ln">Portaria 88/2012</div><div class="lt">Profissões Regulamentadas — Defesa Nacional</div><div class="ld">30 Mar 2012</div></div><div class="lb2">Designa a AMN/ISN como autoridade competente para reconhecimento das qualificações profissionais do Nadador-Salvador.</div></div>
+<div class="lc" style="border-color:rgba(230,126,34,0.35);"><div class="lh" style="border-left:3px solid var(--ro);"><div class="ln" style="font-size:22px;">Lei 68/2014 ⭐</div><div class="lt">Regime Jurídico do Nadador-Salvador</div><div class="ld">29 Ago 2014</div></div><div class="lb2"><strong style="color:#fff;">A lei mais importante.</strong> Aprova o Regulamento da Atividade de NS. Define as 3 categorias, os requisitos de acesso, os módulos complementares (4x4, embarcação, moto), o sistema de inspeções EEAT e as obrigações dos concessionários. Revoga o DL 118/2008. <span class="pill po" style="margin-top:5px;display:inline-block;">Lei base da profissão</span></div></div>
+<div class="lc"><div class="lh"><div class="ln">DL 121/2014</div><div class="lt">Alteração às Concessões Balneares</div><div class="ld">07 Ago 2014</div></div><div class="lb2">Procede à segunda alteração ao regime das concessões balneares. Regula o funcionamento de concessões, apoios de praia e acessórios fora da época balnear.</div></div>
+<div class="lc"><div class="lh"><div class="ln">Portaria 311/2015</div><div class="lt">Regulamentação do Sistema de Assistência</div><div class="ld">28 Set 2015</div></div><div class="lb2">Regulamenta em detalhe o sistema de assistência a banhistas. Define dispositivos de segurança, planos integrados (PIS/PIAB) e especificações técnicas do posto de praia. Alterada pela Portaria 168/2016.</div></div>
+<div class="lc"><div class="lh"><div class="ln">DR 55/2015</div><div class="lt">Retificação — Materiais e Especificações Técnicas</div><div class="ld">27 Nov 2015</div></div><div class="lb2">Acrescenta o Anexo A com especificações técnicas completas dos materiais e equipamentos de assistência (dimensões, cores, características de toda a equipagem obrigatória).</div></div>
+<div class="lc"><div class="lh"><div class="ln">Portaria 321/2015</div><div class="lt">Regulamento de Uniformes do NS Profissional</div><div class="ld">01 Out 2015</div></div><div class="lb2">Define cores, composição e normas de uso do fardamento obrigatório em serviço. O uniforme é adquirido pelo próprio NS e deve cumprir este regulamento.</div></div>
+<div class="lc" style="border-color:rgba(93,173,226,0.32);"><div class="lh" style="border-left:3px solid #5dade2;"><div class="ln" style="color:#5dade2;">Lei 61/2017</div><div class="lt">1.ª Alteração à Lei 68/2014</div><div class="ld">01 Ago 2017</div></div><div class="lb2"><strong style="color:#fff;">O que mudou:</strong> Altera o art.º 31 (vigilância em piscinas de uso público) e o art.º 38 (contratação de NS). Nas piscinas de empreendimentos turísticos de acesso exclusivo a hóspedes, a presença de NS é facultativa, mas é obrigatória vigilância por técnico com formação em SBV. <span class="pill pb" style="margin-top:5px;display:inline-block;">Piscinas e contratação</span></div></div>
+<div class="div"></div>
+<div class="al warning"><div class="ai">📋</div><div><strong style="color:#f0b27a;">SEGMAR Mobile — Obrigação Legal:</strong> Toda a ocorrência deve ser registada no SEGMAR Mobile num prazo máximo de <strong style="color:#fff;">24 horas</strong> após o evento. Este registo protege o NS legalmente e alimenta as estatísticas nacionais do ISN.</div></div>
+<div class="al info"><div class="ai">📝</div><div><strong style="color:#85c1e9;">EEAT — Exame Específico de Aptidão Técnica:</strong> Despacho n.º 3411/2010 (24 Fev). Provas periódicas de recertificação obrigatória. Conteúdos programáticos definidos pelo Despacho 6390/2010 (12 Abr).</div></div>
+</section>
+
+<!-- 04 NS -->
+<section class="sec" id="ns">
+<div class="sh"><div class="sh-tag">Capítulo 04</div><h2>O NADADOR-SALVADOR</h2><p>Valores, conduta profissional, responsabilidades e perigos para o NS em serviço.</p></div>
+<div class="h3t">Os 5 Valores — A·C·P·C·D</div>
+<div class="g3" style="margin-bottom:16px;">
+  <div class="c cr"><span class="lb">A</span><h3>Atenção</h3><p>Vigilância constante e ativa. Nunca pode ser descontinuada durante o serviço.</p></div>
+  <div class="c co"><span class="lb">C</span><h3>Comunicação</h3><p>Clareza com a equipa, superiores e banhistas. Essencial em situação de emergência.</p></div>
+  <div class="c cy"><span class="lb">P</span><h3>Prevenção</h3><p>Antecipar o perigo antes do acidente. A melhor e mais eficaz forma de salvamento.</p></div>
+  <div class="c cbl"><span class="lb">C</span><h3>Companheirismo</h3><p>Espírito de equipa. O trabalho colaborativo aumenta a eficácia e segurança operacional.</p></div>
+  <div class="c cg"><span class="lb">D</span><h3>Dignidade</h3><p>Postura profissional e ética. Respeito pela vida humana, banhistas e colegas.</p></div>
+  <div class="c" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;"><div style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:4px;color:rgba(255,255,255,0.1);">A·C·P·C·D</div><p style="font-size:10.5px;color:rgba(255,255,255,0.32);margin-top:5px;">5 valores fundamentais</p></div>
+</div>
+<div class="div"></div>
+<div class="h3t">Perigos e Riscos para o NS</div>
+<div class="g2">
+  <div class="c">
+    <span class="lb">Riscos Físicos / Ambientais</span>
+    <ul>
+      <li><strong style="color:#f1948a;">Correntes e ondas</strong> durante o salvamento</li>
+      <li><strong style="color:#f1948a;">Tráfego aquático</strong> — embarcações, motos de água</li>
+      <li><strong style="color:#f1948a;">Desmoronamentos</strong> — falésias, dunas instáveis</li>
+      <li><strong style="color:#f1948a;">Eletricidade</strong> — relâmpagos, instalações</li>
+      <li>Exposição solar prolongada — risco de melanoma</li>
+      <li>Desidratação — manter garrafa no posto</li>
+      <li>Dermatofitoses (fungos) por exposição à água</li>
+      <li>Lesões músculo-esqueléticas na extração de vítimas</li>
+    </ul>
+  </div>
+  <div class="c">
+    <span class="lb">Riscos Biológicos / Legais / Infeciosos</span>
+    <ul>
+      <li><strong style="color:#f0b27a;">Contágio por sangue</strong> → usar luvas (EPI)</li>
+      <li>Exposição a matéria orgânica na água</li>
+      <li>Compostos químicos (cloro em piscinas)</li>
+      <li><strong style="color:#85c1e9;">Risco legal</strong> — obrigação de auxiliar, mesmo fora de serviço</li>
+      <li>Intoxicações por medicamentos ou álcool da vítima</li>
+      <li>Registar tudo no SEGMAR Mobile em 24h</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- 05 CARREIRA -->
+<section class="sec" id="carreira">
+<div class="sh"><div class="sh-tag">Capítulo 05</div><h2>CARREIRA E MÓDULOS ADICIONAIS</h2><p>Progressão na carreira e módulos complementares que podes tirar após a certificação base.</p></div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="c ca">
+    <span class="lb">Categoria Base</span><h3>🛟 Nadador-Salvador</h3>
+    <p style="margin-bottom:8px;">Curso NS certificado pelo ISN.</p>
+    <ul><li>Vigilância e salvamento aquático</li><li>SBV em qualquer circunstância</li><li>Técnicas de salvamento aquático</li><li>Prevenção e informação a banhistas</li><li>Sistemas de comunicação</li><li>Uniforme conforme regulamento</li></ul>
+  </div>
+  <div class="c cb2">
+    <span class="lb">Categoria Intermédia</span><h3>📋 NS Coordenador</h3>
+    <p style="margin-bottom:8px;"><strong style="color:#fff;">Requisitos:</strong> Curso NS + mínimo <strong style="color:#fff;">2000h</strong> de exercício (1000h em praia marítima, comprovadas).</p>
+    <ul><li>Desenvolver Planos Integrados (PIS/PIAB)</li><li>Coordenar e supervisionar equipas NS</li><li>Verificar e ajustar equipamento</li><li>Desenvolver ações de treino</li><li>Colaborar com ISN e autoridades</li></ul>
+  </div>
+  <div class="c cd">
+    <span class="lb">Categoria Superior</span><h3>🎓 NS Formador</h3>
+    <p style="margin-bottom:8px;"><strong style="color:#fff;">Requisitos:</strong> Curso NS Coordenador + <strong style="color:#fff;">3500h</strong> (1500h em praia marítima) + certificado pedagógico.</p>
+    <ul><li>Ministrar cursos de NS</li><li>Avaliar ações de formação</li><li>Participar nos júris EEAT</li><li>Elaborar materiais pedagógicos</li><li>Colaborar com ISN em matérias pedagógicas</li></ul>
+  </div>
+</div>
+<div class="div"></div>
+<div class="h3t">Módulos Adicionais (Lei 68/2014)</div>
+<div class="al info" style="margin-bottom:12px;"><div class="ai">📚</div><div>Tirados após a certificação base. Permitem operar meios complementares e ampliam as competências operacionais do NS.</div></div>
+<div class="g4">
+  <div class="c co"><div style="font-size:26px;margin-bottom:7px;">🚗</div><h3 style="font-size:15px;">Viatura 4x4</h3><p>Viaturas todo-o-terreno para assistência, patrulhamento e transporte de vítimas em zonas não vigiadas.</p></div>
+  <div class="c cy"><div style="font-size:26px;margin-bottom:7px;">🏍️</div><h3 style="font-size:15px;">Moto 4x4</h3><p>Quadricíclo para zonas de difícil acesso, transporte de prancha rígida e material de imobilização.</p></div>
+  <div class="c ca"><div style="font-size:26px;margin-bottom:7px;">🌊</div><h3 style="font-size:15px;">Moto de Salvamento</h3><p>Jet-ski de salvamento marítimo. Pode rebocar maca com 1 náufrago inconsciente assistido por 1 NS.</p></div>
+  <div class="c cd"><div style="font-size:26px;margin-bottom:7px;">⛵</div><h3 style="font-size:15px;">Embarcação</h3><p>Semirrígida 4,5m–6,5m para vigilância, patrulhamento e resgate no mar.</p></div>
+</div>
+</section>
+
+<!-- 06 MATERIAL -->
+<section class="sec" id="material">
+<div class="sh"><div class="sh-tag">Capítulo 06</div><h2>MATERIAL E EQUIPAMENTO</h2><p>Todo o equipamento obrigatório e complementar do posto de praia, com características e função.</p></div>
+<div class="al success" style="margin-bottom:16px;"><div class="ai">✅</div><div><strong style="color:#82e0aa;">Obrigatório vs Complementar:</strong> O material obrigatório é adquirido pelos concessionários (DR 16/2008 + DR 55/2015). O complementar é opcional, adquirido em coordenação com a Autoridade Marítima Local após parecer do ISN.</div></div>
+
+<div class="h3t">🏖️ Infraestrutura do Posto</div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="mat"><div class="mh"><div class="mic">🏗️</div><h4>Cercado de Proteção</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Delimita o acesso ao material.</p><p class="sp">4 postes vermelhos, 6cm × 1m. Olhal para cabo de 10mm. Espaço de 5m².</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🔧</div><h4>Armação de Praia</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Estrutura para instruções ISN e arrumar meios de salvamento.</p><p class="sp">Metálica branca. 2 prumos + travessas. Painel de instruções. 4 cunhos para meios.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🏳️</div><h4>Mastro de Sinais</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Içar bandeiras de sinalética.</p><p class="sp">Madeira ou metal. 5m de comprimento com olhal na extremidade.</p></div></div>
+</div>
+
+<div class="h3t">🏴 Bandeiras de Sinais</div>
+<div class="g4" style="margin-bottom:14px;">
+  <div class="flag" style="background:rgba(88,214,141,0.1);border-color:rgba(88,214,141,0.28);">
+    <div class="fswatch" style="background:#27ae60;"></div>
+    <h4 style="color:#58d68d;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;">🟢 Verde</h4>
+    <p style="font-size:12px;color:rgba(255,255,255,0.62);">Boas condições. Banho e natação permitidos, assumindo as regras de segurança.</p>
+  </div>
+  <div class="flag" style="background:rgba(241,196,15,0.08);border-color:rgba(241,196,15,0.28);">
+    <div class="fswatch" style="background:#f1c40f;"></div>
+    <h4 style="color:#f9e79f;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;">🟡 Amarela</h4>
+    <p style="font-size:12px;color:rgba(255,255,255,0.62);">Condições perigosas para natação. Banhos aceitáveis com precaução.</p>
+  </div>
+  <div class="flag" style="background:rgba(192,57,43,0.13);border-color:rgba(192,57,43,0.32);">
+    <div class="fswatch" style="background:#c0392b;"></div>
+    <h4 style="color:#f1948a;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;">🔴 Vermelha</h4>
+    <p style="font-size:12px;color:rgba(255,255,255,0.62);">Proibida natação e banhos. Permanência junto à água representa risco elevado.</p>
+  </div>
+  <div class="flag" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.13);">
+    <div class="fswatch" style="background:repeating-conic-gradient(#111 0% 25%,#fff 0% 50%) 0 0/14px 14px;"></div>
+    <h4 style="font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;">⬛ Xadrez</h4>
+    <p style="font-size:12px;color:rgba(255,255,255,0.62);">Praia sem vigilância temporária. Em emergência pode içar com outra bandeira.</p>
+  </div>
+</div>
+<div class="al info" style="margin-bottom:16px;"><div class="ai">ℹ️</div><div>Bandeiras: <strong style="color:#fff;">70cm × 46cm</strong>, filete ou nylon, um só pano. É responsabilidade do NS içar a bandeira correta conforme as condições ou determinação da AMN.</div></div>
+
+<div class="h3t">🛟 Meios de Salvamento (Obrigatórios)</div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="mat"><div class="mh"><div class="mic">⭕</div><h4>Boia Circular</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Suporta 1 náufrago consciente na posição vertical, com vias aéreas fora de água.</p><p class="sp">Coroa branca com iniciais ISN. Retenida laranja 36m × 6mm.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🔴</div><h4>Boia Torpedo</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Transporte rápido na água. Rebocar 1 inconsciente ou 3 conscientes. Evita contacto físico na abordagem.</p><p class="sp">Oval, laranja/amarela, 70cm. 3 pegas. Cabo 2m + tiracolo 70cm velcro.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🟠</div><h4>Cinto de Salvamento</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Resgatar 1 náufrago consciente ou inconsciente. Acopla ao carretel.</p><p class="sp">Paralelepipédico, 100×15×14cm. Esponjoso. Mosquetão + argola latão.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🟡</div><h4>Carretel</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Resgate a grande distância, fortes correntes e condições adversas.</p><p class="sp">Cilindro branco giratório nos prumos. 200m de linha laranja 8–10mm.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🏄</div><h4>Prancha de Salvamento</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Abordagem a longa distância. Suporte a 1+ conscientes ou 1 inconsciente.</p><p class="sp">Vermelha/amarela com ISN. 270×60cm. ~6kg. Antiderrapante. Patilhão flexível.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">📏</div><h4>Vara de Salvamento</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Alcançar vítimas a partir de ponto fixo (margem, cais, borda de piscina).</p><p class="sp">Telescópica até 5m. Arco rígido em raquete na extremidade, não cortante.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🥽</div><h4>Barbatanas (Pés de Pato)</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Aumentar a velocidade de propulsão na água durante o salvamento.</p><p class="sp">Borracha resistente. Tamanho adequado ao NS em serviço.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">💊</div><h4>Mala Primeiros Socorros</h4><div class="tg tob">Obrigatório</div></div><div class="mb"><p>Armazenar todo o material de primeiros socorros.</p><p class="sp">Impermeável. "MALA DE 1ºs SOCORROS". Conforme art. 18.º da Retificação 55/2015.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🔭</div><h4>Torre/Cadeira Telescópica</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Plano de observação elevado para melhor visão da zona.</p><p class="sp">Madeira tratada. Cadeira + toldo proteção solar. Rampa de acesso frontal.</p></div></div>
+</div>
+
+<div class="h3t">🚗 Meios Complementares</div>
+<div class="g3">
+  <div class="mat"><div class="mh"><div class="mic">🚗</div><h4>Viatura 4x4</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Vigilância, patrulhamento e transporte de vítimas.</p><p class="sp">Pick-up caixa aberta. Barra sinais emergência. VHF, O₂ terapêutico, kit desatolamento.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🏍️</div><h4>Moto 4x4</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Vigilância e transporte de vítimas em zonas não vigiadas.</p><p class="sp">Amarela. 4 rodas. Plano rígido + precinta + colar cervical. Sirene + strob. 2 boias torpedo.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🌊</div><h4>Moto Salvamento Marítimo</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Vigilância e resgate a náufragos no mar.</p><p class="sp">Motor 4 tempos. Reboca maca 1 inconsciente + 1 NS. "SALVAMENTO-RESCUE" nas amuras.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">⛵</div><h4>Embarcação Pequeno Porte</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Vigilância, patrulhamento e resgate.</p><p class="sp">Semirrígida 4,5–6,5m. Laranja. Motor 4 tempos + hélice com resguardo.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">📻</div><h4>Rádio VHF/UHF</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Walkie-talkie entre NS e ligação ao SIEM via 112.</p><p class="sp">Estanque, flutuabilidade positiva, multifrequências.</p></div></div>
+  <div class="mat"><div class="mh"><div class="mic">🔭</div><h4>Binóculos</h4><div class="tg tcp">Complementar</div></div><div class="mb"><p>Vigilância à distância e deteção precoce de comportamentos de risco.</p><p class="sp">Manual, mínimo 4×, estanques, anti-reflexo, antichoque.</p></div></div>
+</div>
+<div class="div"></div>
+<div class="al warning"><div class="ai">🚩</div><div><strong style="color:#f0b27a;">Corredor de Salvamento:</strong> Zona livre de obstáculos junto à água, exclusiva para acesso rápido do NS ao mar. Deve estar sempre desobstruída. O NS é responsável pela sua manutenção.</div></div>
+</section>
+
+<!-- 07 PRAIAS -->
+<section class="sec" id="praias">
+<div class="sh"><div class="sh-tag">Capítulo 07</div><h2>PRAIAS E CONDIÇÕES AMBIENTAIS</h2><p>Ondas, correntes, marés e avaliação para decisão operacional do NS.</p></div>
+<div class="h3t">🌊 Tipos de Ondas</div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="c cd"><h3>Onda Progressiva</h3><p>Propaga-se sem grande alteração de forma. Típica em mar aberto. Menor perigo imediato, mas pode surpreender na rebentação.</p></div>
+  <div class="c ca"><h3>Onda Mergulhante</h3><p>Crista vira-se bruscamente — "tubo". Muito energética e perigosa. Pode causar lesões graves ao mergulhar. Surge em fundos rasos.</p></div>
+  <div class="c ce"><h3>Onda Espraiada</h3><p>Dissipa energia gradualmente. Praias de declive suave. Menor perigo.</p></div>
+</div>
+<div class="c" style="margin-bottom:14px;"><span class="lb">Terminologia das Ondas</span><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;"><span class="pill pb">Comprimento</span><span style="font-size:11.5px;color:rgba(255,255,255,0.55);">entre cristas</span><span class="pill pb">Período</span><span style="font-size:11.5px;color:rgba(255,255,255,0.55);">tempo entre cristas (seg)</span><span class="pill pb">Amplitude</span><span style="font-size:11.5px;color:rgba(255,255,255,0.55);">cava ao cume</span><span class="pill po">Inside</span><span style="font-size:11.5px;color:rgba(255,255,255,0.55);">interior rebentação</span><span class="pill po">Outside</span><span style="font-size:11.5px;color:rgba(255,255,255,0.55);">mar largo</span><span class="pill po">Sota</span><span style="font-size:11.5px;color:rgba(255,255,255,0.55);">próximo da areia</span></div></div>
+<div class="h3t">🌀 Correntes</div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c cd"><h3>Correntes de Maré</h3><p>Geradas pelo movimento das marés. Perigosas na foz de rios e canais de barra. Velocidades elevadas.</p></div>
+  <div class="c" style="border-left:3px solid #9b59b6;"><h3>Correntes de Mar (Derive)</h3><p>Empurram o banhista lateralmente ao longo da costa. Podem afastá-lo progressivamente da zona vigiada.</p></div>
+</div>
+<div class="c ca" style="margin-bottom:14px;"><h3>⚠️ Correntes de Retorno (Rip Currents)</h3><p style="margin-bottom:9px;">As mais perigosas. Água acumulada na praia regressa ao mar em canal estreito e rápido. <strong style="color:#fff;">Se apanhado — nadar paralelamente à costa, nunca contra a corrente.</strong></p><div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="pill pg">Estacionárias — local fixo, água limpa</span><span class="pill po">Móveis — deslocam-se ao longo da praia</span><span class="pill pr">Súbitas — água castanha/turva, máximo perigo</span></div></div>
+<div class="h3t">🌙 Marés</div>
+<div class="g2">
+  <div class="c cd"><h3>🔼 Preia-Mar</h3><p>Nível máximo da água. Praia reduzida. Correntes potencialmente mais intensas.</p></div>
+  <div class="c cb2"><h3>🔽 Baixa-Mar</h3><p>Nível mínimo. Maior exposição de rochas. Ciclo: <strong style="color:#fff;">~6 horas</strong> entre preia-mar e baixa-mar (ciclo completo 12h).</p></div>
+</div>
+</section>
+
+<!-- 08 CLIMA -->
+<section class="sec" id="clima">
+<div class="sh"><div class="sh-tag">Capítulo 08</div><h2>CONDIÇÕES CLIMATÉRICAS</h2><p>Regras operacionais para diferentes situações climatéricas — o que o NS deve fazer em cada cenário.</p></div>
+<div class="g2">
+  <div class="clim danger" style="border-color:rgba(192,57,43,0.38);background:rgba(192,57,43,0.12);"><h4 style="color:#f1948a;">⚡ Trovoada</h4><ul><li><strong style="color:#f1948a;">Evacuação obrigatória</strong> quando 2 relâmpagos consecutivos com intervalo ≤ 30 segundos</li><li>Afastar todos os banhistas da água e da praia descoberta</li><li>Içar bandeira vermelha + xadrez</li><li>Regresso permitido apenas <strong style="color:#f1948a;">30 min após o último relâmpago</strong></li></ul></div>
+  <div class="clim warning" style="border-color:rgba(230,126,34,0.35);background:rgba(230,126,34,0.09);"><h4 style="color:#f0b27a;">🌥️ Nebulosidade / Céu Nublado</h4><ul><li>Manter vigilância ativa — nuvens não eliminam o risco</li><li>Monitorizar evolução do sistema de nuvens e vento</li><li>Consultar IPMA para alertas meteorológicos</li><li>Bandeira mantida conforme condições do mar</li></ul></div>
+  <div class="clim" style="border-color:rgba(93,173,226,0.3);background:rgba(93,173,226,0.07);"><h4 style="color:#85c1e9;">💨 Vento Forte</h4><ul><li>Offshore (terra→mar): onda organizada mas banhistas podem ser arrastados</li><li>Onshore (mar→terra): aumenta ondulação e rebentação</li><li>Vento &gt;20 nós → considerar bandeira amarela</li><li>Monitorizar Windguru e IPMA continuamente</li></ul></div>
+  <div class="clim" style="border-color:rgba(241,196,15,0.28);background:rgba(241,196,15,0.06);"><h4 style="color:#f9e79f;">☀️ Calor Extremo / Exposição Solar</h4><ul><li>Protetor solar 30 min antes + repetir a cada 2h</li><li>Garrafa de água no posto — hidratação contínua</li><li>Pausas em sombra durante intervalos</li><li>Alerta para golpe de calor nos banhistas</li></ul></div>
+  <div class="clim success" style="border-color:rgba(88,214,141,0.28);background:rgba(88,214,141,0.06);"><h4 style="color:#82e0aa;">🌊 Mar Agitado (sem trovoada)</h4><ul><li>Içar bandeira amarela se condições perigosas para natação</li><li>Içar bandeira vermelha se proibição total de banhos</li><li>Informar ativamente os banhistas das condições</li><li>Reforçar vigilância — maior probabilidade de acidentes</li></ul></div>
+  <div class="clim" style="border-color:rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);"><h4>🌫️ Névoa / Visibilidade Reduzida</h4><ul><li>Usar binóculos mesmo em curtas distâncias</li><li>Aumentar frequência de rondas visuais</li><li>Comunicar limitações de visibilidade à hierarquia</li><li>Considerar restricção da zona de banho</li></ul></div>
+</div>
+</section>
+
+<!-- 09 BANHISTAS -->
+<section class="sec" id="banhistas">
+<div class="sh"><div class="sh-tag">Capítulo 09</div><h2>CONSELHOS A BANHISTAS</h2><p>O NS tem o dever de informar e aconselhar. Estes são os principais conselhos a transmitir.</p></div>
+<div class="g3">
+  <div class="c ca"><span class="lb">Segurança na Água</span><ul><li>Nunca entrar com bandeira vermelha</li><li>Respeitar as balizas da zona de banho</li><li>Não nadar sozinho ou longe da costa</li><li>Em dificuldade — acenar com um braço</li><li>Se em corrente de retorno — nadar lateralmente à costa</li></ul></div>
+  <div class="c cb2"><span class="lb">Crianças</span><ul><li>Nunca deixar crianças sem supervisão adulta perto da água</li><li>Crianças &lt;3 anos — não expor ao sol diretamente</li><li>Usar material de flutuação adequado</li><li>Identificar sempre o posto de praia mais próximo</li></ul></div>
+  <div class="c cd"><span class="lb">Exposição Solar</span><ul><li>Protetor solar 30 min antes — repetir a cada 2h</li><li>Evitar sol entre 12h–16h</li><li>Chapéu, t-shirt e óculos de sol</li><li>Vigiar sinais de queimadura e melanoma</li></ul></div>
+  <div class="c co"><span class="lb">Álcool e Medicamentos</span><ul><li>Nunca entrar na água sob efeito de álcool</li><li>Medicamentos com sonolência — evitar nadar</li><li>Não comer imediatamente antes de nadar</li></ul></div>
+  <div class="c cy"><span class="lb">Ambiente</span><ul><li>Não andar nas dunas</li><li>Não trazer animais domésticos</li><li>Guardar resíduos em saco</li><li>Usar os sanitários disponíveis</li></ul></div>
+  <div class="c ce"><span class="lb">Hidratação</span><ul><li>Beber água regularmente mesmo sem sede</li><li>Sinais de desidratação: confusão, pele seca, TA baixa</li><li>Golpe de calor — chamar o NS imediatamente</li></ul></div>
+</div>
+</section>
+
+<!-- 10 ANATOMIA -->
+<section class="sec" id="anatomia">
+<div class="sh"><div class="sh-tag">Capítulo 10</div><h2>ANATOMIA BÁSICA E AFOGAMENTO</h2><p>Noções anatómicas relevantes e o processo fisiológico do afogamento.</p></div>
+<div class="h3t">🫁 Sistemas Corporais</div>
+<div class="g3" style="margin-bottom:16px;">
+  <div class="c ca"><h3>Sistema Respiratório</h3><ul><li><strong style="color:#fff;">Via aérea superior:</strong> boca, nariz, faringe, laringe, traqueia</li><li><strong style="color:#fff;">Via aérea inferior:</strong> brônquios, pulmões, alvéolos</li><li>Glote: válvula que protege a via aérea de líquido</li><li>O₂ → alvéolos → sangue. CO₂ no sentido contrário</li></ul></div>
+  <div class="c cd"><h3>Sistema Cardiovascular</h3><ul><li><strong style="color:#fff;">Coração:</strong> 4 câmaras (2 aurículas + 2 ventrículos)</li><li>Frequência normal em repouso: 60–100 bpm</li><li>Pulso carotídeo — verificar na emergência</li><li>Em PCR → sem pulso → iniciar RCP imediatamente</li></ul></div>
+  <div class="c cb2"><h3>Sistema Nervoso</h3><ul><li><strong style="color:#fff;">SNC:</strong> cérebro e medula espinal</li><li>Danos cerebrais irreversíveis sem O₂ após <strong style="color:#fff;">4–6 min</strong></li><li>Inconsciência = privação grave de O₂</li><li>Base para a urgência do SBV imediato</li></ul></div>
+</div>
+<div class="h3t">💧 Fases do Afogamento</div>
+<div class="g4" style="margin-bottom:14px;">
+  <div class="c cr" style="text-align:center;"><div style="font-size:26px;margin-bottom:7px;">😱</div><h3 style="font-size:14px;">1. Pânico e Luta</h3><p style="font-size:11.5px;">Tenta manter-se à superfície. <strong style="color:#fff;">10–60 seg.</strong> Glote fecha. Adrenalina.</p></div>
+  <div class="c co" style="text-align:center;"><div style="font-size:26px;margin-bottom:7px;">💨</div><h3 style="font-size:14px;">2. Apneia e Aspiração</h3><p style="font-size:11.5px;">Aspiração inicial de líquido. Raciocínio falha. <strong style="color:#fff;">60–90 seg.</strong></p></div>
+  <div class="c cy" style="text-align:center;"><div style="font-size:26px;margin-bottom:7px;">😶</div><h3 style="font-size:14px;">3. Apneia Terminal</h3><p style="font-size:11.5px;">Inconsciência. Água nos pulmões. Esfíncteres relaxam. <strong style="color:#fff;">90 seg–3 min.</strong></p></div>
+  <div class="c ca" style="text-align:center;"><div style="font-size:26px;margin-bottom:7px;">🚨</div><h3 style="font-size:14px;">4. Paragem Cardíaca</h3><p style="font-size:11.5px;">Espasmo glótico (variável). PCR. O coração mantém função ~5 min.</p></div>
+</div>
+<div class="al danger"><div class="ai">⚠️</div><div><strong style="color:#f1948a;">98% dos afogamentos</strong> resultam em aspiração de líquido (afogado molhado). 2% são "afogado seco" por espasmo glótico sem aspiração. Em qualquer caso, o SBV imediato é determinante para a sobrevivência.</div></div>
+</section>
+
+<!-- 11 SIEM -->
+<section class="sec" id="siem">
+<div class="sh"><div class="sh-tag">Capítulo 11</div><h2>SISTEMA INTEGRADO DE EMERGÊNCIA MÉDICA</h2><p>Estrutura nacional de resposta — do 112 à chegada de socorro especializado.</p></div>
+<div class="g3" style="margin-bottom:18px;">
+  <div class="stat"><div class="big">112</div><div class="sub">Número de emergência nacional</div></div>
+  <div class="stat"><div class="big">+19M</div><div class="sub">Chamadas diárias tratadas</div></div>
+  <div class="stat"><div class="big">3.821</div><div class="sub">Médias de emergências diárias</div></div>
+</div>
+<div class="h3t">Fluxo da Emergência</div>
+<div class="chain" style="margin-bottom:18px;">
+  <div class="cn"><div class="ci">📞</div><div class="cl">112<br>(PSP/GNR)</div></div><div class="ca2">→</div>
+  <div class="cn" style="border-color:rgba(192,57,43,0.32);"><div class="ci">🏥</div><div class="cl">CODU<br>Triagem</div></div><div class="ca2">→</div>
+  <div class="cn" style="border-color:rgba(46,134,193,0.32);"><div class="ci">🚑</div><div class="cl">Meios<br>de Socorro</div></div><div class="ca2">→</div>
+  <div class="cn" style="border-color:rgba(88,214,141,0.32);"><div class="ci">🏨</div><div class="cl">Hospital /<br>Estabilização</div></div>
+</div>
+<div class="g2">
+  <div class="c"><span class="lb">Centrais</span><table class="dt"><tr><td><strong style="color:#fff;">CODU</strong></td><td>Centro de Orientação de Doentes Urgentes</td></tr><tr><td><strong style="color:#fff;">CODU-Mar</strong></td><td>Versão marítima do CODU</td></tr><tr><td><strong style="color:#fff;">CIAV</strong></td><td>Centro Informação Antivenenos — <strong style="color:#fff;">808 250 143</strong></td></tr><tr><td><strong style="color:#fff;">TIP</strong></td><td>Transporte Inter-Hospitalar Pediátrico</td></tr><tr><td><strong style="color:#fff;">CAPIC</strong></td><td>Apoio Psicológico e Intervenção em Crise</td></tr><tr><td><strong style="color:#fff;">CIPSE</strong></td><td>Intervenção para Situações de Exceção</td></tr></table></div>
+  <div class="c"><span class="lb">Meios de Socorro</span><ul><li><strong style="color:#fff;">AEM</strong> — Ambulância de Emergência Médica</li><li><strong style="color:#fff;">SIV</strong> — Suporte Imediato de Vida</li><li><strong style="color:#fff;">TIP</strong> — Transporte Inter-Hospitalar Pediátrico</li><li><strong style="color:#fff;">VMER</strong> — Viatura Médica de Emergência e Reanimação</li><li><strong style="color:#fff;">Helicóptero</strong> — Evacuação médica aérea</li><li><strong style="color:#fff;">Motas de emergência médica</strong></li><li><strong style="color:#fff;">Hospital de campanha</strong> — situações de exceção</li></ul></div>
+</div>
+</section>
+
+<!-- 12 SBV -->
+<section class="sec" id="sbv">
+<div class="sh"><div class="sh-tag">Capítulo 12</div><h2>SUPORTE BÁSICO DE VIDA E RCP</h2><p>Protocolo de atuação em paragem cardiorrespiratória. A cadeia de sobrevivência começa com o NS.</p></div>
+<div class="g3" style="margin-bottom:18px;">
+  <div class="stat"><div class="big">350K–700K</div><div class="sub">PCR anuais na Europa</div></div>
+  <div class="stat"><div class="big">5–10%</div><div class="sub">Sobrevivência sem SBV imediato</div></div>
+  <div class="stat"><div class="big">30+2</div><div class="sub">Compressões + ventilações / ciclo</div></div>
+</div>
+<div class="g2">
+  <div class="c"><span class="lb">Algoritmo SBV — 7 Passos</span>
+    <ol class="steps">
+      <li><div class="sn">1</div><div class="st"><strong>Segurança</strong> — Avaliar riscos para o NS e para a vítima antes de qualquer ação.</div></li>
+      <li><div class="sn">2</div><div class="st"><strong>Verificar consciência</strong> — Chamar alto, sacudir os ombros. "Está bem? Está-me a ouvir?"</div></li>
+      <li><div class="sn">3</div><div class="st"><strong>Abrir a via aérea</strong> — Extensão da cabeça + elevação do queixo.</div></li>
+      <li><div class="sn">4</div><div class="st"><strong>VOS</strong> — Ver, Ouvir, Sentir. Verificar respiração até 10 segundos.</div></li>
+      <li><div class="sn">5</div><div class="st">Se respira → <strong>PLS + ligar 112</strong>. Se não respira → ligar 112 ou pedir a alguém.</div></li>
+      <li><div class="sn b">6</div><div class="st"><strong>30 compressões torácicas</strong> — Centro do tórax, 5–6cm, 100–120/min.</div></li>
+      <li><div class="sn b">7</div><div class="st"><strong>2 ventilações</strong> — Extensão cabeça, pinçar nariz, soprar 1 segundo. Continuar 30:2.</div></li>
+    </ol>
+  </div>
+  <div>
+    <div class="c" style="margin-bottom:12px;"><span class="lb">Cadeia de Sobrevivência</span>
+      <div class="chain" style="flex-wrap:wrap;gap:5px;padding:5px 0;">
+        <div class="cn" style="min-width:75px;padding:9px;"><div class="ci" style="font-size:17px;">📞</div><div class="cl" style="font-size:9.5px;">Ligar 112</div></div><div class="ca2" style="font-size:14px;">→</div>
+        <div class="cn" style="min-width:75px;padding:9px;border-color:rgba(192,57,43,0.32);"><div class="ci" style="font-size:17px;">💪</div><div class="cl" style="font-size:9.5px;">SBV/RCP</div></div><div class="ca2" style="font-size:14px;">→</div>
+        <div class="cn" style="min-width:75px;padding:9px;border-color:rgba(230,126,34,0.32);"><div class="ci" style="font-size:17px;">⚡</div><div class="cl" style="font-size:9.5px;">DAE</div></div><div class="ca2" style="font-size:14px;">→</div>
+        <div class="cn" style="min-width:75px;padding:9px;border-color:rgba(88,214,141,0.32);"><div class="ci" style="font-size:17px;">🚑</div><div class="cl" style="font-size:9.5px;">SAV/VMER</div></div>
+      </div>
+    </div>
+    <div class="c cb2" style="margin-bottom:12px;"><span class="lb">Ventilação</span><ul><li><strong style="color:#fff;">Com ar expirado (boca-a-boca)</strong> — Extensão cabeça, pinçar nariz, soprar 1 segundo. Verificar elevação torácica.</li><li><strong style="color:#fff;">Ventilação mecânica (ambu)</strong> — Preferível. Máscara bem vedada.</li><li>Se ventilações ineficazes → só compressões (≥100/min).</li></ul></div>
+    <div class="al danger"><div class="ai">⚡</div><div><strong style="color:#f1948a;">DAE:</strong> Ligar assim que disponível. Não interromper compressões até o DAE pedir análise. Seguir instruções de voz do equipamento.</div></div>
+  </div>
+</div>
+</section>
+
+<!-- 13 PLS -->
+<section class="sec" id="pls">
+<div class="sh"><div class="sh-tag">Capítulo 13</div><h2>POSIÇÃO LATERAL DE SEGURANÇA</h2><p>Para vítimas inconscientes que respiram. Previne obstrução da via aérea por queda da língua ou vómito.</p></div>
+<div class="g2">
+  <div class="c"><span class="lb">Colocar em PLS</span>
+    <ol class="steps">
+      <li><div class="sn">1</div><div class="st">Retirar todos os pertences da vítima (óculos, colar, objetos nos bolsos).</div></li>
+      <li><div class="sn">2</div><div class="st">Braço do lado do NS a <strong>90°</strong>, palma virada para cima.</div></li>
+      <li><div class="sn">3</div><div class="st">Mão contrária da vítima sobre a face, costas da mão contra a face.</div></li>
+      <li><div class="sn">4</div><div class="st">Puxar o joelho mais afastado para cima, pé pousado no chão.</div></li>
+      <li><div class="sn">5</div><div class="st">Afastar-se ligeiramente da vítima.</div></li>
+      <li><div class="sn">6</div><div class="st">Puxar o joelho em direção ao NS, rodando a vítima de lado.</div></li>
+      <li><div class="sn o">7</div><div class="st"><strong>Abrir a via aérea</strong> — cabeça em extensão, boca aberta. Monitorizar respiração.</div></li>
+    </ol>
+  </div>
+  <div class="c"><span class="lb">Desfazer PLS</span>
+    <ol class="steps">
+      <li><div class="sn b">1</div><div class="st">Joelhos contra as costas da vítima para suporte.</div></li>
+      <li><div class="sn b">2</div><div class="st">Apoiar uma mão na anca da vítima.</div></li>
+      <li><div class="sn b">3</div><div class="st">Esticar a perna que estava fletida.</div></li>
+      <li><div class="sn b">4</div><div class="st">Trocar mão de apoio para a anca oposta.</div></li>
+      <li><div class="sn b">5</div><div class="st">Mão livre por baixo da nuca.</div></li>
+      <li><div class="sn b">6</div><div class="st">Puxar a vítima contra os joelhos do NS.</div></li>
+      <li><div class="sn b">7</div><div class="st">Andar para trás calmamente, depositando em decúbito dorsal.</div></li>
+    </ol>
+  </div>
+</div>
+<div class="al success" style="margin-top:14px;"><div class="ai">✅</div><div><strong style="color:#82e0aa;">Quando usar:</strong> Vítima inconsciente com respiração presente. Se respiração cessar → decúbito dorsal + SBV imediato.</div></div>
+<div class="al warning"><div class="ai">⚠️</div><div><strong style="color:#f0b27a;">Suspeita de trauma raquidiano:</strong> Não executar PLS sem imobilização prévia adequada. Manter via aérea com manobra modificada.</div></div>
+</section>
+
+<!-- 14 APPS -->
+<section class="sec" id="apps">
+<div class="sh"><div class="sh-tag">Capítulo 14</div><h2>APPS E FERRAMENTAS DE CONSULTA</h2><p>Ferramentas digitais para monitorização de condições e apoio à decisão no terreno.</p></div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c ca" style="display:flex;gap:12px;align-items:flex-start;"><div style="font-size:30px;flex-shrink:0;">🌊</div><div><h3 style="font-size:15px;">Windguru</h3><p>Previsão de vento e ondulação. Essencial para avaliação diária. Ver altura, período, direção e intensidade de vento.</p></div></div>
+  <div class="c cd" style="display:flex;gap:12px;align-items:flex-start;"><div style="font-size:30px;flex-shrink:0;">🌤️</div><div><h3 style="font-size:15px;">IPMA</h3><p>Previsão meteorológica oficial. Alertas de agitação marítima, trovoada e vento. Avisos por nível e região.</p></div></div>
+  <div class="c cb2" style="display:flex;gap:12px;align-items:flex-start;"><div style="font-size:30px;flex-shrink:0;">📡</div><div><h3 style="font-size:15px;">Instituto Hidrográfico</h3><p>Previsão de marés, correntes e dados oceanográficos. Tabelas preia-mar/baixa-mar para toda a costa portuguesa.</p></div></div>
+  <div class="c co" style="display:flex;gap:12px;align-items:flex-start;"><div style="font-size:30px;flex-shrink:0;">📱</div><div><h3 style="font-size:15px;">Vodafone / Praia Saudável</h3><p>Parceria ISN + Fundação Vodafone. Condições em tempo real. SMS para <strong style="color:#fff;">915 690 083</strong> com nome da praia.</p></div></div>
+</div>
+<div class="al warning"><div class="ai">📋</div><div><strong style="color:#f0b27a;">SEGMAR Mobile:</strong> App obrigatória de registo de ocorrências do ISN. Toda a ocorrência deve ser registada em <strong style="color:#fff;">máximo 24 horas</strong>. Protege o NS legalmente e alimenta estatísticas nacionais.</div></div>
+</section>
+
+</main>
+</div>
+<script>
+function show(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>{
+    if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'"))n.classList.add('active');
+  });
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
