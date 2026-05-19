@@ -175,29 +175,35 @@ body{font-family:'DM Sans',sans-serif;background:#0a3d62;color:#fff;overflow-x:h
     <p>Guia de Estudo Completo</p>
   </div>
 
-  <div class="ng">Institucional</div>
-  <a class="ni active" onclick="show('isn')"><span class="ic">⚓</span>ISN — História<span class="nn">01</span></a>
+  <div class="ng">Cap. 1 — O ISN</div>
+  <a class="ni active" onclick="show('isn')"><span class="ic">⚓</span>História do ISN<span class="nn">01</span></a>
   <a class="ni" onclick="show('hierarquia')"><span class="ic">🏛️</span>Hierarquia<span class="nn">02</span></a>
   <a class="ni" onclick="show('legal')"><span class="ic">⚖️</span>Enquadramento Legal<span class="nn">03</span></a>
 
-  <div class="ng">Profissão</div>
+  <div class="ng">Cap. 2 — Ser NS</div>
   <a class="ni" onclick="show('ns')"><span class="ic">🦺</span>O Nadador-Salvador<span class="nn">04</span></a>
   <a class="ni" onclick="show('carreira')"><span class="ic">📈</span>Carreira e Módulos<span class="nn">05</span></a>
   <a class="ni" onclick="show('material')"><span class="ic">🛟</span>Material e Equipamento<span class="nn">06</span></a>
+  <a class="ni" onclick="show('banhistas')"><span class="ic">🏊</span>Conselhos a Banhistas<span class="nn">07</span></a>
 
-  <div class="ng">Ambiente</div>
-  <a class="ni" onclick="show('praias')"><span class="ic">🌊</span>Praias e Condições<span class="nn">07</span></a>
-  <a class="ni" onclick="show('clima')"><span class="ic">⛅</span>Condições Climatéricas<span class="nn">08</span></a>
-  <a class="ni" onclick="show('banhistas')"><span class="ic">🏊</span>Conselhos a Banhistas<span class="nn">09</span></a>
+  <div class="ng">Cap. 3/4 — Ambiente</div>
+  <a class="ni" onclick="show('praias')"><span class="ic">🌊</span>Praias e Ondas<span class="nn">08</span></a>
+  <a class="ni" onclick="show('clima')"><span class="ic">⛅</span>Condições Climatéricas<span class="nn">09</span></a>
 
-  <div class="ng">Emergência Médica</div>
-  <a class="ni" onclick="show('anatomia')"><span class="ic">🫀</span>Anatomia e Afogamento<span class="nn">10</span></a>
-  <a class="ni" onclick="show('siem')"><span class="ic">🚑</span>SIEM — Emergência<span class="nn">11</span></a>
-  <a class="ni" onclick="show('sbv')"><span class="ic">❤️</span>SBV e RCP<span class="nn">12</span></a>
-  <a class="ni" onclick="show('pls')"><span class="ic">🔄</span>Posição Lateral (PLS)<span class="nn">13</span></a>
+  <div class="ng">Cap. 6 — Salvamento</div>
+  <a class="ni" onclick="show('naufragos')"><span class="ic">🆘</span>Tipos de Náufragos<span class="nn">10</span></a>
+  <a class="ni" onclick="show('salvamento')"><span class="ic">🏊</span>Fases do Salvamento<span class="nn">11</span></a>
+  <a class="ni" onclick="show('tecnicas')"><span class="ic">💪</span>Técnicas e Reboques<span class="nn">12</span></a>
+  <a class="ni" onclick="show('sinais')"><span class="ic">🤙</span>Sinais entre NS<span class="nn">13</span></a>
+
+  <div class="ng">Cap. 7 — Emergência</div>
+  <a class="ni" onclick="show('anatomia')"><span class="ic">🫀</span>Anatomia e Afogamento<span class="nn">14</span></a>
+  <a class="ni" onclick="show('siem')"><span class="ic">🚑</span>SIEM — Emergência<span class="nn">15</span></a>
+  <a class="ni" onclick="show('sbv')"><span class="ic">❤️</span>SBV e RCP<span class="nn">16</span></a>
+  <a class="ni" onclick="show('pls')"><span class="ic">🔄</span>Posição Lateral (PLS)<span class="nn">17</span></a>
 
   <div class="ng">Recursos</div>
-  <a class="ni" onclick="show('apps')"><span class="ic">📱</span>Apps e Ferramentas<span class="nn">14</span></a>
+  <a class="ni" onclick="show('apps')"><span class="ic">📱</span>Apps e Ferramentas<span class="nn">18</span></a>
 
   <div class="sb-foot"><p>Manual Técnico NS<br>2ª Edição — ISN / Marinha</p></div>
 </nav>
@@ -554,6 +560,349 @@ body{font-family:'DM Sans',sans-serif;background:#0a3d62;color:#fff;overflow-x:h
 </div>
 <div class="al success" style="margin-top:14px;"><div class="ai">✅</div><div><strong style="color:#82e0aa;">Quando usar:</strong> Vítima inconsciente com respiração presente. Se respiração cessar → decúbito dorsal + SBV imediato.</div></div>
 <div class="al warning"><div class="ai">⚠️</div><div><strong style="color:#f0b27a;">Suspeita de trauma raquidiano:</strong> Não executar PLS sem imobilização prévia adequada. Manter via aérea com manobra modificada.</div></div>
+</section>
+
+<!-- 10 NAUFRAGOS -->
+<section class="sec" id="naufragos">
+<div class="sh"><div class="sh-tag">Capítulo 6 — Salvamento</div><h2>TIPOS DE NÁUFRAGOS</h2><p>Modelo RID Factor (Franck Pia, EUA, 1984). O estado do náufrago determina completamente como o NS planeia e executa o salvamento.</p></div>
+
+<div class="al info" style="margin-bottom:18px;"><div class="ai">🔬</div><div><strong style="color:#85c1e9;">RID Factor — Franck Pia (1984, EUA):</strong> Estudo pioneiro baseado na análise de afogamentos filmados em piscinas. Identificou que o comportamento do náufrago é previsível e segue padrões definidos. A metodologia "abordagem em escada" decorre diretamente deste trabalho — o NS deve usar sempre o método menos perigoso primeiro, passando para mais perigosos apenas se necessário.</div></div>
+
+<div class="g3">
+  <div class="c ce">
+    <div style="font-size:32px;margin-bottom:8px;">😮‍💨</div>
+    <span class="lb">Tipo 1</span><h3>Consciente Cansado</h3>
+    <p style="margin-bottom:10px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">ANTES DO SALVAMENTO</p>
+    <ul>
+      <li>Usa braços e pernas para se manter à superfície</li>
+      <li>Geralmente virado para terra</li>
+      <li>Pode submergir periodicamente</li>
+      <li>Pode repelir alguma água que entre na boca</li>
+      <li>Aspeto cansado e assustado</li>
+    </ul>
+    <p style="margin-top:10px; margin-bottom:4px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">DURANTE O SALVAMENTO</p>
+    <ul>
+      <li>Cumpre com dificuldade as instruções do NS</li>
+      <li>Geralmente colabora no regresso a terra com movimentos propulsivos</li>
+    </ul>
+    <p style="margin-top:10px; margin-bottom:4px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">AÇÃO DO NS</p>
+    <ul>
+      <li>Evitar contacto físico — interpor sempre um meio de salvamento</li>
+      <li>O meio de flutuação faz o náufrago sentir-se mais confortável e cooperante</li>
+    </ul>
+  </div>
+
+  <div class="c ca">
+    <div style="font-size:32px;margin-bottom:8px;">😱</div>
+    <span class="lb">Tipo 2</span><h3>Consciente em Pânico</h3>
+    <p style="margin-bottom:10px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">ANTES DO SALVAMENTO</p>
+    <ul>
+      <li>Geralmente muito agitado</li>
+      <li>Sem qualquer tipo de autodomínio</li>
+    </ul>
+    <p style="margin-top:10px; margin-bottom:4px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">DURANTE O SALVAMENTO</p>
+    <ul>
+      <li>Não compreende as instruções do NS</li>
+      <li>Dificilmente fará o que o NS solicita</li>
+      <li>As reações são imprevisíveis e contrárias ao desfecho favorável</li>
+    </ul>
+    <p style="margin-top:10px; margin-bottom:4px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">AÇÃO DO NS</p>
+    <ul>
+      <li>Indicações curtas, claras e precisas</li>
+      <li>Manter distância de segurança de 3–4 metros</li>
+      <li>Interpor sempre um meio de salvamento</li>
+      <li>Efetuar reboque sem contacto físico direto</li>
+    </ul>
+  </div>
+
+  <div class="c cy">
+    <div style="font-size:32px;margin-bottom:8px;">😶</div>
+    <span class="lb">Tipo 3</span><h3>Aparentemente Inconsciente</h3>
+    <p style="margin-bottom:10px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">ANTES DO SALVAMENTO</p>
+    <ul>
+      <li>Pode estar entre a superfície (posição de medusa) e o fundo</li>
+      <li>Não reage, sem energia, sem expressão facial</li>
+      <li>Pode ter as vias respiratórias submersas</li>
+    </ul>
+    <p style="margin-top:10px; margin-bottom:4px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">DURANTE O SALVAMENTO</p>
+    <ul>
+      <li>O náufrago não responde nem coopera</li>
+    </ul>
+    <p style="margin-top:10px; margin-bottom:4px; font-weight:700; color:rgba(255,255,255,0.5); font-size:11px;">AÇÃO DO NS</p>
+    <ul>
+      <li>Sinalizar pedido de 2ª ajuda (braço acima da cabeça em movimentos circulares)</li>
+      <li>Manter vias aéreas fora de água durante o reboque</li>
+      <li>Rebocar rapidamente para terra</li>
+      <li>Iniciar SBV conforme adequado</li>
+    </ul>
+  </div>
+</div>
+
+<div class="div"></div>
+<div class="h3t">Triagem — Múltiplos Náufragos</div>
+<div class="c" style="margin-bottom:0;">
+  <p style="margin-bottom:8px;">Quando existem vários náufragos em simultâneo, o NS deve estabelecer uma ordem de prioridades:</p>
+  <ol style="list-style:none;padding:0;">
+    <li style="display:flex;gap:11px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);"><div class="sn g">1º</div><div class="st"><strong>Náufragos conscientes não nadadores</strong> — maior risco de se tornarem inconscientes rapidamente</div></li>
+    <li style="display:flex;gap:11px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);"><div class="sn o">2º</div><div class="st"><strong>Náufragos conscientes nadadores</strong> — conseguem manter-se à superfície por mais tempo</div></li>
+    <li style="display:flex;gap:11px;padding:8px 0;"><div class="sn">3º</div><div class="st"><strong>Náufragos inconscientes</strong> — requerem SBV imediato após extração</div></li>
+  </ol>
+</div>
+</section>
+
+<!-- 11 SALVAMENTO -->
+<section class="sec" id="salvamento">
+<div class="sh"><div class="sh-tag">Capítulo 6 — Salvamento</div><h2>FASES DO SALVAMENTO</h2><p>Metodologia estruturada de salvamento aquático — da deteção ao relatório final.</p></div>
+
+<div class="h3t">Cadeia de Sobrevivência Aquática</div>
+<div class="chain" style="margin-bottom:18px;flex-wrap:wrap;gap:6px;">
+  <div class="cn" style="min-width:90px;"><div class="ci">👁️</div><div class="cl">Prevenir</div></div><div class="ca2">→</div>
+  <div class="cn" style="min-width:90px;"><div class="ci">🔍</div><div class="cl">Reconhecer</div></div><div class="ca2">→</div>
+  <div class="cn" style="min-width:90px;border-color:rgba(230,126,34,0.35);"><div class="ci">🛟</div><div class="cl">Fornecer<br>Flutuação</div></div><div class="ca2">→</div>
+  <div class="cn" style="min-width:90px;border-color:rgba(192,57,43,0.35);"><div class="ci">🏊</div><div class="cl">Retirar<br>da Água</div></div><div class="ca2">→</div>
+  <div class="cn" style="min-width:90px;border-color:rgba(88,214,141,0.35);"><div class="ci">❤️</div><div class="cl">Prestar<br>Auxílio</div></div>
+</div>
+
+<div class="h3t">As 4 Fases do Salvamento</div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c ca">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div class="sn" style="width:32px;height:32px;font-size:15px;flex-shrink:0;">1</div><h3 style="margin:0;">Reconhecimento</h3></div>
+    <ul>
+      <li>Alertar SOS — 1ª Ajuda (outros NS, Autoridade Marítima, Concessionário, meios complementares)</li>
+      <li>Despir/vestir rapidamente o uniforme para agilizar o salvamento</li>
+      <li>Confirmar o número de náufragos</li>
+      <li>Localizar os náufragos — <strong style="color:#fff;">ato contínuo durante todo o salvamento</strong></li>
+      <li>Avaliar condições do mar e ambiente — <strong style="color:#fff;">ato contínuo durante todo o salvamento</strong></li>
+    </ul>
+  </div>
+  <div class="c cb2">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div class="sn o" style="width:32px;height:32px;font-size:15px;flex-shrink:0;">2</div><h3 style="margin:0;">Planeamento</h3></div>
+    <ul>
+      <li>Escolher o método de salvamento adequado à situação (Alcançar → Lançar → Caminhar → Remar → Nadar → Rebocar)</li>
+      <li>Selecionar o meio de salvamento de acordo com o método</li>
+      <li>Pensar antes de agir — um plano errado pode custar duas vidas</li>
+    </ul>
+  </div>
+  <div class="c cd" style="grid-column:span 2;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div class="sn b" style="width:32px;height:32px;font-size:15px;flex-shrink:0;">3</div><h3 style="margin:0;">Ação — Componentes do Resgate</h3></div>
+    <div class="g4" style="margin-top:4px;">
+      <div><p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:5px;">Entrada na Água</p><p style="font-size:12.5px;color:rgba(255,255,255,0.7);">Entrar rapidamente com o meio escolhido. Técnica adequada à situação (deslize, corrida, salto).</p></div>
+      <div><p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:5px;">Aproximação</p><p style="font-size:12.5px;color:rgba(255,255,255,0.7);">Nadar sem perder o náufrago de vista. Parar a 3–4m (distância de segurança). Avaliar estado de consciência.</p></div>
+      <div><p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:5px;">Reboque</p><p style="font-size:12.5px;color:rgba(255,255,255,0.7);">Sempre com vias aéreas fora de água. Técnica adaptada ao estado do náufrago.</p></div>
+      <div><p style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:5px;">Transporte e Relatório</p><p style="font-size:12.5px;color:rgba(255,255,255,0.7);">Transportar para local seguro. Prestar SBV. Avaliar, transferir e preencher o relatório no SEGMAR Mobile (24h).</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="h3t">⏱️ Tempos de Salvamento</div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="stat"><div class="big">3 min</div><div class="sub">Tempo máximo para salvar em praia<br>(náufrago a ~50m da costa)</div></div>
+  <div class="stat"><div class="big" style="font-size:26px;">Piscina</div><div class="sub">Tempo variável conforme dimensões<br>— depende do dispositivo de segurança</div></div>
+</div>
+
+<div class="h3t">📊 Métodos por Grau de Perigosidade para o NS</div>
+<div class="c" style="margin-bottom:14px;">
+  <span class="lb">Abordagem em Escada — do menos para o mais perigoso</span>
+  <div style="display:flex;flex-direction:column;gap:7px;margin-top:10px;">
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(88,214,141,0.1);border:1px solid rgba(88,214,141,0.25);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#58d68d;min-width:28px;">1</div><div><strong style="color:#58d68d;">Alcançar</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">— alcançar a vítima com vara, ramo ou qualquer objeto. NS em terra.</span></div></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(88,214,141,0.08);border:1px solid rgba(88,214,141,0.2);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#82e0aa;min-width:28px;">2</div><div><strong style="color:#82e0aa;">Lançar/Atirar</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">— lançar a boia circular ou outro objeto de apoio. NS em terra.</span></div></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(241,196,15,0.08);border:1px solid rgba(241,196,15,0.2);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f9e79f;min-width:28px;">3</div><div><strong style="color:#f9e79f;">Caminhar</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">— entrar na água a pé e prestar auxílio. NS entra na água.</span></div></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(230,126,34,0.08);border:1px solid rgba(230,126,34,0.2);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f0b27a;min-width:28px;">4</div><div><strong style="color:#f0b27a;">Remar</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">— remar até à vítima usando embarcação.</span></div></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f1948a;min-width:28px;">5</div><div><strong style="color:#f1948a;">Nadar</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">— nadar até à vítima e prestar auxílio.</span></div></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(192,57,43,0.14);border:1px solid rgba(192,57,43,0.35);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#e74c3c;min-width:28px;">6</div><div><strong style="color:#e74c3c;">Rebocar</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">— nadar até à vítima e rebocá-la para local seguro, com meio de salvamento.</span></div></div>
+  </div>
+</div>
+
+<div class="h3t">🏃 Técnicas de Entrada na Água</div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="c cd">
+    <h3>Em Deslize</h3>
+    <p>O NS senta-se no bordo da estrutura (piscina, pontão) mantendo sempre contacto visual com o náufrago. Desliza controlando a descida com as mãos no bordo. <strong style="color:#fff;">Ideal para piscinas, quedas junto a estruturas e variação de profundidade.</strong></p>
+  </div>
+  <div class="c cb2">
+    <h3>Em Corrida e Nado</h3>
+    <p>Correr até à água aos joelhos → corrida com pernas elevadas até à cintura → mergulho "golfinho" até ao peito → calçar os pés de pato → nadar em crawl até ao náufrago. <strong style="color:#fff;">Técnica mais comum em praias marítimas.</strong></p>
+  </div>
+  <div class="c ca">
+    <h3>Salto na Passada "Pato"</h3>
+    <p>Salto controlado para águas pouco profundas, com os pés à frente para proteção. Usado quando a entrada direta seria perigosa. <strong style="color:#fff;">Atenção a outros banhistas e objetos submersos.</strong></p>
+  </div>
+</div>
+
+<div class="al danger"><div class="ai">⚠️</div><div><strong style="color:#f1948a;">Regra fundamental:</strong> A principal preocupação em qualquer entrada na água é evitar ao máximo qualquer incidente que dificulte ou impeça o resgate. Mergulhar de cabeça pode atingir o fundo ou lesionar tornozelos, joelhos e costas.</div></div>
+</section>
+
+<!-- 12 TECNICAS -->
+<section class="sec" id="tecnicas">
+<div class="sh"><div class="sh-tag">Capítulo 6 — Salvamento</div><h2>TÉCNICAS DE REBOQUE<br>E SALVAMENTO</h2><p>Técnicas de reboque sem meios (último recurso) e com meios de salvamento.</p></div>
+
+<div class="al warning" style="margin-bottom:16px;"><div class="ai">⚠️</div><div><strong style="color:#f0b27a;">Regra de Ouro:</strong> As técnicas sem meios são de <strong style="color:#fff;">último recurso</strong> — só quando não há meios disponíveis. Implicam risco elevado para o NS pelo contacto direto com o náufrago em pânico. <strong style="color:#fff;">Vias aéreas fora de água sempre.</strong></div></div>
+
+<div class="h3t">🏊 Reboques Sem Meios</div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c ca">
+    <h3>Reboque Convencional</h3>
+    <p>Abordar pelas costas, passando o braço sob a axila e segurar pelo cervical. Colocar a região cervical sobre o ombro do mesmo braço. Rebocar em posição dorsal.</p>
+    <div class="al danger" style="margin-top:10px;padding:8px 12px;"><div class="ai" style="font-size:14px;">🚫</div><div style="font-size:11.5px;">Não usar em suspeita de trauma cervical.</div></div>
+  </div>
+  <div class="c cb2">
+    <h3>Reboque pelos Maxilares</h3>
+    <p>Abordar pelas costas. Fixar a cabeça com os dedos mínimos sob a mandíbula e as palmas a envolver a face. Manter a permeabilização das vias aéreas. Rebocar em posição dorsal.</p>
+    <div class="al danger" style="margin-top:10px;padding:8px 12px;"><div class="ai" style="font-size:14px;">🚫</div><div style="font-size:11.5px;">Não usar em suspeita de trauma cervical.</div></div>
+  </div>
+  <div class="c cd">
+    <h3>Reboque pelas Axilas</h3>
+    <p>Abordar pelas costas. Segurar pelas axilas com os braços em extensão. Manter os braços do náufrago estendidos. Rebocar em posição dorsal.</p>
+  </div>
+  <div class="c ce">
+    <h3>Reboque com os Braços em V</h3>
+    <p>Abordar pelas costas. Segurar pelos braços, colocando os polegares na face interna da articulação do cotovelo. Elevar os braços promovendo a permeabilização das vias aéreas. Rebocar em posição dorsal. <strong style="color:#fff;">Confere algum apoio à zona cervical — indicado para vítimas com trauma.</strong></p>
+  </div>
+  <div class="c co" style="grid-column:span 2;">
+    <h3>Reboque Cruzado</h3>
+    <p>Abordar pelas costas. Cruzar um braço pela frente do peito do náufrago na diagonal, colocando a mão na zona das omoplatas. O outro braço fica livre para as ações propulsivas. Colocar o náufrago sobre a zona abdominal do NS com a cabeça apoiada entre o ombro e o pescoço. Ter cuidado para que a pressão seja exercida na zona costal e <strong style="color:#fff;">não no pescoço.</strong></p>
+  </div>
+</div>
+
+<div class="h3t">🛟 Salvamento Com Meios</div>
+<div class="g3">
+  <div class="c cd">
+    <h3>🔴 Boia Torpedo</h3>
+    <p style="margin-bottom:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Consciente (cansado/pânico)</p>
+    <ul>
+      <li>Nadar com boia torpedo até ao náufrago</li>
+      <li>Parar a 3–4m — distância de segurança</li>
+      <li>Atirar a boia ao náufrago</li>
+      <li>Dar instruções para se agarrar</li>
+      <li>Rebocar para terra</li>
+    </ul>
+    <p style="margin-top:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Aparentemente Inconsciente</p>
+    <ul>
+      <li>Manter vias aéreas fora de água</li>
+      <li>Rebocar rapidamente + aplicar 10 insuflações se não ventila</li>
+    </ul>
+  </div>
+  <div class="c cb2">
+    <h3>⭕ Boia Circular</h3>
+    <p style="margin-bottom:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Técnica de lançamento</p>
+    <ul>
+      <li>Pegar num dos seios de retenida e lançar num movimento circular</li>
+      <li>Manter a extremidade do chicote na outra mão</li>
+      <li>A boia deve ficar ao alcance do náufrago mas sem risco físico</li>
+      <li>Se falhar — recolher a retenida e repetir o lançamento</li>
+      <li>Dar instruções para colocar à volta do tronco sob as axilas</li>
+    </ul>
+    <p class="sp" style="margin-top:6px;">Retenida 36m — NS pode estar em terra ou embarcação.</p>
+  </div>
+  <div class="c ca">
+    <h3>🟡 Carretel + Cinto</h3>
+    <p style="margin-bottom:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Exige 3–5 pessoas coordenadas</p>
+    <ul>
+      <li>Colocar a alça do cinto a tiracolo</li>
+      <li>Entrar rapidamente na água</li>
+      <li>Calçar os pés de pato com água pela cintura</li>
+      <li>Nadar até ao náufrago (distância &lt;200m)</li>
+      <li>Acoplar o cinto ao náufrago</li>
+      <li>Equipa em terra puxa o carretel</li>
+    </ul>
+  </div>
+  <div class="c ce">
+    <h3>📏 Vara de Salvamento</h3>
+    <ul>
+      <li>Posicionar o aro à frente do náufrago, perto o suficiente para agarrar</li>
+      <li>Náufrago consciente: puxar lenta e controladamente</li>
+      <li>Náufrago inconsciente: enfiar o aro num braço ou perna e arrastar para a margem</li>
+    </ul>
+  </div>
+  <div class="c cc">
+    <h3>🏄 Prancha de Salvamento</h3>
+    <ul>
+      <li>Abordagem rápida a longa distância</li>
+      <li>Náufrago inconsciente: virar a prancha 180°, ajustar o náufrago, subir pela popa</li>
+      <li>Colocar queixo sobre o cóccix para controlar e equilibrar a prancha</li>
+      <li>Remar simultânea ou alternadamente para terra</li>
+    </ul>
+    <p class="sp" style="margin-top:6px;">Pode funcionar como plano rígido no transporte.</p>
+  </div>
+  <div class="c" style="border-left:3px solid #9b59b6;">
+    <h3>🟠 Cinto de Salvamento</h3>
+    <p style="margin-bottom:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Náufrago inconsciente</p>
+    <ul>
+      <li>Rebocar em reboque convencional, passando o braço por baixo da axila</li>
+      <li>Com a mão livre, puxar o cinto agarrando pela extremidade mais próxima</li>
+      <li>Colocar o cinto à volta do tronco sob as axilas</li>
+      <li>Uma mão apoia a cabeça elevando o queixo</li>
+      <li>Verificar se respira → Sim: resgatar; Não: 10 insuflações e resgatar</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<!-- 13 SINAIS -->
+<section class="sec" id="sinais">
+<div class="sh"><div class="sh-tag">Capítulo 6 — Salvamento</div><h2>SINAIS ENTRE NS<br>E SINALÉTICA</h2><p>Comunicação visual entre NS durante operações de salvamento — essencial quando a distância ou o ruído impedem a comunicação verbal.</p></div>
+
+<div class="h3t">🤙 Sinais Gestuais</div>
+<div class="g3" style="margin-bottom:18px;">
+  <div class="c ca" style="text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">🔄</div>
+    <h3 style="font-size:16px;">Mão em Movimento Circular</h3>
+    <p>Náufrago aparentemente inconsciente. Sinalizar para os outros NS e pedir 2ª ajuda.</p>
+    <span class="pill pr" style="margin-top:8px;">Máxima urgência</span>
+  </div>
+  <div class="c ce" style="text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">✊</div>
+    <h3 style="font-size:16px;">Punho na Cabeça</h3>
+    <p>OK — tudo bem, situação controlada, não preciso de ajuda.</p>
+    <span class="pill pg" style="margin-top:8px;">Situação normal</span>
+  </div>
+  <div class="c cb2" style="text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">✖️</div>
+    <h3 style="font-size:16px;">Mãos em X</h3>
+    <p>Não encontro o náufrago — está submerso. Indicar a zona de busca.</p>
+    <span class="pill po" style="margin-top:8px;">Náufrago submerso</span>
+  </div>
+  <div class="c cd" style="text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">👐</div>
+    <h3 style="font-size:16px;">Duas Mãos Esticadas à Frente</h3>
+    <p>Mais para a frente — indicar ao NS ou à equipa de apoio que avance.</p>
+    <span class="pill pb" style="margin-top:8px;">Direção</span>
+  </div>
+  <div class="c cc" style="text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">🙆</div>
+    <h3 style="font-size:16px;">Duas Mãos na Cabeça</h3>
+    <p>Mais para trás — indicar ao NS ou à equipa de apoio que recue.</p>
+    <span class="pill py" style="margin-top:8px;">Direção</span>
+  </div>
+  <div class="c cr" style="text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">🙋</div>
+    <h3 style="font-size:16px;">Abanar o Braço Lateralmente</h3>
+    <p>Preciso de apoio de outro NS — solicitar reforço imediato.</p>
+    <span class="pill pr" style="margin-top:8px;">Pedir reforço</span>
+  </div>
+</div>
+
+<div class="h3t">📢 Sinais Sonoros — Apito</div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="c ce" style="text-align:center;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#58d68d;margin-bottom:6px;">1×</div>
+    <h3>1 Apito Curto</h3>
+    <p>Advertir um banhista — chamar a atenção para comportamento de risco ou proibido.</p>
+  </div>
+  <div class="c cb2" style="text-align:center;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#5dade2;margin-bottom:6px;">2×</div>
+    <h3>2 Apitos Curtos</h3>
+    <p>Chamar outro NS — solicitar a presença de um colega no posto ou na zona de intervenção.</p>
+  </div>
+  <div class="c ca" style="text-align:center;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:#c0392b;margin-bottom:6px;">3×</div>
+    <h3>3 Apitos Longos</h3>
+    <p>Salvamento em curso — alerta geral. Todos os NS ficam em alerta e preparam apoio imediato.</p>
+    <span class="pill pr" style="margin-top:8px;">Emergência</span>
+  </div>
+</div>
+
+<div class="al info"><div class="ai">ℹ️</div><div>O apito é o meio de comunicação sonora primário do NS. Deve estar sempre acessível durante o serviço. Em conjunto com os gestos, permite comunicação eficaz a grandes distâncias e em ambiente de ruído (ondas, vento, multidão).</div></div>
 </section>
 
 <!-- 14 APPS -->
