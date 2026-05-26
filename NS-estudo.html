@@ -202,8 +202,14 @@ body{font-family:'DM Sans',sans-serif;background:#0a3d62;color:#fff;overflow-x:h
   <a class="ni" onclick="show('sbv')"><span class="ic">❤️</span>SBV e RCP<span class="nn">16</span></a>
   <a class="ni" onclick="show('pls')"><span class="ic">🔄</span>Posição Lateral (PLS)<span class="nn">17</span></a>
 
+  <div class="ng">Cap. 7/8 — Emergências</div>
+  <a class="ni" onclick="show('exame')"><span class="ic">🔍</span>Exame da Vítima<span class="nn">19</span></a>
+  <a class="ni" onclick="show('temperatura')"><span class="ic">🌡️</span>Calor, Frio e Câimbras<span class="nn">20</span></a>
+  <a class="ni" onclick="show('sbvespecial')"><span class="ic">🤰</span>SBV Especiais<span class="nn">21</span></a>
+  <a class="ni" onclick="show('mala')"><span class="ic">🎒</span>Mala de 1ºs Socorros<span class="nn">22</span></a>
+
   <div class="ng">Recursos</div>
-  <a class="ni" onclick="show('apps')"><span class="ic">📱</span>Apps e Ferramentas<span class="nn">18</span></a>
+  <a class="ni" onclick="show('apps')"><span class="ic">📱</span>Apps e Ferramentas<span class="nn">23</span></a>
 
   <div class="sb-foot"><p>Manual Técnico NS<br>2ª Edição — ISN / Marinha</p></div>
 </nav>
@@ -1216,6 +1222,368 @@ body{font-family:'DM Sans',sans-serif;background:#0a3d62;color:#fff;overflow-x:h
 </div>
 
 <div class="al info"><div class="ai">ℹ️</div><div>O apito é o meio de comunicação sonora primário do NS. Deve estar sempre acessível durante o serviço. Em conjunto com os gestos, permite comunicação eficaz a grandes distâncias e em ambiente de ruído (ondas, vento, multidão).</div></div>
+</section>
+
+<!-- EXAME DA VITIMA -->
+<section class="sec" id="exame">
+<div class="sh"><div class="sh-tag">Capítulo 7 — Socorro ao Náufrago</div><h2>EXAME DA VÍTIMA</h2><p>Objetivo: tentar diagnosticar o que a pessoa tem. Identificar situações de perigo de vida e avaliar a extensão das lesões.</p></div>
+
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c cd">
+    <span class="lb">Sinais vs Sintomas</span>
+    <div class="g2" style="margin-top:8px;gap:8px;">
+      <div style="background:rgba(93,173,226,0.1);border:1px solid rgba(93,173,226,0.25);border-radius:8px;padding:12px 14px;">
+        <h3 style="font-size:15px;color:#5dade2;margin-bottom:6px;">🔍 Sinais</h3>
+        <p style="font-size:12.5px;color:rgba(255,255,255,0.7);">O que o NS <strong style="color:#fff;">observa</strong> — objetivo, mensurável. Ex: temperatura, frequência respiratória, cor da pele, nível de consciência.</p>
+      </div>
+      <div style="background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.25);border-radius:8px;padding:12px 14px;">
+        <h3 style="font-size:15px;color:#e67e22;margin-bottom:6px;">💬 Sintomas</h3>
+        <p style="font-size:12.5px;color:rgba(255,255,255,0.7);">O que a vítima <strong style="color:#fff;">refere</strong> — subjetivo, não mensurável. Ex: dor, náusea, tonturas, sensação de frio.</p>
+      </div>
+    </div>
+  </div>
+  <div class="c ca">
+    <span class="lb">Escala AVDS — Nível de Consciência</span>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;background:rgba(88,214,141,0.12);border:1px solid rgba(88,214,141,0.25);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#58d68d;width:22px;">A</div><div><strong style="color:#fff;">Alerta</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">Vítima consciente, responde espontaneamente</span></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;background:rgba(241,196,15,0.1);border:1px solid rgba(241,196,15,0.22);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f9e79f;width:22px;">V</div><div><strong style="color:#fff;">Verbal</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">Responde ao estímulo verbal (chamar)</span></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.22);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f0b27a;width:22px;">D</div><div><strong style="color:#fff;">Doloroso</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">Responde apenas ao estímulo doloroso</span></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:7px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.28);"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f1948a;width:22px;">S</div><div><strong style="color:#fff;">Sem resposta</strong><span style="font-size:12px;color:rgba(255,255,255,0.55);margin-left:8px;">Não responde a nenhum estímulo</span></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="h3t">🔴 Exame Primário — Perigo de Vida? (ABCDE)</div>
+<div class="al info" style="margin-bottom:12px;"><div class="ai">ℹ️</div><div>Objetivo: identificar rapidamente situações de risco de vida. Sequência A→B→C→D→E — avaliar por ordem de prioridade, corrigindo cada problema antes de avançar.</div></div>
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.28);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#e74c3c;width:32px;flex-shrink:0;line-height:1;">A</div>
+    <div><strong style="color:#fff;font-size:14px;">Airway — Permeabilidade da Via Aérea</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:3px;">Garantir que a via aérea está aberta e sem obstrução. Extensão da cabeça + elevação do queixo. Remover corpos estranhos visíveis. Atenção a possível lesão cervical.</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.25);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#e67e22;width:32px;flex-shrink:0;line-height:1;">B</div>
+    <div><strong style="color:#fff;font-size:14px;">Breathing — Avaliação da Função Respiratória</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:3px;">VOS — Ver movimentos torácico-abdominais; Ouvir o ruído do ar; Sentir o ar expirado. Máximo 10 segundos. Se não respira → iniciar SBV.</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:rgba(241,196,15,0.08);border:1px solid rgba(241,196,15,0.22);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#f1c40f;width:32px;flex-shrink:0;line-height:1;">C</div>
+    <div><strong style="color:#fff;font-size:14px;">Circulation — Função Cardiocirculatória (Hemorragia / Choque)</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:3px;">Pesquisar pulso carotídeo (máx. 10 seg). Controlar hemorragias evidentes. Identificar sinais de choque. Se sem pulso → compressões torácicas.</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:rgba(93,173,226,0.09);border:1px solid rgba(93,173,226,0.23);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#5dade2;width:32px;flex-shrink:0;line-height:1;">D</div>
+    <div><strong style="color:#fff;font-size:14px;">Disability — Disfunção Neurológica</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:3px;">Avaliar nível de consciência com a escala AVDS. Verificar resposta pupilar à luz. Identificar sinais de lesão neurológica (desorientação, convulsões, paralisia).</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border-radius:10px;background:rgba(88,214,141,0.08);border:1px solid rgba(88,214,141,0.22);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#58d68d;width:32px;flex-shrink:0;line-height:1;">E</div>
+    <div><strong style="color:#fff;font-size:14px;">Exposure — Exposição com Prevenção da Hipotermia</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:3px;">Expor o corpo para observação completa das lesões. Manter a temperatura corporal — cobrir e aquecer a vítima para prevenir hipotermia após exposição.</p></div>
+  </div>
+</div>
+
+<div class="h3t">🟡 Exame Secundário — Extensão das Lesões (CHAMU)</div>
+<div class="al info" style="margin-bottom:12px;"><div class="ai">ℹ️</div><div>Realizado após estabilização do exame primário. Objetivo: recolher informação detalhada sobre o historial e condição da vítima para transmitir ao SIEM.</div></div>
+<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 16px;border-radius:10px;background:var(--card);border:1px solid var(--cb);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:#e67e22;width:28px;flex-shrink:0;line-height:1;">C</div>
+    <div><strong style="color:#fff;font-size:13.5px;">Circunstâncias</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;">Situação / O que sente. Como aconteceu o acidente? O que sente agora? Mecanismo de lesão.</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 16px;border-radius:10px;background:var(--card);border:1px solid var(--cb);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:#e67e22;width:28px;flex-shrink:0;line-height:1;">H</div>
+    <div><strong style="color:#fff;font-size:13.5px;">Historial</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;">Já costuma ter este problema? O que faz habitualmente quando acontece?</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 16px;border-radius:10px;background:var(--card);border:1px solid var(--cb);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:#e67e22;width:28px;flex-shrink:0;line-height:1;">A</div>
+    <div><strong style="color:#fff;font-size:13.5px;">Alergias</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;">Tem alguma alergia grave? Tem medicação SOS (ex: EpiPen para anafilaxia)?</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 16px;border-radius:10px;background:var(--card);border:1px solid var(--cb);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:#e67e22;width:28px;flex-shrink:0;line-height:1;">M</div>
+    <div><strong style="color:#fff;font-size:13.5px;">Medicação</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;">Tem alguma doença crónica? Toma alguma medicação regular? (importante para o SIEM)</p></div>
+  </div>
+  <div style="display:flex;align-items:flex-start;gap:14px;padding:13px 16px;border-radius:10px;background:var(--card);border:1px solid var(--cb);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:#e67e22;width:28px;flex-shrink:0;line-height:1;">U</div>
+    <div><strong style="color:#fff;font-size:13.5px;">Última Refeição</strong><p style="font-size:12.5px;color:rgba(255,255,255,0.65);margin-top:2px;">Quando comeu pela última vez? O quê? Relevante para avaliação de hipoglicemia, paragem digestiva e risco de vómito.</p></div>
+  </div>
+</div>
+
+<div class="h3t">📊 Avaliação — Sinais Vitais a Monitorizar</div>
+<div class="g3">
+  <div class="c ca" style="text-align:center;"><div style="font-size:28px;margin-bottom:6px;">🌡️</div><h3 style="font-size:15px;">Temperatura</h3><p style="font-size:12.5px;color:rgba(255,255,255,0.65);">Normal: 36–37ºC. Hipotermia &lt;35ºC. Febre/insolação &gt;38ºC.</p></div>
+  <div class="c cb2" style="text-align:center;"><div style="font-size:28px;margin-bottom:6px;">💉</div><h3 style="font-size:15px;">Pressão Arterial</h3><p style="font-size:12.5px;color:rgba(255,255,255,0.65);">Normal: ~120/80 mmHg. Hipotensão = sinal de choque.</p></div>
+  <div class="c cd" style="text-align:center;"><div style="font-size:28px;margin-bottom:6px;">❤️</div><h3 style="font-size:15px;">Batimentos Cardíacos</h3><p style="font-size:12.5px;color:rgba(255,255,255,0.65);">Normal adulto: 60–100 bpm. Taquicardia &gt;100. Bradicardia &lt;60.</p></div>
+  <div class="c ce" style="text-align:center;"><div style="font-size:28px;margin-bottom:6px;">💨</div><h3 style="font-size:15px;">Frequência Respiratória</h3><p style="font-size:12.5px;color:rgba(255,255,255,0.65);">Normal adulto: 12–20 respirações/min. Contar durante 1 minuto.</p></div>
+  <div class="c co" style="text-align:center;"><div style="font-size:28px;margin-bottom:6px;">🫁</div><h3 style="font-size:15px;">Saturação de O₂ (SpO₂)</h3><p style="font-size:12.5px;color:rgba(255,255,255,0.65);">Normal: 95–100%. Abaixo de 90% = situação crítica. Medido com oxímetro de pulso.</p></div>
+  <div class="c cy" style="text-align:center;"><div style="font-size:28px;margin-bottom:6px;">🍬</div><h3 style="font-size:15px;">Glicémia Capilar</h3><p style="font-size:12.5px;color:rgba(255,255,255,0.65);">Normal: 70–110 mg/dl. Hipoglicemia &lt;60 mg/dl. Hiperglicemia &gt;200 mg/dl.</p></div>
+</div>
+</section>
+
+<!-- CALOR FRIO CAIMBRAS -->
+<section class="sec" id="temperatura">
+<div class="sh"><div class="sh-tag">Capítulo 8 — Acidentes Frequentes</div><h2>CALOR, FRIO<br>E CÂIMBRAS</h2><p>Emergências provocadas pelo ambiente térmico — frequentes em praias e piscinas.</p></div>
+
+<div class="h3t">🌡️ Ambiente Quente</div>
+<div class="g3" style="margin-bottom:14px;">
+  <div class="c ca">
+    <h3>☀️ Insolação</h3>
+    <p style="margin-bottom:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Ambiente Quente e Seco</p>
+    <p style="margin-bottom:8px;font-size:12.5px;color:rgba(255,255,255,0.65);">Causada pela exposição prolongada ao sol ou ao calor intenso. O organismo fica incapaz de controlar a temperatura através da transpiração.</p>
+    <span class="lb">Sintomatologia</span>
+    <ul>
+      <li>Pele congestionada e avermelhada</li>
+      <li>Aumento da temperatura corporal</li>
+      <li>Agitação, cefaleias</li>
+      <li>Náuseas ou vómitos</li>
+      <li>Pulso forte e irregular</li>
+      <li>Pele seca</li>
+      <li>Ventilação rápida e profunda</li>
+      <li>Inconsciência pode ocorrer rapidamente</li>
+    </ul>
+    <span class="lb" style="margin-top:10px;">Procedimento</span>
+    <ul>
+      <li>Levar para local fresco, com sombra e arejado</li>
+      <li>Arrefecer gradualmente o corpo (maior atenção à cabeça)</li>
+      <li>Envolver em lençol húmido</li>
+      <li>Prevenir o choque</li>
+      <li>Vigiar as funções vitais</li>
+      <li>Transportar conforme grau de consciência</li>
+    </ul>
+  </div>
+  <div class="c cb2">
+    <h3>🥵 Golpe de Calor</h3>
+    <p style="margin-bottom:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Ambiente Quente e Húmido</p>
+    <p style="margin-bottom:8px;font-size:12.5px;color:rgba(255,255,255,0.65);">Afeta quem está exposto a ambientes quentes e húmidos durante um período prolongado, especialmente se não repõe os líquidos e sais minerais perdidos na transpiração.</p>
+    <span class="lb">Sintomatologia</span>
+    <ul>
+      <li>Palidez</li>
+      <li>Arrefecimento corporal</li>
+      <li>Suores frios e viscosos</li>
+      <li>Cefaleias</li>
+      <li>Astenia generalizada (fraqueza)</li>
+      <li>Alterações de equilíbrio</li>
+      <li>Náuseas, apatia</li>
+      <li>Câibras (por desidratação)</li>
+      <li>Ventilação rápida e superficial</li>
+      <li>Inconsciência nos casos graves</li>
+    </ul>
+    <span class="lb" style="margin-top:10px;">Procedimento</span>
+    <ul>
+      <li>Levar para lugar fresco e arejado</li>
+      <li>Aplicar primeiro socorro para choque</li>
+      <li>Se consciente: água em pequenos goles</li>
+      <li>Transportar conforme grau de consciência</li>
+    </ul>
+  </div>
+  <div class="c cc">
+    <h3>💪 Câibra</h3>
+    <p style="margin-bottom:8px;font-size:12.5px;color:rgba(255,255,255,0.65);">Contração sustentada, involuntária e dolorosa de um músculo ou grupo muscular. Provocada por situações de fadiga muscular ou por desidratação originada por vómitos, diarreia e sudação abundante, com consequente perda de água e sais minerais.</p>
+    <span class="lb">Sintomatologia</span>
+    <ul>
+      <li>Dor local de instalação súbita</li>
+      <li>Rigidez muscular</li>
+      <li>Edema</li>
+      <li>Equimose tardia</li>
+    </ul>
+    <span class="lb" style="margin-top:10px;">Procedimento</span>
+    <ul>
+      <li>Distender os músculos afetados, forçando o seu relaxamento</li>
+      <li>Massajar o local suavemente no sentido da circulação de retorno</li>
+      <li>Aplicar calor local</li>
+    </ul>
+  </div>
+</div>
+
+<div class="h3t">❄️ Ambiente Frio — Hipotermia</div>
+<div class="al danger" style="margin-bottom:12px;"><div class="ai">🥶</div><div><strong style="color:#f1948a;">Hipotermia:</strong> A temperatura central do corpo baixa a valores inferiores a <strong style="color:#fff;">35ºC</strong>. A hipotermia moderada pode ser invertida. Se baixar para menos de <strong style="color:#fff;">26ºC</strong>, a recuperação é extremamente difícil. Atenção especial à <strong style="color:#fff;">hidrocução</strong> — entrada repentina em água fria pode causar PCR por choque termodiferencial.</div></div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c cd">
+    <span class="lb">Sintomatologia</span>
+    <ul>
+      <li>Temperatura corporal ≤ 35ºC</li>
+      <li>Pele pálida</li>
+      <li>Diminuição da lucidez e alteração do comportamento</li>
+      <li>Bradicardia e bradipneia (pulso e respiração lentos)</li>
+      <li>Pele branca na face e mucosas (hipotermia grave)</li>
+      <li>Ausência dos reflexos</li>
+      <li>Perda de sentidos</li>
+      <li>Relaxamento muscular total</li>
+      <li>Pode ocorrer PCR</li>
+    </ul>
+  </div>
+  <div class="c ca">
+    <span class="lb">Procedimento</span>
+    <ul>
+      <li>Retirar vestuário molhado ou húmido</li>
+      <li>Colocar fontes de calor protegidas nas axilas e virilhas (zonas de acesso vascular superficial)</li>
+      <li>Cobrir com cobertor isotérmico</li>
+      <li>Evitar movimentos bruscos — podem originar arritmias e PCR</li>
+      <li>Vigiar as funções vitais</li>
+      <li>Promover o transporte ao hospital</li>
+      <li>Se PCR → iniciar SBV imediatamente</li>
+    </ul>
+    <div class="al warning" style="margin-top:10px;padding:9px 12px;"><div class="ai" style="font-size:14px;">⚠️</div><div style="font-size:12px;"><strong style="color:#f0b27a;">Hidrocução:</strong> Entrada repentina em água muito fria. Pode causar paragem brusca das funções vitais por choque termodiferencial. Molhar o corpo gradualmente antes de entrar.</div></div>
+  </div>
+</div>
+
+<div class="h3t">💧 Desidratação</div>
+<div class="g2">
+  <div class="c ce">
+    <span class="lb">Sintomatologia</span>
+    <ul>
+      <li>Náuseas e sede</li>
+      <li>Pressão arterial baixa</li>
+      <li>Frequência cardíaca alta</li>
+      <li>Lento preenchimento capilar</li>
+      <li>Pouca ou nenhuma excreção de urina</li>
+      <li>Tonturas, confusão, astenia</li>
+      <li>Sonolência ou coma (grave)</li>
+    </ul>
+  </div>
+  <div class="c cd">
+    <span class="lb">Procedimento</span>
+    <ul>
+      <li>Hidratar dando a beber pequenas quantidades de líquidos</li>
+      <li>Prevenir o estado de choque</li>
+      <li>Deslocar para local fresco e à sombra</li>
+      <li>Vigiar sinais vitais</li>
+    </ul>
+    <div class="al info" style="margin-top:10px;padding:9px 12px;"><div class="ai" style="font-size:14px;">ℹ️</div><div style="font-size:12px;">Crianças e idosos são mais suscetíveis à desidratação. O NS deve estar atento e manter garrafa de água disponível durante o serviço.</div></div>
+  </div>
+</div>
+</section>
+
+<!-- SBV ESPECIAIS -->
+<section class="sec" id="sbvespecial">
+<div class="sh"><div class="sh-tag">Capítulo 7 — Socorro ao Náufrago</div><h2>SBV ESPECIAIS</h2><p>Adaptações do Suporte Básico de Vida para populações com características específicas.</p></div>
+
+<div class="h3t">👶 SBV Pediátrico (Crianças e Lactentes)</div>
+<div class="al info" style="margin-bottom:12px;"><div class="ai">ℹ️</div><div>A principal diferença no SBV pediátrico é a proporção <strong style="color:#fff;">15 compressões : 2 insuflações</strong> (em vez de 30:2 do adulto), e a técnica de compressões e insuflações é adaptada ao tamanho da vítima. Ligar 112 após <strong style="color:#fff;">1 minuto</strong> de RCP.</div></div>
+<div class="g2" style="margin-bottom:16px;">
+  <div class="c ca">
+    <span class="lb">Criança (1–8 anos)</span>
+    <ol class="steps">
+      <li><div class="sn">1</div><div class="st">Segurança + verificar consciência (chamar, tocar nos ombros)</div></li>
+      <li><div class="sn">2</div><div class="st">Gritar por ajuda</div></li>
+      <li><div class="sn">3</div><div class="st">Abrir via aérea — extensão da cabeça + elevação do queixo</div></li>
+      <li><div class="sn">4</div><div class="st">VOS — verificar respiração (máx. 10 seg)</div></li>
+      <li><div class="sn b">5</div><div class="st"><strong>5 insuflações iniciais</strong></div></li>
+      <li><div class="sn b">6</div><div class="st">Observar sinais de vida (movimento, tosse, respiração normal)</div></li>
+      <li><div class="sn b">7</div><div class="st"><strong>RCP 15:2</strong> — após 1 minuto ligar 112</div></li>
+    </ol>
+    <p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:8px;">Compressões: base de 1 mão, centro do tórax, 5cm de profundidade</p>
+  </div>
+  <div class="c cd">
+    <span class="lb">Lactente (&lt;1 ano)</span>
+    <ol class="steps">
+      <li><div class="sn">1</div><div class="st">Segurança + verificar consciência (tocar na planta do pé)</div></li>
+      <li><div class="sn">2</div><div class="st">Gritar por ajuda</div></li>
+      <li><div class="sn">3</div><div class="st">Abrir via aérea — posição neutra (não hiperextender)</div></li>
+      <li><div class="sn">4</div><div class="st">VOS — verificar respiração</div></li>
+      <li><div class="sn b">5</div><div class="st"><strong>5 insuflações</strong> (boca + nariz em simultâneo)</div></li>
+      <li><div class="sn b">6</div><div class="st">Observar sinais de vida</div></li>
+      <li><div class="sn b">7</div><div class="st"><strong>RCP 15:2</strong> — após 1 minuto ligar 112</div></li>
+    </ol>
+    <p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:8px;">Compressões: 2 dedos no centro do tórax, abaixo da linha dos mamilos, 4cm de profundidade</p>
+  </div>
+</div>
+
+<div class="h3t">🤰 SBV em Grávidas</div>
+<div class="g2" style="margin-bottom:14px;">
+  <div class="c cb2">
+    <span class="lb">Adaptações Necessárias</span>
+    <ul>
+      <li>O útero gravídico comprime a veia cava inferior quando a grávida está em decúbito dorsal, reduzindo o retorno venoso ao coração</li>
+      <li><strong style="color:#fff;">Inclinar o tronco 15–30° para a esquerda</strong> — colocar uma cunha sob o lado direito ou apoiar a anca direita com a mão de quem assiste</li>
+      <li>As compressões são realizadas no <strong style="color:#fff;">centro do tórax</strong> (posição normal)</li>
+      <li>A via aérea pode ser mais difícil de permeabilizar por possível edema</li>
+    </ul>
+  </div>
+  <div class="c ca">
+    <span class="lb">Notas Importantes</span>
+    <ul>
+      <li>Em caso de PCR, o parto de emergência pode ser necessário para salvar o bebé e facilitar a reanimação da mãe — decisão médica</li>
+      <li>O DAE pode e deve ser utilizado normalmente</li>
+      <li>Chamar o 112 com informação da gravidez</li>
+      <li>Prioridade: salvar a mãe — um SBV eficaz na mãe é a melhor forma de proteger o feto</li>
+    </ul>
+  </div>
+</div>
+
+<div class="h3t">👴 SBV em Pessoas de Estatura Fraca / Idosos</div>
+<div class="c">
+  <ul>
+    <li>Compressões torácicas com <strong style="color:#fff;">menor profundidade se necessário</strong> — adaptar à resistência do tórax, mas nunca abaixo dos 5cm</li>
+    <li>Atenção a maior fragilidade óssea — risco de fratura de costelas; não é contraindicação para parar o SBV</li>
+    <li>Via aérea pode ser mais fácil com dentadura removível — retirar se estiver solta, manter se estiver firme</li>
+    <li>Aplicar as mesmas técnicas do adulto com adaptação proporcional</li>
+  </ul>
+</div>
+</section>
+
+<!-- MALA 1os SOCORROS -->
+<section class="sec" id="mala">
+<div class="sh"><div class="sh-tag">Capítulo 4 — Material</div><h2>MALA DE PRIMEIROS<br>SOCORROS</h2><p>Material obrigatório no posto de praia. O NS deve conhecer o conteúdo e saber utilizar cada item.</p></div>
+
+<div class="al success" style="margin-bottom:16px;"><div class="ai">✅</div><div>A mala é de <strong style="color:#fff;">material impermeável</strong>, com identificação "MALA DE 1ºs SOCORROS" e conteúdo conforme o artigo 18.º da Retificação n.º 55/2015. O NS deve verificar o conteúdo no início de cada turno.</div></div>
+
+<div class="g3">
+  <div class="c ca">
+    <span class="lb">Proteção e Via Aérea</span>
+    <ul>
+      <li>Luvas de latex descartáveis (vários tamanhos)</li>
+      <li>Máscara de reanimação (pocket mask)</li>
+      <li>Óculos de proteção</li>
+      <li>Máscara facial simples (O₂ baixa concentração)</li>
+      <li>Máscara facial composta (O₂ alta concentração)</li>
+    </ul>
+  </div>
+  <div class="c cb2">
+    <span class="lb">Pensos e Imobilização</span>
+    <ul>
+      <li>Compressas esterilizadas (vários tamanhos)</li>
+      <li>Ligaduras de gaze e elásticas</li>
+      <li>Adesivos/pensos rápidos</li>
+      <li>Cobertor isotérmico (aluminizado)</li>
+      <li>Talas de imobilização</li>
+      <li>Colar cervical (vários tamanhos)</li>
+    </ul>
+  </div>
+  <div class="c cd">
+    <span class="lb">Avaliação de Sinais Vitais</span>
+    <ul>
+      <li>Oxímetro de pulso (SpO₂ + batimentos)</li>
+      <li>Termómetro</li>
+      <li>Tensiómetro</li>
+      <li>Glucómetro (glicémia capilar)</li>
+      <li>Lanterna de observação</li>
+      <li>Tesoura trauma (cortar roupa)</li>
+    </ul>
+  </div>
+  <div class="c ce">
+    <span class="lb">Desinfecção e Limpeza</span>
+    <ul>
+      <li>Soro fisiológico para limpeza de feridas</li>
+      <li>Solução antisséptica (povidona iodada)</li>
+      <li>Álcool etílico 70%</li>
+      <li>Saco para resíduos contaminados</li>
+    </ul>
+  </div>
+  <div class="c cc">
+    <span class="lb">Comunicação e Registo</span>
+    <ul>
+      <li>Caneta e bloco de notas</li>
+      <li>Formulário de relatório de ocorrência (para SEGMAR)</li>
+      <li>Número CIAV: <strong style="color:#fff;">808 250 143</strong></li>
+      <li>Números de emergência afixados</li>
+    </ul>
+  </div>
+  <div class="c co">
+    <span class="lb">⚠️ Regras de Uso</span>
+    <ul>
+      <li>Usar sempre luvas antes de contacto com a vítima</li>
+      <li>Não dar medicação sem prescrição médica</li>
+      <li>Registar todo o material utilizado</li>
+      <li>Repor material após cada utilização</li>
+      <li>Verificar prazos de validade periodicamente</li>
+    </ul>
+  </div>
+</div>
 </section>
 
 <!-- 14 APPS -->
