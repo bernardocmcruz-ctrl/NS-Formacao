@@ -67,11 +67,12 @@ const CAREER = [
 ];
 
 const MODULES = [
-  {id:'oceanografia',title:'Oceanografia Costeira',   n:8, icon:'🌊',cat:'Ambiente'},
-  {id:'sbv',         title:'Suporte Básico de Vida',  n:12,icon:'❤️',cat:'Emergência'},
-  {id:'afogamento',  title:'Protocolo de Afogamento', n:6, icon:'🏊',cat:'Emergência'},
-  {id:'legislacao',  title:'Legislação e Normas',     n:5, icon:'📋',cat:'Jurídico'},
-  {id:'equipamento', title:'Manutenção de Equipamento',n:7,icon:'🔧',cat:'Operacional'},
+  {id:'oceanografia',title:'Oceanografia Costeira',   n:3, icon:'🌊',cat:'Ambiente'},
+  {id:'sbv',         title:'Suporte Básico de Vida',  n:5, icon:'❤️',cat:'Emergência'},
+  {id:'afogamento',  title:'Protocolo de Afogamento', n:3, icon:'🏊',cat:'Emergência'},
+  {id:'salvamento',  title:'Técnicas de Salvamento',  n:6, icon:'🛟',cat:'Emergência'},
+  {id:'legislacao',  title:'Legislação e Normas',     n:2, icon:'📋',cat:'Jurídico'},
+  {id:'equipamento', title:'Manutenção de Equipamento',n:2,icon:'🔧',cat:'Operacional'},
   {id:'comunicacao', title:'Comunicação e Sinais',    n:4, icon:'🚩',cat:'Operacional'},
 ];
 
@@ -138,6 +139,32 @@ const SLIDES = {
     {title:'Comunicação Via Rádio VHF',tag:'Procedimento',color:'#0ea5e9',
      pts:['📡 Canal 16 — canal de emergência e escuta','🔊 Falar claro e pausado','📋 Identificar posto + mensagem + "câmbio"','🆘 MAYDAY MAYDAY MAYDAY (risco de vida)','🔶 PAN PAN PAN (urgência sem risco imediato)','📻 Confirmar receção antes de terminar'],
      note:'⚠️ Escuta canal 16 obrigatória durante todo o turno'},
+    {title:'Sinais Gestuais NS — Terra → Água',tag:'Sinais NS',color:'#22c55e',
+     pts:['👇 Braço apontado para baixo — náufrago está na zona do NS','👐 Dois braços à frente — náufrago mais para o mar','🙆 Dois braços acima da cabeça — náufrago mais para terra','🔄 Mão em círculo — náufrago inconsciente, pedir 2ª ajuda (112)','✊ Punho na cabeça — OK, situação controlada','✖️ Dois braços cruzados acima da cabeça — náufrago submerso'],
+     note:'📌 NS em terra sinaliza com 2 braços. NS na água confirma sempre que compreendeu.'},
+    {title:'Sinais Sonoros — Apito',tag:'Apito',color:'#f59e0b',
+     pts:['1️⃣ 1 Apito Curto — advertir banhista (comportamento de risco ou proibido)','2️⃣ 2 Apitos Curtos — chamar outro NS','🚨 3 Apitos Longos — salvamento em curso, alerta geral','🙋 Água para terra: braço lateral a bater na água = pedir reforço','👍 Água para terra: gesto visível = compreendido'],
+     note:'🎵 O apito deve estar sempre acessível durante o serviço — meio de comunicação primário do NS.'},
+  ],
+  salvamento:[
+    {title:'Tipos de Náufragos — Modelo RID Factor',tag:'Fundamentos',color:'#f59e0b',
+     pts:['😮‍💨 Tipo 1 — Consciente Cansado: mantém-se à superfície, pode cooperar com dificuldade','😱 Tipo 2 — Consciente em Pânico: imprevisível, não coopera — manter distância 3–4m','😶 Tipo 3 — Aparentemente Inconsciente: não reage, vias aéreas em risco — pedir 2ª ajuda','⚠️ Triagem: 1º conscientes não-nadadores → 2º conscientes nadadores → 3º inconscientes','🔑 Sempre abordar pela retaguarda. Interpor sempre um meio de salvamento.'],
+     note:'🔬 Modelo RID Factor — Franck Pia (1984, EUA). O tipo de náufrago determina o método de abordagem.'},
+    {title:'Cadeia de Sobrevivência — 5 Elos',tag:'Conceitos',color:'#22c55e',
+     pts:['🛡️ 1. Prevenção — vigilância, sinalética, informar banhistas','👁️ 2. Reconhecer o Afogado — identificar + ativar 112','🛟 3. Fornecer Flutuação — evitar submersão','🏊 4. Retirar da Água — resgate efetivo','❤️ 5. SBV — aplicação precoce; hospital se necessário'],
+     note:'⚠️ Todos os elos têm igual importância. A cadeia é tão forte quanto o seu elo mais fraco.'},
+    {title:'4 Fases do Salvamento',tag:'Procedimento',color:'#3b82f6',
+     pts:['🔍 1. Reconhecimento — alertar SOS, confirmar nº náufragos, avaliar condições (contínuo)','📋 2. Planeamento — método: Alcançar→Lançar→Caminhar→Remar→Nadar→Rebocar','🏊 3. Ação — entrar, nadar, parar 3–4m, abordar, rebocar com vias aéreas fora de água','🚑 4. Transporte — local seguro, SBV se necessário, SIEM, relatório SEGMAR (máx. 24h)'],
+     note:'⏱️ Tempo máximo para salvar em praia: 3 minutos (náufrago a ~50m da costa)'},
+    {title:'Abordagem em Escada — 6 Métodos',tag:'Técnica',color:'#f43f5e',
+     pts:['1️⃣ Alcançar — vara ou objeto. NS em terra (menos perigoso)','2️⃣ Lançar/Atirar — boia circular com chicote 36m. NS em terra','3️⃣ Caminhar — entrar a pé na água até à vítima','4️⃣ Remar — embarcação até à vítima','5️⃣ Nadar — nadar até à vítima','6️⃣ Rebocar — nadar + reboque com meio de salvamento (mais perigoso)'],
+     note:'⚠️ Sempre usar o método menos perigoso primeiro. NS morto não salva ninguém.'},
+    {title:'Técnicas de Reboque e Salvamento',tag:'Técnica',color:'#8b5cf6',
+     pts:['🛟 Boia Torpedo — lançar ao náufrago a 3–4m; rebocar com vias aéreas fora de água','⭕ Boia Circular — lançar com chicote; instruções para colocar sob axilas','🏊 Reboques SEM meios — ÚLTIMO RECURSO; sempre pela retaguarda','🔄 Reboque convencional: braço sob axila, cervical apoiada (⚠️ não em trauma cervical)','💪 Reboque em V: segura pelos braços, eleva, permeabiliza vias aéreas — indicado em trauma'],
+     note:'⚠️ Reboques sem meios = contacto direto com náufrago em pânico = risco elevado para o NS.'},
+    {title:'SBV Aquático e Extração da Água',tag:'SBV Aquático',color:'#0ea5e9',
+     pts:['😷 Máscara Pocket Mask — barreira anti-transmissão, válvula antirrefluxo','💨 10 insuflações iniciais se não ventila (ainda na água)','🔄 Durante reboque: 3 insuflações de 15 em 15 segundos','🏊 Extração piscina — declive suave (caleira) ou declive acentuado (puxar pelos punhos)','🏖️ Extração praia — marcha assistida / arrasto / transporte bombeiro / a dois'],
+     note:'⏱️ Hipóxia causa danos cerebrais irreversíveis em minutos — iniciar insuflações logo que possível.'},
   ],
 };
 
