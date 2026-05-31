@@ -1,0 +1,20 @@
+{
+  "name": "NS-PRO – Nadador-Salvador",
+  "short_name": "NS-PRO",
+  "description": "Aplicação de apoio ao Nadador-Salvador: formação, protocolos e ferramentas operacionais.",
+  "start_url": "./main.html",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "orientation": "portrait-primary",
+  "lang": "pt-PT",
+  "categories": ["education", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Quiz Rápido",         "url": "./main.html#quiz",        "description": "Iniciar quiz de formação" },
+    { "name": "Checklist do Posto",  "url": "./main.html#operacional", "description": "Abrir checklist diária"  }
+  ]
+}

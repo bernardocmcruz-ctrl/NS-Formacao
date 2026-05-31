@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>NS-PRO</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{}}}</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    /* ── TEMA ESCURO (padrão) ── */
+    :root {
+      --bg:   #0f172a; --surf: #1e293b; --surf2: #263347;
+      --brd:  rgba(71,85,105,.28); --txt: #e2e8f0; --muted: #94a3b8;
+      --acc:  #f59e0b; --atxt: #0f172a; --ok: #22c55e; --err: #f43f5e; --warn: #fb923c;
+      --side: #0c1829;
+    }
+    /* ── TEMA CLARO ── */
+    html.light {
+      --bg:   #eef3f9; --surf: #ffffff; --surf2: #dce8f5;
+      --brd:  rgba(100,116,139,.18); --txt: #1e293b; --muted: #64748b;
+      --acc:  #d97706; --atxt: #ffffff; --ok: #16a34a; --err: #dc2626; --warn: #ea580c;
+      --side: #1e293b;
+    }
+    *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;transition:background .25s,color .25s}
+    #root{height:100%}
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--brd);border-radius:4px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--acc)}
+    @keyframes pageFwd{from{opacity:0;transform:translateX(36px) scale(.98)}to{opacity:1;transform:none}}
+    @keyframes pageBwd{from{opacity:0;transform:translateX(-36px) scale(.98)}to{opacity:1;transform:none}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .page-fwd{animation:pageFwd .26s cubic-bezier(.25,.46,.45,.94)}
+    .page-bwd{animation:pageBwd .26s cubic-bezier(.25,.46,.45,.94)}
+    .fade-up{animation:fadeUp .22s ease-out}
+    input[type=number]{-moz-appearance:textfield;appearance:textfield}
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+    input,textarea,select{
+      background:var(--surf2);color:var(--txt);border:1px solid var(--brd);
+      border-radius:10px;padding:9px 13px;font-size:13px;width:100%;outline:none;transition:border-color .2s}
+    input:focus,textarea:focus,select:focus{border-color:var(--acc)}
+    textarea{resize:none}
+  </style>
+</head>
+<body><div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ── DADOS ─────────────────────────────────────────────────────────────────────
+
+const CAREER = [
+  {id:'candidato',   label:'Candidato NS',   minPts:0,   icon:'🎓',cls:'text-gray-400'},
+  {id:'profissional',label:'NS Profissional',minPts:250, icon:'🛟',cls:'text-amber-400'},
+  {id:'coordenador', label:'NS Coordenador', minPts:600, icon:'⭐',cls:'text-blue-400'},
+  {id:'formador',    label:'Formador NS',    minPts:900, icon:'🏆',cls:'text-yellow-300'},
+];
+
+const MODULES = [
+  {id:'oceanografia',title:'Oceanografia Costeira',   n:8, icon:'🌊',cat:'Ambiente'},
+  {id:'sbv',         title:'Suporte Básico de Vida',  n:12,icon:'❤️',cat:'Emergência'},
+  {id:'afogamento',  title:'Protocolo de Afogamento', n:6, icon:'🏊',cat:'Emergência'},
+  {id:'legislacao',  title:'Legislação e Normas',     n:5, icon:'📋',cat:'Jurídico'},
+  {id:'equipamento', title:'Manutenção de Equipamento',n:7,icon:'🔧',cat:'Operacional'},
+  {id:'comunicacao', title:'Comunicação e Sinais',    n:4, icon:'🚩',cat:'Operacional'},
+];
+
+const SLIDES = {
+  sbv:[
+    {title:'Cadeia de Sobrevivência (ERC 2021)',tag:'Fundamentos',color:'#f59e0b',
+     pts:['1️⃣ Reconhecer PCR e pedir ajuda','2️⃣ RCP precoce — ênfase compressões','3️⃣ Desfibrilhação precoce com AED','4️⃣ SAV e cuidados pós-ressuscitação'],
+     note:'⚡ Cada minuto sem desfibrilhação reduz a sobrevivência em ~10%'},
+    {title:'Sequência SBV Adulto',tag:'Procedimento',color:'#22c55e',
+     pts:['🔍 Garantir segurança do local','🤝 Verificar resposta (verbal + dor)','📢 Pedir ajuda / ativar 112','✋ Verificar respiração (máx. 10 seg)','💪 30 compressões + 2 ventilações','⚡ AED logo que disponível'],
+     note:'⏱️ 100–120 comp/min · profundidade 5–6 cm · ratio 30:2'},
+    {title:'Compressões Cardíacas',tag:'Técnica',color:'#f43f5e',
+     pts:['📍 Metade inferior do esterno','📏 Profundidade 5–6 cm (min. 5 cm)','⏱️ 100–120 compressões/min','↕️ Expansão total do tórax entre compressões','⚠️ Não interromper mais de 10 seg'],
+     note:'💡 Usar peso do corpo — braços estendidos e verticais'},
+    {title:'Ventilações',tag:'Técnica',color:'#3b82f6',
+     pts:['🔼 Extensão da cabeça + elevação do mento','🌬️ Soprar suavemente ~1 segundo','👁️ Confirmar elevação do tórax','🔄 2 ventilações após cada 30 compressões','❌ Máx. 2 tentativas se ineficaz'],
+     note:'💡 No afogado: iniciar com 5 ventilações de resgate'},
+    {title:'AED — Desfibrilhador Automático',tag:'AED',color:'#a855f7',
+     pts:['⚡ Ligar logo que disponível','🔊 Seguir as instruções de voz','✂️ Expor o tórax — cortar roupa','🩺 Afastar implantes / piercings','🔌 Elétrodos: ápex + infra-clavicular direito','⛔ Afastar toda a gente antes de descarga'],
+     note:'🎯 Meta: desfibrilhação <3 min (interior) · <5 min (exterior)'},
+  ],
+  afogamento:[
+    {title:'Classificação do Afogamento (Szpilman)',tag:'Avaliação',color:'#f59e0b',
+     pts:['🟢 Grau 1 — Tosse, sem espuma','🟡 Grau 2 — Espuma ligeira','🟠 Grau 3 — Edema pulmonar + hipotensão','🔴 Grau 4 — Edema pulmonar + PCR','⚫ Grau 5 — Sem sinais de vida (resgatável)','💀 Grau 6 — Morte irreversível'],
+     note:'⚠️ Graus 4–5 requerem RCP imediata · Grau 6 exige confirmação médica'},
+    {title:'Protocolo de Resgate em Água',tag:'Resgate',color:'#22c55e',
+     pts:['👁️ Identificar e avaliar a distância','🆘 Ativar socorro (112 / VHF ch.16)','🛟 Escolher auxiliar de flutuação','🏊 Entrar pela retaguarda da vítima','🌬️ Ventilações na água se exequível','🏖️ Remover horizontal — manter posição'],
+     note:'⚠️ NS morto não salva ninguém — não sacrificar a tua vida'},
+    {title:'SBV Específico no Afogado',tag:'SBV',color:'#3b82f6',
+     pts:['🌬️ 5 ventilações iniciais (não 2!)','💪 30:2 com ênfase nas ventilações','⚡ AED — menos eficaz (hipóxia > FV)','🧊 Hipotermia pode proteger — não desistir cedo','🏥 Transporte rápido para SAV'],
+     note:'💡 No afogado a hipóxia é causa primária — ventilação é chave'},
+  ],
+  oceanografia:[
+    {title:'Tipos de Correntes Costeiras',tag:'Conceitos',color:'#0ea5e9',
+     pts:['🌊 Correntes de deriva — paralelas à costa','🔄 Correntes de maré — dependem da maré','⚡ Correntes de retorno — perpendiculares','🌀 Correntes de circulação — entre estruturas'],
+     note:'⚠️ Correntes de retorno são a principal causa de afogamentos'},
+    {title:'Correntes de Retorno (Rip Currents)',tag:'Risco',color:'#f43f5e',
+     pts:['🔍 Canal turvo/espumoso mais calmo visualmente','↔️ Largura 10–100 m · velocidade até 2,5 m/s','🚶 Fuga: nadar paralelo à costa depois para a praia','📢 Sinalizar com braços — conservar energia'],
+     note:'💡 Nunca nadar contra a corrente — esgotamento em 2–5 min'},
+    {title:'Ondas e Marés',tag:'Fenómenos',color:'#6366f1',
+     pts:['🌊 Ondas: geradas pelo vento','📏 Período: segundos entre ondas consecutivas','⬆️ Ciclo de maré: ~12h25min','⚠️ Marés vivas (sizígia) — diferença máxima','🌙 Marés mortas (quadratura) — diferença mínima'],
+     note:'🧭 Consultar tabelas de marés todos os dias'},
+  ],
+  legislacao:[
+    {title:'Estrutura Institucional',tag:'Organizações',color:'#8b5cf6',
+     pts:['🏛️ AMN — Autoridade Marítima Nacional','🛟 ISN — Instituto de Socorros a Náufragos','📋 ISN tutela formação e certificação do NS','🔄 Licença renovável a cada 3 anos'],
+     note:'📞 ISN: 217 633 000 · AMN: Capitanias do Porto'},
+    {title:'Deveres do Nadador-Salvador',tag:'Obrigações',color:'#f59e0b',
+     pts:['👁️ Vigilância permanente da zona balnear','🚩 Içar e baixar bandeiras na abertura/fecho','📝 Preencher diário de posto diariamente','🚨 Coordenar evacuação em situações de emergência','⛔ Proibir banhos em condições de risco'],
+     note:'⚠️ Abandono de posto sem substituição = infração grave'},
+  ],
+  equipamento:[
+    {title:'Equipamento Obrigatório de Posto',tag:'Inventário',color:'#22c55e',
+     pts:['🛟 Bóia de resgate + linha de segurança','🏄 Tábua de resgate','🧰 Kit de primeiros socorros completo','⚡ AED — Desfibrilhador Automático','🫁 Oxigénio medicinal','📻 Rádio VHF (canal 16 obrigatório)'],
+     note:'✅ Verificação diária obrigatória no início do turno'},
+    {title:'Manutenção do AED',tag:'AED',color:'#a855f7',
+     pts:['🔋 Verificar carga da bateria diariamente','📅 Confirmar validade dos elétrodos','🧹 Limpar aparelho regularmente','📦 Confirmar integridade do kit completo','📊 Registar data da última utilização','🏭 Manutenção anual por técnico certificado'],
+     note:'⚠️ AED não funcional = incumprimento legal grave'},
+  ],
+  comunicacao:[
+    {title:'Bandeiras de Sinalização',tag:'Sinais',color:'#f43f5e',
+     pts:['🟢 Verde — Banho autorizado','🟡 Amarela — Precaução','🔴 Vermelha — Banho interdito','⚫ Semáforo/preta — Sem vigilância','🟣 Roxa — Aviso de medusas','🟠 Laranja dupla — Zona náutica'],
+     note:'📍 Bandeiras içadas no mastro do posto NS'},
+    {title:'Comunicação Via Rádio VHF',tag:'Procedimento',color:'#0ea5e9',
+     pts:['📡 Canal 16 — canal de emergência e escuta','🔊 Falar claro e pausado','📋 Identificar posto + mensagem + "câmbio"','🆘 MAYDAY MAYDAY MAYDAY (risco de vida)','🔶 PAN PAN PAN (urgência sem risco imediato)','📻 Confirmar receção antes de terminar'],
+     note:'⚠️ Escuta canal 16 obrigatória durante todo o turno'},
+  ],
+};
+
+const QUESTIONS = [
+  {id:1,q:'Sequência correta do Protocolo de Afogamento (ILCOR)?',
+   opts:['Remover→Avaliar→RCP→AED','Suporte ventilação na água→Remover→RCP com ênfase em ventilações','Ligar 112→Entrar→Rebocar→RCP','Estabilizar coluna→Remover→Avaliar→RCP'],
+   c:1,exp:'No afogamento a ventilação precoce ainda na água é prioritária. Remove-se e faz-se RCP com ênfase nas ventilações.'},
+  {id:2,q:'Relação compressões/ventilações no SBV adulto?',
+   opts:['15:2','30:2','5:1','30:1'],c:1,
+   exp:'A relação padrão no SBV adulto é 30:2 independentemente do nº de reanimadores.'},
+  {id:3,q:'O que é uma corrente de retorno (rip current)?',
+   opts:['Corrente paralela à costa pela maré','Canal perpendicular à costa que afasta da praia','Corrente de vento superficial','Movimento causado por embarcações'],
+   c:1,exp:'Rip currents fluem perpendicularmente à costa — principal causa de afogamentos. Velocidade até 2,5 m/s.'},
+  {id:4,q:'Bandeira VERMELHA num posto NS significa:',
+   opts:['Perigo moderado','Banhos interditos','Zona exclusiva surf','Praia sem vigilância'],
+   c:1,exp:'Bandeira vermelha = banhos interditos. O NS tem competência para ordenar saída imediata.'},
+  {id:5,q:'Profundidade mínima de compressão no SBV adulto?',
+   opts:['3–4 cm','5–6 cm','7–8 cm','2–3 cm'],c:1,
+   exp:'Compressões devem ter 5–6 cm para serem eficazes na circulação sanguínea.'},
+  {id:6,q:'Ângulo de aproximação preferencial a uma vítima em afogamento?',
+   opts:['Frontal','Pela retaguarda','Lateral esquerdo','Não importa desde que rápido'],
+   c:1,exp:'Abordagem pela retaguarda impede que a vítima em pânico agarre o NS.'},
+  {id:7,q:'Entidade que tutela o NS em Portugal?',
+   opts:['INEM','ISN – Instituto de Socorros a Náufragos','Cruz Vermelha','IPMA'],
+   c:1,exp:'O ISN, sob tutela da Autoridade Marítima Nacional, regula formação e certificação.'},
+  {id:8,q:'Com que frequência verificar o AED no posto?',
+   opts:['Semanalmente','Mensalmente','Diariamente, início do turno','Só após utilização'],
+   c:2,exp:'AED verificado diariamente: bateria, elétrodos e validade dos consumíveis.'},
+  {id:9,q:'Sinal visual mais comum de uma rip current?',
+   opts:['Ondas mais altas','Canal turvo/espumoso aparentemente mais calmo','Água mais azul','Algas em linha'],
+   c:1,exp:'Canal com espuma superficial e aparência mais calma, por vezes coloração turva de areia.'},
+  {id:10,q:'Quando usar o AED no algoritmo de SBV?',
+   opts:['Só se não respirar há >10 min','Logo que disponível, sem interromper RCP desnecessariamente','Só após 5 ciclos de RCP','Só em adultos >18 anos'],
+   c:1,exp:'AED ligado logo que disponível — desfibrilhação precoce aumenta significativamente a sobrevivência.'},
+];
+
+const BANDEIRAS = [
+  {id:1,emoji:'🟢',name:'Verde',    ans:'Banho autorizado — boas condições',
+   opts:['Banho autorizado — boas condições','Banho interdito','Precaução','Praia sem vigilância']},
+  {id:2,emoji:'🟡',name:'Amarela',  ans:'Precaução — condições adversas',
+   opts:['Banho interdito','Precaução — condições adversas','Zona náutica','Aviso de medusas']},
+  {id:3,emoji:'🔴',name:'Vermelha', ans:'Banho interdito',
+   opts:['Precaução','Banho autorizado','Banho interdito','Sem vigilância']},
+  {id:4,emoji:'🟣',name:'Roxa',     ans:'Aviso de medusas ou animais perigosos',
+   opts:['Banho interdito','Zona náutica','Aviso de medusas ou animais perigosos','Tempestade iminente']},
+  {id:5,emoji:'🟠',name:'Laranja (dupla)', ans:'Zona de desportos náuticos',
+   opts:['Precaução extrema','Banho interdito','Zona de desportos náuticos','Posto de vigilância']},
+  {id:6,emoji:'⬛',name:'Preta',    ans:'Praia sem vigilância ativa',
+   opts:['Emergência','Praia sem vigilância ativa','Banho proibido por lei','Acesso vedado']},
+];
+
+const WEATHER_TYPE = {
+  1:{i:'☀️',d:'Céu limpo'},2:{i:'🌤️',d:'Pouco nublado'},3:{i:'⛅',d:'Parcialmente nublado'},
+  4:{i:'🌥️',d:'Nublado'},5:{i:'🌦️',d:'Aguaceiros'},6:{i:'🌦️',d:'Aguaceiros/trovoada'},
+  7:{i:'⛈️',d:'Trovoada'},9:{i:'🌫️',d:'Névoa'},10:{i:'🌧️',d:'Chuva fraca'},
+  11:{i:'🌧️',d:'Chuva moderada'},12:{i:'🌧️',d:'Chuva forte'},13:{i:'❄️',d:'Neve'},
+  16:{i:'☁️',d:'Muito nublado'},18:{i:'🌫️',d:'Nevoeiro'},
+};
+const WIND_CLASS = {1:'Fraco  <15',2:'Moderado 15–35',3:'Forte  35–55',4:'Muito forte >55'};
+const BEACH_CITIES = [
+  {id:1110600,name:'Lisboa'},{id:1151300,name:'Setúbal'},
+  {id:1060300,name:'Faro'},{id:1010500,name:'Aveiro'},
+  {id:1180500,name:'Viana do Castelo'},{id:1030300,name:'Braga'},
+];
+
+const MAIN_TABS  = [{id:'formacao',label:'Formação',icon:'📚'},{id:'videos',label:'Vídeos',icon:'▶️'},{id:'manual',label:'Manual',icon:'📖'},{id:'operacional',label:'Operacional',icon:'🗂️'},{id:'ferramentas',label:'Ferramentas',icon:'🔧'}];
+const EXTRA_TABS = [{id:'perfil',label:'Perfil',icon:'👤'},{id:'definicoes',label:'Definições',icon:'⚙️'}];
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+
+const getLevel = pts => [...CAREER].reverse().find(l=>pts>=l.minPts)??CAREER[0];
+const getNext  = pts => CAREER.find(l=>l.minPts>pts)??null;
+
+const loadProfile  = ()=>{try{const s=localStorage.getItem('nspro_v1');if(s)return JSON.parse(s);}catch{}return{pts:0,completedModules:[],completedQuestions:[],name:'',nsNum:'',location:''};};
+const loadSettings = ()=>{try{const s=localStorage.getItem('nspro_cfg');if(s)return JSON.parse(s);}catch{}return{cityId:1110600};};
+const saveProfile  = p=>{try{localStorage.setItem('nspro_v1',JSON.stringify(p));}catch{}};
+const saveSettings = s=>{try{localStorage.setItem('nspro_cfg',JSON.stringify(s));}catch{}};
+
+// ── BASE UI ───────────────────────────────────────────────────────────────────
+
+const S={
+  surf: {background:'var(--surf)', border:'1px solid var(--brd)'},
+  surf2:{background:'var(--surf2)',border:'1px solid var(--brd)'},
+  acc:  {background:'var(--acc)', color:'var(--atxt)'},
+  ok:   {background:'rgba(34,197,94,.1)',  border:'1px solid rgba(34,197,94,.3)',  color:'var(--ok)'},
+  err:  {background:'rgba(244,63,94,.1)',  border:'1px solid rgba(244,63,94,.3)',  color:'var(--err)'},
+  warn: {background:'rgba(251,146,60,.1)', border:'1px solid rgba(251,146,60,.3)', color:'var(--warn)'},
+};
+
+const Card=({children,className='',style={}})=>(
+  <div className={`rounded-2xl ${className}`} style={{...S.surf,...style}}>{children}</div>
+);
+
+const PillNav=({tabs,active,onChange})=>(
+  <div className="flex p-1 rounded-2xl mb-5" style={S.surf2}>
+    {tabs.map(([v,lbl])=>(
+      <button key={v} onClick={()=>onChange(v)}
+              className="flex-1 py-2 rounded-xl text-sm font-bold transition-all"
+              style={active===v?S.acc:{color:'var(--muted)'}}>
+        {lbl}
+      </button>
+    ))}
+  </div>
+);
+
+const Spinner=()=>(
+  <div className="w-5 h-5 rounded-full border-2 flex-shrink-0"
+       style={{borderColor:'var(--brd)',borderTopColor:'var(--acc)',animation:'spin .8s linear infinite'}}/>
+);
+
+// ── CAREER BAR ────────────────────────────────────────────────────────────────
+
+function CareerBar({profile}){
+  const cur=getLevel(profile.pts),next=getNext(profile.pts);
+  const pct=next?((profile.pts-cur.minPts)/(next.minPts-cur.minPts))*100:100;
+  return(
+    <Card className="p-5 mb-5 relative overflow-hidden">
+      <div className="absolute -right-12 -top-12 w-40 h-40 rounded-full pointer-events-none"
+           style={{background:'radial-gradient(circle,rgba(245,158,11,.1),transparent 70%)'}}/>
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <p className="text-xs uppercase tracking-widest mb-1" style={{color:'var(--muted)'}}>Nível Atual</p>
+          <p className={`text-lg font-black ${cur.cls}`}>{cur.icon} {cur.label}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-3xl font-black leading-none" style={{color:'var(--acc)'}}>{profile.pts}</p>
+          <p className="text-xs" style={{color:'var(--muted)'}}>pontos</p>
+        </div>
+      </div>
+      <div className="w-full rounded-full h-2.5 overflow-hidden mb-2" style={{background:'var(--surf2)'}}>
+        <div className="h-full rounded-full transition-all duration-700"
+             style={{width:`${pct}%`,background:'linear-gradient(90deg,var(--acc),#fde68a)'}}/>
+      </div>
+      {next
+        ?<div className="flex justify-between text-xs" style={{color:'var(--muted)'}}>
+           <span>{cur.label}</span>
+           <span style={{color:'var(--acc)'}} className="font-semibold">{next.minPts-profile.pts} pts → {next.icon} {next.label}</span>
+         </div>
+        :<p className="text-xs text-center font-bold text-yellow-300">🏆 Nível máximo atingido!</p>}
+    </Card>
+  );
+}
+
+// ── RESUMOS / SLIDES ──────────────────────────────────────────────────────────
+
+function SlideViewer({modId}){
+  const slides=SLIDES[modId]||[];
+  const [idx,setIdx]=useState(0);
+  useEffect(()=>setIdx(0),[modId]);
+  if(!slides.length)return(
+    <Card className="p-8 text-center">
+      <p className="text-4xl mb-3">📝</p>
+      <p style={{color:'var(--muted)'}}>Conteúdo em elaboração</p>
+    </Card>
+  );
+  const s=slides[idx];
+  return(
+    <div>
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-xs uppercase tracking-widest" style={{color:'var(--muted)'}}>{MODULES.find(m=>m.id===modId)?.title}</span>
+        <span className="text-xs font-semibold px-3 py-1 rounded-full" style={S.surf2}>{idx+1}/{slides.length}</span>
+      </div>
+      <div className="flex gap-1.5 mb-4">
+        {slides.map((_,i)=>(
+          <button key={i} onClick={()=>setIdx(i)} className="flex-1 h-1.5 rounded-full transition-all" style={{background:i===idx?s.color:'var(--surf2)'}}/>
+        ))}
+      </div>
+      <Card className="p-5 mb-4 fade-up" key={idx}>
+        <span className="inline-block text-xs font-bold px-3 py-1.5 rounded-full mb-4"
+              style={{background:s.color+'22',color:s.color}}>{s.tag}</span>
+        <h3 className="text-lg font-black mb-4">{s.title}</h3>
+        <ul className="space-y-2.5 mb-4">
+          {s.pts.map((p,i)=>(
+            <li key={i} className="text-sm leading-relaxed">{p}</li>
+          ))}
+        </ul>
+        {s.note&&(
+          <div className="rounded-xl p-3 text-xs leading-relaxed"
+               style={{background:s.color+'11',border:`1px solid ${s.color}33`,color:'var(--txt)'}}>
+            {s.note}
+          </div>
+        )}
+      </Card>
+      <div className="flex gap-3">
+        <button onClick={()=>setIdx(i=>Math.max(0,i-1))} disabled={idx===0}
+                className="flex-1 py-3 rounded-xl font-bold text-sm disabled:opacity-30 transition-all" style={S.surf2}>← Anterior</button>
+        <button onClick={()=>setIdx(i=>Math.min(slides.length-1,i+1))} disabled={idx===slides.length-1}
+                className="flex-1 py-3 rounded-xl font-bold text-sm disabled:opacity-30 transition-all" style={S.acc}>Seguinte →</button>
+      </div>
+    </div>
+  );
+}
+
+function ResumosSection(){
+  const [modId,setModId]=useState('sbv');
+  return(
+    <div className="fade-up">
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-4" style={{scrollbarWidth:'none'}}>
+        {MODULES.map(m=>(
+          <button key={m.id} onClick={()=>setModId(m.id)}
+                  className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+                  style={modId===m.id?S.acc:S.surf2}>
+            {m.icon} {m.title.split(' ')[0]}
+          </button>
+        ))}
+      </div>
+      <SlideViewer modId={modId}/>
+    </div>
+  );
+}
+
+// ── JOGO DAS BANDEIRAS ────────────────────────────────────────────────────────
+
+function BandeirasGame(){
+  const [idx,setIdx]=useState(0),[sel,setSel]=useState(null),[score,setScore]=useState(0),[done,setDone]=useState(false);
+  const q=BANDEIRAS[idx];
+  function pick(opt){if(sel!==null)return;setSel(opt);if(opt===q.ans)setScore(s=>s+1);}
+  function next(){if(idx+1>=BANDEIRAS.length)setDone(true);else{setSel(null);setIdx(i=>i+1);}}
+  function restart(){setSel(null);setIdx(0);setScore(0);setDone(false);}
+  if(done)return(
+    <Card className="p-6 text-center fade-up">
+      <div className="text-5xl mb-3">🚩</div>
+      <h3 className="text-xl font-black mb-1" style={{color:'var(--acc)'}}>Resultado Final</h3>
+      <p className="mb-5" style={{color:'var(--muted)'}}>{score}/{BANDEIRAS.length} corretas</p>
+      <div className="rounded-xl p-4 mb-5" style={score>=4?S.ok:S.err}>
+        <p className="text-3xl font-black">{score>=5?'🏆':score>=3?'👍':'📚'}</p>
+        <p className="text-sm font-semibold mt-1">{score>=5?'Excelente!':score>=3?'Bom — continua a estudar!':'Revê as bandeiras!'}</p>
+      </div>
+      <button onClick={restart} className="w-full py-3 rounded-xl font-bold" style={S.acc}>Jogar de Novo</button>
+    </Card>
+  );
+  return(
+    <Card className="p-5 fade-up">
+      <div className="flex justify-between items-center mb-5">
+        <span className="text-xs uppercase tracking-widest" style={{color:'var(--muted)'}}>Jogo das Bandeiras</span>
+        <span className="text-xs font-semibold px-3 py-1 rounded-full" style={S.surf2}>{idx+1}/{BANDEIRAS.length}</span>
+      </div>
+      <div className="text-center mb-6">
+        <div className="text-7xl mb-3">{q.emoji}</div>
+        <p className="text-lg font-black">Bandeira {q.name}</p>
+        <p className="text-sm" style={{color:'var(--muted)'}}>O que significa?</p>
+      </div>
+      <div className="space-y-2 mb-4">
+        {q.opts.map((opt,i)=>{
+          let st={...S.surf2};
+          if(sel){if(opt===q.ans)st=S.ok;else if(opt===sel)st=S.err;else st={...S.surf2,opacity:.4};}
+          return(<button key={i} onClick={()=>pick(opt)} className="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all" style={st}>{opt}</button>);
+        })}
+      </div>
+      {sel&&<button onClick={next} className="w-full py-3 rounded-xl font-bold" style={S.acc}>{idx+1>=BANDEIRAS.length?'Ver Resultado →':'Próxima →'}</button>}
+    </Card>
+  );
+}
+
+// ── FLASHCARD GAME ────────────────────────────────────────────────────────────
+
+function FlashcardGame(){
+  const [idx,setIdx]=useState(0),[flipped,setFlipped]=useState(false);
+  const [known,setKnown]=useState([]),[unknown,setUnknown]=useState([]);
+  const q=QUESTIONS[idx];
+  function rate(k){
+    if(k)setKnown(a=>[...a,q.id]);else setUnknown(a=>[...a,q.id]);
+    setFlipped(false);
+    if(idx<QUESTIONS.length-1)setIdx(i=>i+1);
+  }
+  function restart(){setIdx(0);setFlipped(false);setKnown([]);setUnknown([]);}
+  if(known.length+unknown.length===QUESTIONS.length)return(
+    <Card className="p-6 text-center fade-up">
+      <div className="text-5xl mb-3">🎓</div>
+      <h3 className="text-xl font-black mb-1" style={{color:'var(--acc)'}}>Sessão Completa!</h3>
+      <p className="mb-5" style={{color:'var(--muted)'}}>Sabes {known.length} de {QUESTIONS.length}</p>
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="rounded-xl p-3 text-center" style={S.ok}><p className="text-2xl font-black">{known.length}</p><p className="text-xs">Sei bem</p></div>
+        <div className="rounded-xl p-3 text-center" style={S.err}><p className="text-2xl font-black">{unknown.length}</p><p className="text-xs">A rever</p></div>
+      </div>
+      <button onClick={restart} className="w-full py-3 rounded-xl font-bold" style={S.acc}>Nova Sessão</button>
+    </Card>
+  );
+  return(
+    <div className="fade-up">
+      <div className="flex justify-between items-center mb-3">
+        <span className="text-xs uppercase tracking-widest" style={{color:'var(--muted)'}}>Flashcards</span>
+        <div className="flex gap-2">
+          <span className="text-xs px-2 py-1 rounded-full" style={S.ok}>{known.length} ✓</span>
+          <span className="text-xs px-2 py-1 rounded-full" style={S.err}>{unknown.length} ✗</span>
+        </div>
+      </div>
+      <div className="w-full rounded-full h-1.5 mb-4 overflow-hidden" style={{background:'var(--surf2)'}}>
+        <div className="h-full rounded-full transition-all" style={{width:`${((known.length+unknown.length)/QUESTIONS.length)*100}%`,background:'var(--acc)'}}/>
+      </div>
+      <Card className="p-5 mb-4 cursor-pointer select-none min-h-40 flex flex-col justify-center" onClick={()=>!flipped&&setFlipped(true)}>
+        {!flipped?(
+          <div className="text-center">
+            <p className="text-xs uppercase tracking-widest mb-4" style={{color:'var(--muted)'}}>Questão {idx+1}/{QUESTIONS.length}</p>
+            <p className="font-semibold text-sm leading-relaxed">{q.q}</p>
+            <p className="text-xs mt-5" style={{color:'var(--acc)'}}>Toca para revelar →</p>
+          </div>
+        ):(
+          <div className="fade-up">
+            <p className="text-xs uppercase tracking-widest mb-3" style={{color:'var(--muted)'}}>Resposta correta:</p>
+            <p className="font-bold text-sm mb-3" style={{color:'var(--ok)'}}>{q.opts[q.c]}</p>
+            <p className="text-xs leading-relaxed" style={{color:'var(--muted)'}}>{q.exp}</p>
+          </div>
+        )}
+      </Card>
+      {flipped&&(
+        <div className="grid grid-cols-2 gap-3 fade-up">
+          <button onClick={()=>rate(false)} className="py-3 rounded-xl font-bold text-sm" style={S.err}>😕 A Rever</button>
+          <button onClick={()=>rate(true)}  className="py-3 rounded-xl font-bold text-sm" style={S.ok}>😊 Sei!</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── JOGOS SECTION ─────────────────────────────────────────────────────────────
+
+function JogosSection(){
+  const [game,setGame]=useState(null);
+  const back=<button onClick={()=>setGame(null)} className="text-sm mb-4 flex items-center gap-1 font-semibold" style={{color:'var(--acc)'}}>← Voltar</button>;
+  if(game==='bandeiras')return <div>{back}<BandeirasGame/></div>;
+  if(game==='flashcard')return <div>{back}<FlashcardGame/></div>;
+  return(
+    <div className="fade-up">
+      <p className="text-xs uppercase tracking-widest mb-4" style={{color:'var(--muted)'}}>Escolhe um jogo</p>
+      {[
+        {id:'bandeiras',icon:'🚩',title:'Jogo das Bandeiras',desc:'Identifica o significado de cada bandeira — 6 rondas',color:'#f59e0b'},
+        {id:'flashcard',icon:'🃏',title:'Flashcards de Estudo',desc:'Estuda ao teu ritmo — avalia o que já sabes',color:'#3b82f6'},
+      ].map(g=>(
+        <div key={g.id} onClick={()=>setGame(g.id)}
+             className="flex items-center gap-4 p-4 rounded-2xl mb-3 cursor-pointer transition-all hover:scale-[1.01] active:scale-[.98]"
+             style={S.surf}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
+               style={{background:g.color+'22'}}>{g.icon}</div>
+          <div className="flex-1">
+            <p className="font-bold text-sm">{g.title}</p>
+            <p className="text-xs mt-0.5" style={{color:'var(--muted)'}}>{g.desc}</p>
+          </div>
+          <span style={{color:'var(--muted)'}}>›</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── QUIZ ──────────────────────────────────────────────────────────────────────
+
+function Quiz({profile,onUpdate}){
+  const [idx,setIdx]=useState(0),[sel,setSel]=useState(null);
+  const [pts,setPts]=useState(0),[hit,setHit]=useState(0);
+  const [streak,setStreak]=useState(0),[done,setDone]=useState(false);
+  const pending=QUESTIONS.filter(q=>!profile.completedQuestions.includes(q.id));
+  const batch=(pending.length>=5?pending:QUESTIONS).slice(0,5);
+  const q=batch[idx];
+  function pick(i){
+    if(sel!==null)return;setSel(i);
+    if(i===q.c){const ns=streak+1;setStreak(ns);setPts(p=>p+(ns>=3?15:10));setHit(h=>h+1);}
+    else setStreak(0);
+  }
+  function next(){
+    if(idx+1>=batch.length){
+      onUpdate({...profile,pts:profile.pts+pts,completedQuestions:[...new Set([...profile.completedQuestions,...batch.map(x=>x.id)])]});
+      setDone(true);
+    }else{setSel(null);setIdx(i=>i+1);}
+  }
+  function restart(){setIdx(0);setSel(null);setPts(0);setHit(0);setStreak(0);setDone(false);}
+  if(done)return(
+    <Card className="p-6 text-center fade-up">
+      <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl"
+           style={{background:'rgba(245,158,11,.15)',border:'2px solid rgba(245,158,11,.3)'}}>🎉</div>
+      <h3 className="text-xl font-black mb-1" style={{color:'var(--acc)'}}>Quiz Concluído!</h3>
+      <p className="text-sm mb-5" style={{color:'var(--muted)'}}>{hit}/{batch.length} corretas</p>
+      <div className="rounded-xl p-4 mb-5" style={{background:'rgba(245,158,11,.08)',border:'1px solid rgba(245,158,11,.2)'}}>
+        <p className="text-4xl font-black" style={{color:'var(--acc)'}}>+{pts}</p>
+        <p className="text-xs mt-1" style={{color:'var(--muted)'}}>pontos ganhos</p>
+      </div>
+      <button onClick={restart} className="w-full py-3 rounded-xl font-bold" style={S.acc}>Novo Quiz</button>
+    </Card>
+  );
+  return(
+    <Card className="p-5 fade-up">
+      <div className="flex justify-between items-center mb-1">
+        <span className="text-xs uppercase tracking-widest" style={{color:'var(--muted)'}}>Questão</span>
+        <div className="flex items-center gap-2">
+          {streak>=2&&<span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{background:'rgba(245,158,11,.2)',color:'var(--acc)'}}>🔥 ×{streak}</span>}
+          <span className="text-xs font-semibold px-3 py-1 rounded-full" style={S.surf2}>{idx+1}/{batch.length}</span>
+        </div>
+      </div>
+      <div className="w-full rounded-full h-1 mb-5 overflow-hidden" style={{background:'var(--surf2)'}}>
+        <div className="h-full rounded-full transition-all" style={{width:`${(idx/batch.length)*100}%`,background:'var(--acc)'}}/>
+      </div>
+      <p className="font-semibold text-sm leading-relaxed mb-5 min-h-12">{q.q}</p>
+      <div className="space-y-2 mb-4">
+        {q.opts.map((opt,i)=>{
+          let st={...S.surf2};
+          if(sel!==null){if(i===q.c)st=S.ok;else if(i===sel)st=S.err;else st={...S.surf2,opacity:.4};}
+          return(
+            <button key={i} onClick={()=>pick(i)}
+                    className={`w-full text-left px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${sel===null?'cursor-pointer':'cursor-default'}`}
+                    style={st}>
+              <span className="font-mono opacity-40 mr-2">{String.fromCharCode(65+i)}.</span>{opt}
+            </button>
+          );
+        })}
+      </div>
+      {sel!==null&&<>
+        <div className="rounded-xl p-3 mb-4 text-xs" style={sel===q.c?S.ok:S.err}>
+          <p className="font-bold mb-1">{sel===q.c?'✓ Correto!':'✗ Errado'}</p>
+          <p style={{color:'var(--muted)'}}>{q.exp}</p>
+        </div>
+        <button onClick={next} className="w-full py-3 rounded-xl font-bold" style={S.acc}>
+          {idx+1>=batch.length?'Ver Resultados →':'Próxima →'}
+        </button>
+      </>}
+    </Card>
+  );
+}
+
+// ── FORMAÇÃO TAB ──────────────────────────────────────────────────────────────
+
+function FormacaoTab({profile,onUpdate}){
+  const [sec,setSec]=useState('resumos');
+  return(
+    <div className="flex-1 overflow-y-auto p-4 md:p-6">
+      <CareerBar profile={profile}/>
+      <PillNav tabs={[['resumos','📖 Resumos'],['jogos','🎮 Jogos'],['quiz','🧠 Quiz']]} active={sec} onChange={setSec}/>
+      {sec==='resumos'&&<ResumosSection/>}
+      {sec==='jogos'&&<JogosSection/>}
+      {sec==='quiz'&&<Quiz profile={profile} onUpdate={onUpdate}/>}
+    </div>
+  );
+}
+
+// ── MANUAL TAB ────────────────────────────────────────────────────────────────
+
+function ManualTab(){
+  const canvasRef=useRef(null),renderTask=useRef(null),touchStart=useRef(null),areaRef=useRef(null);
+  const [pdf,setPdf]=useState(null),[pageNum,setPageNum]=useState(1),[numPages,setNumPages]=useState(0);
+  const [scale,setScale]=useState(null),[loading,setLoading]=useState(true),[error,setError]=useState(null);
+  const [animDir,setAnimDir]=useState(1),[animKey,setAnimKey]=useState(0);
+  useEffect(()=>{
+    const lib=window['pdfjs-dist/build/pdf'];
+    if(!lib){setError('PDF.js não carregou.');setLoading(false);return;}
+    lib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    lib.getDocument('./Manual-NS.pdf').promise
+      .then(doc=>{setPdf(doc);setNumPages(doc.numPages);setLoading(false);})
+      .catch(e=>{setError('Erro: '+e.message);setLoading(false);});
+  },[]);
+  useEffect(()=>{
+    if(!pdf||!canvasRef.current)return;
+    if(renderTask.current)renderTask.current.cancel();
+    let cancelled=false;
+    async function render(){
+      try{
+        const page=await pdf.getPage(pageNum);if(cancelled)return;
+        const Q=Math.max(window.devicePixelRatio||1,2);
+        const cw=areaRef.current?.clientWidth;
+        const w=(cw&&cw>0)?cw-32:window.innerWidth-32;
+        const baseVp=page.getViewport({scale:1});
+        const css=scale??(w/baseVp.width);
+        const vp=page.getViewport({scale:css*Q});
+        const canvas=canvasRef.current;if(!canvas||cancelled)return;
+        canvas.width=vp.width;canvas.height=vp.height;
+        canvas.style.width=(vp.width/Q)+'px';canvas.style.height=(vp.height/Q)+'px';
+        renderTask.current=page.render({canvasContext:canvas.getContext('2d'),viewport:vp});
+        await renderTask.current.promise;
+      }catch(_){}
+    }
+    render();return()=>{cancelled=true;};
+  },[pdf,pageNum,scale,animKey]);
+  function goTo(n){const p=Math.max(1,Math.min(numPages,n));if(p===pageNum)return;setAnimDir(p>pageNum?1:-1);setAnimKey(k=>k+1);setPageNum(p);}
+  function onTouchStart(e){touchStart.current=e.touches[0].clientX;}
+  function onTouchEnd(e){if(touchStart.current===null)return;const dx=e.changedTouches[0].clientX-touchStart.current;touchStart.current=null;if(dx<-50)goTo(pageNum+1);if(dx>50)goTo(pageNum-1);}
+  const pct=numPages?(pageNum/numPages)*100:0;
+  if(loading)return(<div className="flex-1 flex flex-col items-center justify-center gap-3"><Spinner/><p className="text-sm" style={{color:'var(--muted)'}}>A carregar manual…</p></div>);
+  if(error)return(<div className="flex-1 flex flex-col items-center justify-center gap-3 px-6 text-center"><span className="text-4xl">⚠️</span><p className="text-sm" style={{color:'var(--err)'}}>{error}</p></div>);
+  return(
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="h-0.5 flex-shrink-0" style={{background:'var(--surf2)'}}>
+        <div className="h-full rounded-full transition-all duration-300" style={{width:`${pct}%`,background:'var(--acc)'}}/>
+      </div>
+      <div className="flex items-center gap-2 px-4 py-2 flex-shrink-0 border-b" style={{borderColor:'var(--brd)',background:'var(--surf)'}}>
+        <button onClick={()=>setScale(s=>Math.max(.4,((s??1)-.2)))} className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold" style={S.surf2}>−</button>
+        <button onClick={()=>setScale(null)} className="flex-1 py-1.5 rounded-xl text-xs" style={{...S.surf2,color:'var(--muted)'}}>🔍 Ajustar</button>
+        <button onClick={()=>setScale(s=>Math.min(4,((s??1)+.2)))} className="w-9 h-9 rounded-xl flex items-center justify-center text-lg font-bold" style={S.surf2}>+</button>
+      </div>
+      <div ref={areaRef} className="flex-1 overflow-auto" style={{background:'#0d0d18'}} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div key={animKey} className={animDir>=0?'page-fwd':'page-bwd'} style={{display:'flex',justifyContent:'center',padding:'20px 16px 32px'}}>
+          <canvas ref={canvasRef} style={{display:'block',borderRadius:'3px',boxShadow:'0 0 0 1px rgba(255,255,255,.05),0 8px 32px rgba(0,0,0,.7),0 32px 80px rgba(0,0,0,.5)'}}/>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0 border-t" style={{borderColor:'var(--brd)',background:'var(--surf)'}}>
+        <button onClick={()=>goTo(pageNum-1)} disabled={pageNum<=1} className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl disabled:opacity-20" style={S.surf2}>‹</button>
+        <div className="flex-1 flex items-center justify-center gap-2">
+          <input type="number" min="1" max={numPages} value={pageNum} onChange={e=>goTo(Number(e.target.value))}
+                 className="w-16 text-center font-black text-sm" style={{color:'var(--acc)',padding:'6px'}}/>
+          <span className="text-sm" style={{color:'var(--muted)'}}>/ {numPages}</span>
+        </div>
+        <button onClick={()=>goTo(pageNum+1)} disabled={pageNum>=numPages} className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl disabled:opacity-20" style={S.surf2}>›</button>
+      </div>
+    </div>
+  );
+}
+
+// ── OPERACIONAL TAB ───────────────────────────────────────────────────────────
+
+function OperacionalTab(){
+  const [sec,setSec]=useState('checklist');
+  const [chk,setChk]=useState({});
+  const [turno,setTurno]=useState({data:'',hora:'',ns:'',obs:''});
+  const [ocorr,setOcorr]=useState({hora:'',tipo:'Afogamento',desc:'',acao:''});
+  const [log,setLog]=useState(()=>{try{return JSON.parse(localStorage.getItem('nspro_ocorr')||'[]');}catch{return[];}});
+  const [protoIdx,setProtoIdx]=useState(null);
+  const items=['AED verificado','Oxigénio verificado','Rádio com carga','Maca de resgate OK','Tubo de Guarda','Bóia de Resgate','Tábua de Estabilização','Kit 1ºs Socorros'];
+  const done=items.filter((_,i)=>chk[i]).length;
+  const PROTOCOLS=[
+    {name:'Afogamento',steps:['Identificar vítima — avaliar a distância','Ativar 112 / VHF canal 16','Entrar pela retaguarda com bóia','Ventilações na água se possível','Remover horizontal','5 ventilações iniciais + RCP 30:2','AED logo que disponível']},
+    {name:'PCR em Praia',steps:['Avaliar segurança do local','Verificar consciência + respiração','Ativar 112','30 compressões (5–6 cm, 100–120/min)','2 ventilações','AED assim que disponível','Não interromper compressões >10 seg']},
+    {name:'Trauma Vertebral',steps:['Imobilização cervical imediata','NÃO mover sem estabilização completa','Ativar 112','Monitorizar estado de consciência','Manter via aérea permeável','Aguardar helicóptero / SAV','Registar mecanismo de lesão']},
+    {name:'Hipertermia',steps:['Remover do sol imediatamente','Arrefecer: água fria + sombra','Posição deitada, pernas elevadas','Hidratação oral se consciente','Arrefecer axilas, pescoço, virilhas','Ativar 112 se temperatura >40ºC','Monitorizar consciência continuamente']},
+  ];
+  function saveOcorrencia(){
+    if(!ocorr.desc)return;
+    const entry={...ocorr,data:new Date().toLocaleString('pt-PT')};
+    const nl=[entry,...log];setLog(nl);localStorage.setItem('nspro_ocorr',JSON.stringify(nl));
+    setOcorr({hora:'',tipo:'Afogamento',desc:'',acao:''});
+  }
+  return(
+    <div className="flex-1 overflow-y-auto p-4 md:p-6">
+      <PillNav tabs={[['checklist','✅ Checklist'],['diario','📋 Turno'],['ocorrencias','🚨 Ocorrências']]} active={sec} onChange={setSec}/>
+      {sec==='checklist'&&(
+        <div className="fade-up">
+          <Card className="p-5 mb-4">
+            <div className="flex justify-between items-center mb-4">
+              <p className="font-bold">Checklist Diária</p>
+              <span className="text-xs font-black px-3 py-1.5 rounded-full"
+                    style={done===items.length?S.ok:S.acc}>{done}/{items.length}</span>
+            </div>
+            <div className="w-full rounded-full h-2 mb-5 overflow-hidden" style={{background:'var(--surf2)'}}>
+              <div className="h-full rounded-full transition-all duration-500"
+                   style={{width:`${(done/items.length)*100}%`,background:'linear-gradient(90deg,var(--acc),var(--ok))'}}/>
+            </div>
+            {items.map((item,i)=>(
+              <label key={i} className="flex items-center gap-3 py-3 border-b cursor-pointer last:border-0"
+                     style={{borderColor:'var(--brd)'}} onClick={()=>setChk(c=>({...c,[i]:!c[i]}))}>
+                <div className="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                     style={chk[i]?{background:'var(--ok)',borderColor:'var(--ok)'}:{borderColor:'var(--brd)'}}>
+                  {chk[i]&&<span className="text-xs font-black" style={{color:'var(--atxt)'}}>✓</span>}
+                </div>
+                <span className="text-sm" style={chk[i]?{textDecoration:'line-through',color:'var(--muted)'}:{}}>{item}</span>
+              </label>
+            ))}
+          </Card>
+          <p className="text-xs uppercase tracking-widest mb-3" style={{color:'var(--muted)'}}>Protocolos de Emergência</p>
+          <div className="grid grid-cols-2 gap-2">
+            {PROTOCOLS.map((p,i)=>(
+              <div key={i}>
+                <button onClick={()=>setProtoIdx(protoIdx===i?null:i)}
+                        className="w-full p-3 rounded-xl text-left text-xs font-bold transition-all"
+                        style={protoIdx===i?{...S.err,fontWeight:'bold'}:S.surf}>
+                  ⚡ {p.name}
+                </button>
+                {protoIdx===i&&(
+                  <Card className="p-3 mt-1 fade-up">
+                    <ol className="space-y-1">
+                      {p.steps.map((step,j)=>(
+                        <li key={j} className="text-xs flex gap-2">
+                          <span className="font-bold flex-shrink-0" style={{color:'var(--acc)'}}>{j+1}.</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </Card>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {sec==='diario'&&(
+        <Card className="p-5 fade-up">
+          <p className="font-bold mb-4">📋 Registo de Turno</p>
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Data</label>
+                <input type="date" value={turno.data} onChange={e=>setTurno(t=>({...t,data:e.target.value}))}/></div>
+              <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Hora abertura</label>
+                <input type="time" value={turno.hora} onChange={e=>setTurno(t=>({...t,hora:e.target.value}))}/></div>
+            </div>
+            <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Nome do NS</label>
+              <input type="text" placeholder="Nome completo" value={turno.ns} onChange={e=>setTurno(t=>({...t,ns:e.target.value}))}/></div>
+            <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Condições e observações</label>
+              <textarea rows="4" placeholder="Estado do mar, condições atmosféricas, equipamento, notas do turno…" value={turno.obs} onChange={e=>setTurno(t=>({...t,obs:e.target.value}))}/></div>
+            <button onClick={()=>alert('Registo guardado!')} className="w-full py-3 rounded-xl font-bold" style={S.acc}>Guardar Registo de Turno</button>
+          </div>
+        </Card>
+      )}
+      {sec==='ocorrencias'&&(
+        <div className="fade-up">
+          <Card className="p-5 mb-4">
+            <p className="font-bold mb-4">🚨 Registar Ocorrência</p>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Hora</label>
+                  <input type="time" value={ocorr.hora} onChange={e=>setOcorr(o=>({...o,hora:e.target.value}))}/></div>
+                <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Tipo</label>
+                  <select value={ocorr.tipo} onChange={e=>setOcorr(o=>({...o,tipo:e.target.value}))}>
+                    {['Afogamento','PCR','Trauma','Hipertermia','Corte/Ferida','Medusa','Outro'].map(t=>(<option key={t}>{t}</option>))}
+                  </select></div>
+              </div>
+              <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Descrição do incidente</label>
+                <textarea rows="2" placeholder="O que aconteceu…" value={ocorr.desc} onChange={e=>setOcorr(o=>({...o,desc:e.target.value}))}/></div>
+              <div><label className="text-xs mb-1 block" style={{color:'var(--muted)'}}>Ação tomada</label>
+                <textarea rows="2" placeholder="Medidas aplicadas…" value={ocorr.acao} onChange={e=>setOcorr(o=>({...o,acao:e.target.value}))}/></div>
+              <button onClick={saveOcorrencia} className="w-full py-3 rounded-xl font-bold" style={S.acc}>Guardar Ocorrência</button>
+            </div>
+          </Card>
+          {log.length>0&&(
+            <div>
+              <p className="text-xs uppercase tracking-widest mb-3" style={{color:'var(--muted)'}}>Histórico de Ocorrências</p>
+              {log.slice(0,10).map((e,i)=>(
+                <Card key={i} className="p-3 mb-2">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-xs font-bold" style={{color:'var(--err)'}}>{e.tipo}</span>
+                    <span className="text-xs" style={{color:'var(--muted)'}}>{e.hora} · {e.data}</span>
+                  </div>
+                  <p className="text-sm">{e.desc}</p>
+                  {e.acao&&<p className="text-xs mt-1" style={{color:'var(--muted)'}}>→ {e.acao}</p>}
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── FERRAMENTAS TAB ───────────────────────────────────────────────────────────
+
+const IPMA_BASE='https://api.ipma.pt/open-data';
+
+function CPRMetronome(){
+  const [running,setRunning]=useState(false),[beat,setBeat]=useState(0);
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(running)ref.current=setInterval(()=>setBeat(b=>b+1),545);
+    else clearInterval(ref.current);
+    return()=>clearInterval(ref.current);
+  },[running]);
+  return(
+    <div className="text-center py-2">
+      <div className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center text-3xl transition-all duration-75"
+           style={{...S.surf2,transform:running&&beat%2===0?'scale(1.2)':'scale(1)',
+                   background:running&&beat%2===0?'rgba(244,63,94,.25)':'var(--surf2)'}}>
+        {running?'❤️':'🫀'}
+      </div>
+      <p className="text-xs mb-3" style={{color:'var(--muted)'}}>~110 compressões/min</p>
+      <button onClick={()=>setRunning(r=>!r)} className="w-full py-3 rounded-xl font-bold" style={running?S.err:S.acc}>
+        {running?'⏹ Parar':'▶ Iniciar Metrónomo RCP'}
+      </button>
+    </div>
+  );
+}
+
+function FerramentasTab({settings,onSettings}){
+  const [sec,setSec]=useState('condicoes');
+  const [wx,setWx]=useState(null),[uv,setUv]=useState(null),[warns,setWarns]=useState([]);
+  const [loading,setLoading]=useState(false),[wxErr,setWxErr]=useState(null);
+
+  async function fetch_wx(cityId=settings.cityId){
+    setLoading(true);setWxErr(null);
+    try{
+      const [wRes,uvRes,warnRes]=await Promise.all([
+        fetch(`${IPMA_BASE}/forecast/meteorology/cities/daily/${cityId}.json`),
+        fetch(`${IPMA_BASE}/forecast/meteorology/uv/uv.json`),
+        fetch(`${IPMA_BASE}/forecast/warnings/warnings_www.json`),
+      ]);
+      const [wJ,uvJ,warnJ]=await Promise.all([wRes.json(),uvRes.json(),warnRes.json()]);
+      setWx({name:BEACH_CITIES.find(c=>c.id===cityId)?.name,d:wJ.data?.[0]});
+      setUv(Array.isArray(uvJ)?uvJ.find(u=>u.globalIdLocal===cityId):null);
+      setWarns(Array.isArray(warnJ)?warnJ.filter(w=>w.idAreaAviso).slice(0,3):[]);
+    }catch{setWxErr('Sem acesso à API IPMA. Verifica a ligação à internet.');}
+    setLoading(false);
+  }
+
+  useEffect(()=>{fetch_wx();},[settings.cityId]);
+  const wt=wx?.d?.idWeatherType,wi=WEATHER_TYPE[wt]||{i:'🌡️',d:'—'};
+  const wc=wx?.d?.classWindSpeed;
+  const seaState=wc>=3?'Agitado 🔴':wc===2?'Moderado 🟡':'Calmo 🟢';
+
+  const contacts=[
+    {name:'INEM',tel:'112',icon:'🚑'},{name:'Capitania do Porto',tel:'213 910 900',icon:'⚓'},
+    {name:'ISN',tel:'217 633 000',icon:'🛟'},{name:'GNR',tel:'112',icon:'👮'},{name:'Bombeiros',tel:'117',icon:'🚒'},
+  ];
+
+  return(
+    <div className="flex-1 overflow-y-auto p-4 md:p-6">
+      <PillNav tabs={[['condicoes','🌊 Condições'],['contactos','📞 Contactos']]} active={sec} onChange={setSec}/>
+      {sec==='condicoes'&&(
+        <div className="fade-up">
+          <div className="flex items-center gap-2 mb-4">
+            <select value={settings.cityId}
+                    onChange={e=>{const id=Number(e.target.value);onSettings({...settings,cityId:id});fetch_wx(id);}}
+                    className="flex-1 text-sm" style={{color:'var(--txt)'}}>
+              {BEACH_CITIES.map(c=>(<option key={c.id} value={c.id}>{c.name}</option>))}
+            </select>
+            <button onClick={()=>fetch_wx()} className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={S.surf2}>
+              {loading?<Spinner/>:<span>↺</span>}
+            </button>
+          </div>
+          {wxErr&&<div className="rounded-xl p-3 mb-4 text-sm" style={S.err}>{wxErr}</div>}
+          {wx?.d&&(
+            <>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                {[
+                  [wi.i,wi.d,'Condição'],
+                  [`${wx.d.tMin}°–${wx.d.tMax}°`,'','Temperatura'],
+                  ['💨',`${WIND_CLASS[wc]||'—'} km/h`,'Vento '+(wx.d.predWindDir||'')],
+                  ['☀️',uv?`Índice ${uv.iUvMax}`:'—','UV Index'],
+                  ['🌧️',`${wx.d.precipitaProb}%`,'Precipitação'],
+                  ['🌊',seaState,'Mar (estimado)'],
+                ].map(([ico,val,lbl],i)=>(
+                  <Card key={i} className="p-3.5 text-center">
+                    <p className="text-2xl mb-1">{ico}</p>
+                    <p className="font-black text-sm leading-tight" style={{color:'var(--acc)'}}>{val||'—'}</p>
+                    <p className="text-xs mt-0.5" style={{color:'var(--muted)'}}>{lbl}</p>
+                  </Card>
+                ))}
+              </div>
+              <p className="text-xs mb-4" style={{color:'var(--muted)'}}>Previsão {wx.d.forecastDate} · {wx.name} · fonte IPMA</p>
+            </>
+          )}
+          {!wx?.d&&!loading&&!wxErr&&(
+            <div className="text-center py-8" style={{color:'var(--muted)'}}>
+              <p className="text-3xl mb-2">🌊</p>
+              <p className="text-sm">Clica ↺ para carregar a previsão</p>
+            </div>
+          )}
+          {warns.length>0&&(
+            <div>
+              <p className="text-xs uppercase tracking-widest mb-3" style={{color:'var(--muted)'}}>Avisos IPMA Ativos</p>
+              {warns.map((w,i)=>(
+                <Card key={i} className="p-3 mb-2">
+                  <div className="flex items-start gap-2">
+                    <span>⚠️</span>
+                    <div>
+                      <p className="text-xs font-bold" style={{color:'var(--warn)'}}>{w.awarenessTypeName||'Aviso meteorológico'}</p>
+                      <p className="text-xs mt-0.5" style={{color:'var(--muted)'}}>{w.idAreaAviso||''} · nível {w.awarenessLevelID||'?'}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      {sec==='contactos'&&(
+        <div className="fade-up">
+          <Card className="p-4 mb-4">
+            <p className="font-bold mb-3">📞 Contactos de Emergência</p>
+            {contacts.map(c=>(
+              <a key={c.name} href={`tel:${c.tel.replace(/\s/g,'')}`}
+                 className="flex items-center gap-3 py-3 border-b last:border-0 transition-opacity hover:opacity-75"
+                 style={{borderColor:'var(--brd)'}}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={S.surf2}>{c.icon}</div>
+                <div className="flex-1"><p className="text-sm font-semibold">{c.name}</p><p className="text-xs" style={{color:'var(--acc)'}}>{c.tel}</p></div>
+                <span style={{color:'var(--ok)'}}>📲</span>
+              </a>
+            ))}
+          </Card>
+          <Card className="p-4">
+            <p className="font-bold mb-4">⏱️ Metrónomo RCP</p>
+            <CPRMetronome/>
+          </Card>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── PERFIL TAB ────────────────────────────────────────────────────────────────
+
+function PerfilTab({profile,onUpdate}){
+  const [edit,setEdit]=useState(false);
+  const [form,setForm]=useState({name:profile.name||'',nsNum:profile.nsNum||'',location:profile.location||''});
+  const cur=getLevel(profile.pts),next=getNext(profile.pts);
+  function save(){onUpdate({...profile,...form});setEdit(false);}
+  const badges=[
+    {icon:'🎓',title:'Primeiro Quiz',  desc:'Completa o 1º quiz',         unlocked:profile.completedQuestions.length>0},
+    {icon:'🛟',title:'NS Profissional',desc:'Atingir 250 pontos',         unlocked:profile.pts>=250},
+    {icon:'⭐',title:'NS Coordenador', desc:'Atingir 600 pontos',         unlocked:profile.pts>=600},
+    {icon:'📚',title:'Estudioso',      desc:'Completar 3 módulos',        unlocked:profile.completedModules.length>=3},
+    {icon:'🔥',title:'Em Chama',       desc:'Streak de 3 no quiz',        unlocked:profile.pts>=50},
+    {icon:'🏆',title:'Formador NS',    desc:'Atingir 900 pontos',         unlocked:profile.pts>=900},
+  ];
+  return(
+    <div className="flex-1 overflow-y-auto p-4 md:p-6">
+      <Card className="p-5 mb-4">
+        <div className="flex items-center gap-4 mb-5">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black flex-shrink-0"
+               style={{background:'rgba(245,158,11,.15)',border:'2px solid rgba(245,158,11,.25)'}}>
+            {profile.name?profile.name[0].toUpperCase():'NS'}
+          </div>
+          <div className="flex-1 min-w-0">
+            {edit?(
+              <div className="space-y-2">
+                <input value={form.name}     onChange={e=>setForm(f=>({...f,name:e.target.value}))}     placeholder="Nome completo"/>
+                <input value={form.nsNum}    onChange={e=>setForm(f=>({...f,nsNum:e.target.value}))}    placeholder="Nº NS / Cédula"/>
+                <input value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value}))} placeholder="Posto / Praia"/>
+              </div>
+            ):(
+              <>
+                <p className="font-black text-lg leading-tight">{profile.name||'Nadador-Salvador'}</p>
+                {profile.nsNum&&<p className="text-sm" style={{color:'var(--muted)'}}>NS #{profile.nsNum}</p>}
+                {profile.location&&<p className="text-sm" style={{color:'var(--muted)'}}>📍 {profile.location}</p>}
+              </>
+            )}
+          </div>
+          <button onClick={edit?save:()=>setEdit(true)} className="px-3 py-2 rounded-xl text-xs font-bold flex-shrink-0" style={edit?S.acc:S.surf2}>
+            {edit?'Guardar':'Editar'}
+          </button>
+        </div>
+        <p className={`text-base font-black mb-2 ${cur.cls}`}>{cur.icon} {cur.label}</p>
+        <div className="w-full rounded-full h-2 overflow-hidden mb-1" style={{background:'var(--surf2)'}}>
+          <div className="h-full rounded-full" style={{width:`${next?((profile.pts-cur.minPts)/(next.minPts-cur.minPts))*100:100}%`,background:'linear-gradient(90deg,var(--acc),#fde68a)'}}/>
+        </div>
+        <p className="text-xs" style={{color:'var(--muted)'}}>{next?`${next.minPts-profile.pts} pts para ${next.label}`:'Nível máximo atingido!'}</p>
+      </Card>
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        {[['🏅',profile.pts,'Pontos'],['🧠',profile.completedQuestions.length,'Questões'],['📚',profile.completedModules.length,'Módulos']].map(([ico,v,l])=>(
+          <Card key={l} className="p-3 text-center">
+            <p className="text-2xl mb-1">{ico}</p>
+            <p className="text-2xl font-black" style={{color:'var(--acc)'}}>{v}</p>
+            <p className="text-xs" style={{color:'var(--muted)'}}>{l}</p>
+          </Card>
+        ))}
+      </div>
+      <p className="text-xs uppercase tracking-widest mb-3" style={{color:'var(--muted)'}}>Conquistas</p>
+      <div className="grid grid-cols-2 gap-2">
+        {badges.map((b,i)=>(
+          <Card key={i} className={`p-3 flex items-center gap-3 transition-opacity ${!b.unlocked?'opacity-35':''}`}>
+            <span className="text-2xl">{b.unlocked?b.icon:'🔒'}</span>
+            <div><p className="text-xs font-bold">{b.title}</p><p className="text-xs" style={{color:'var(--muted)'}}>{b.desc}</p></div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── DEFINIÇÕES TAB ────────────────────────────────────────────────────────────
+
+function DefinicoesTab({isDark,onTheme,settings,onSettings,onReset}){
+  return(
+    <div className="flex-1 overflow-y-auto p-4 md:p-6">
+      <Card className="p-5 mb-4">
+        <p className="font-bold mb-4">🎨 Aparência</p>
+        {[['Modo Escuro','Otimizado para leitura ao sol',true],['Modo Claro','Para ambientes fechados',false]].map(([label,desc,dark])=>(
+          <div key={label} className="flex items-center justify-between py-3 border-b last:border-0" style={{borderColor:'var(--brd)'}}>
+            <div><p className="text-sm font-semibold">{label}</p><p className="text-xs" style={{color:'var(--muted)'}}>{desc}</p></div>
+            <button onClick={()=>onTheme(dark)}
+                    className="w-12 h-6 rounded-full relative transition-colors flex-shrink-0 ml-4"
+                    style={{background:isDark===dark?'var(--acc)':'var(--surf2)'}}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-0.5 transition-all"
+                   style={{left:isDark===dark?'calc(100% - 1.375rem)':'2px'}}/>
+            </button>
+          </div>
+        ))}
+      </Card>
+      <Card className="p-5 mb-4">
+        <p className="font-bold mb-3">📍 Localização do Posto</p>
+        <select value={settings.cityId} onChange={e=>onSettings({...settings,cityId:Number(e.target.value)})} style={{color:'var(--txt)'}}>
+          {BEACH_CITIES.map(c=>(<option key={c.id} value={c.id}>{c.name}</option>))}
+        </select>
+        <p className="text-xs mt-2" style={{color:'var(--muted)'}}>Usada para a previsão meteorológica na aba Ferramentas</p>
+      </Card>
+      <Card className="p-5 mb-4">
+        <p className="font-bold mb-1">ℹ️ Sobre NS-PRO</p>
+        <p className="text-sm mt-1" style={{color:'var(--muted)'}}>Versão 1.0 · Aplicação de apoio ao Nadador-Salvador</p>
+        <p className="text-xs mt-2" style={{color:'var(--muted)'}}>Desenvolvido com ❤️ para a comunidade NS portuguesa</p>
+      </Card>
+      <button onClick={()=>{if(window.confirm('Apagar todos os dados de progresso? Esta ação não pode ser desfeita.'))onReset();}}
+              className="w-full py-3 rounded-xl font-bold text-sm" style={S.err}>
+        🗑️ Repor Dados de Progresso
+      </button>
+    </div>
+  );
+}
+
+// ── PLACEHOLDER ───────────────────────────────────────────────────────────────
+
+function Placeholder({icon,title,sub}){
+  return(
+    <div className="flex-1 flex flex-col items-center justify-center gap-4 px-6 text-center">
+      <div className="w-24 h-24 rounded-3xl flex items-center justify-center text-5xl" style={S.surf2}>{icon}</div>
+      <h2 className="text-xl font-bold">{title}</h2>
+      <p className="text-sm max-w-xs leading-relaxed" style={{color:'var(--muted)'}}>{sub}</p>
+      <span className="text-xs px-5 py-2 rounded-full" style={{...S.surf2,color:'var(--acc)'}}>Em Desenvolvimento</span>
+    </div>
+  );
+}
+
+// ── SIDEBAR (desktop) ─────────────────────────────────────────────────────────
+
+function Sidebar({active,onChange,profile}){
+  const cur=getLevel(profile.pts),next=getNext(profile.pts);
+  const pct=next?((profile.pts-cur.minPts)/(next.minPts-cur.minPts))*100:100;
+  return(
+    <aside className="hidden md:flex flex-col flex-shrink-0 border-r"
+           style={{width:'230px',background:'var(--side)',borderColor:'var(--brd)'}}>
+      <div className="px-6 py-7 border-b" style={{borderColor:'var(--brd)'}}>
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0"
+               style={{background:'rgba(245,158,11,.15)',border:'1.5px solid rgba(245,158,11,.3)'}}>🛟</div>
+          <div>
+            <p className="font-black text-xl leading-none">NS<span style={{color:'var(--acc)'}}>PRO</span></p>
+            <p className="text-xs mt-0.5" style={{color:'var(--muted)'}}>Nadador-Salvador</p>
+          </div>
+        </div>
+      </div>
+      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        {MAIN_TABS.map(t=>(
+          <button key={t.id} onClick={()=>onChange(t.id)}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all border"
+                  style={active===t.id
+                    ?{background:'rgba(245,158,11,.12)',borderColor:'rgba(245,158,11,.2)',color:'var(--acc)'}
+                    :{border:'1px solid transparent',color:'var(--muted)'}}>
+            <span className="text-xl w-7 text-center">{t.icon}</span>
+            <span className="text-sm font-semibold">{t.label}</span>
+            {active===t.id&&<span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:'var(--acc)'}}/>}
+          </button>
+        ))}
+        <div className="my-2 border-t" style={{borderColor:'var(--brd)'}}/>
+        {EXTRA_TABS.map(t=>(
+          <button key={t.id} onClick={()=>onChange(t.id)}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all border"
+                  style={active===t.id
+                    ?{background:'rgba(245,158,11,.12)',borderColor:'rgba(245,158,11,.2)',color:'var(--acc)'}
+                    :{border:'1px solid transparent',color:'var(--muted)'}}>
+            <span className="text-xl w-7 text-center">{t.icon}</span>
+            <span className="text-sm font-semibold">{t.label}</span>
+          </button>
+        ))}
+      </nav>
+      <div className="px-3 pb-5 pt-4 border-t" style={{borderColor:'var(--brd)'}}>
+        <div className="rounded-xl p-3.5 border" style={{...S.surf,borderColor:'var(--brd)'}}>
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base flex-shrink-0" style={S.surf2}>{cur.icon}</div>
+            <div className="flex-1 min-w-0">
+              <p className={`text-xs font-bold truncate ${cur.cls}`}>{cur.label}</p>
+              <p className="text-xs" style={{color:'var(--muted)'}}>{profile.pts} pts</p>
+            </div>
+          </div>
+          <div className="w-full rounded-full h-1.5 overflow-hidden" style={{background:'var(--surf2)'}}>
+            <div className="h-full rounded-full" style={{width:`${pct}%`,background:'var(--acc)'}}/>
+          </div>
+          {next&&<p className="text-xs mt-1.5 truncate" style={{color:'var(--muted)'}}>{next.minPts-profile.pts} pts → {next.label}</p>}
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+// ── APP ────────────────────────────────────────────────────────────────────────
+
+function App(){
+  const [tab,setTab]=useState('formacao');
+  const [profile,setProfile]=useState(loadProfile);
+  const [settings,setSettings]=useState(loadSettings);
+  const [isDark,setIsDark]=useState(()=>localStorage.getItem('nspro_theme')!=='light');
+
+  useEffect(()=>{
+    document.documentElement.classList.toggle('light',!isDark);
+    localStorage.setItem('nspro_theme',isDark?'dark':'light');
+  },[isDark]);
+
+  function updateProfile(p){setProfile(p);saveProfile(p);}
+  function updateSettings(s){setSettings(s);saveSettings(s);}
+  function resetProgress(){updateProfile({...profile,pts:0,completedModules:[],completedQuestions:[]});}
+
+  const cur=getLevel(profile.pts);
+  const tabMeta=[...MAIN_TABS,...EXTRA_TABS].find(t=>t.id===tab);
+
+  function renderContent(){
+    switch(tab){
+      case 'formacao':    return <FormacaoTab profile={profile} onUpdate={updateProfile}/>;
+      case 'manual':      return <ManualTab/>;
+      case 'operacional': return <OperacionalTab/>;
+      case 'ferramentas': return <FerramentasTab settings={settings} onSettings={updateSettings}/>;
+      case 'perfil':      return <PerfilTab profile={profile} onUpdate={updateProfile}/>;
+      case 'definicoes':  return <DefinicoesTab isDark={isDark} onTheme={setIsDark} settings={settings} onSettings={updateSettings} onReset={resetProgress}/>;
+      case 'videos':      return <Placeholder icon="🎬" title="Biblioteca de Vídeos" sub="Técnicas de salvamento, SBV e manutenção em vídeo. Em breve."/>;
+      default: return null;
+    }
+  }
+
+  return(
+    <div className="flex h-full" style={{background:'var(--bg)'}}>
+      <Sidebar active={tab} onChange={setTab} profile={profile}/>
+      <div className="flex flex-col flex-1 overflow-hidden min-w-0">
+        {/* Mobile header */}
+        <header className="md:hidden flex items-center justify-between px-4 flex-shrink-0 border-b"
+                style={{paddingTop:'max(2.5rem,env(safe-area-inset-top))',paddingBottom:'.75rem',
+                        borderColor:'var(--brd)',background:'var(--surf)'}}>
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🛟</span>
+            <span className="font-black text-xl">NS<span style={{color:'var(--acc)'}}>PRO</span></span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button onClick={()=>setTab('perfil')} className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={tab==='perfil'?S.acc:S.surf2}>👤</button>
+            <button onClick={()=>setTab('definicoes')} className="w-9 h-9 rounded-xl flex items-center justify-center"
+                    style={tab==='definicoes'?S.acc:S.surf2}>⚙️</button>
+          </div>
+        </header>
+        {/* Desktop topbar */}
+        <header className="hidden md:flex items-center px-6 py-3.5 flex-shrink-0 border-b"
+                style={{borderColor:'var(--brd)',background:'var(--surf)'}}>
+          <div className="flex items-center gap-2">
+            <span>{tabMeta?.icon}</span>
+            <h1 className="font-bold">{tabMeta?.label}</h1>
+          </div>
+          <div className="ml-auto flex items-center gap-3 rounded-xl px-4 py-2 border" style={S.surf2}>
+            <span>{cur.icon}</span>
+            <span className={`text-sm font-semibold ${cur.cls}`}>{cur.label}</span>
+            <span style={{color:'var(--brd)'}}>·</span>
+            <span className="text-sm font-black" style={{color:'var(--acc)'}}>{profile.pts} pts</span>
+          </div>
+        </header>
+        <main className="flex-1 overflow-hidden flex flex-col">{renderContent()}</main>
+        {/* Mobile bottom tabs */}
+        <nav className="md:hidden flex border-t flex-shrink-0"
+             style={{borderColor:'var(--brd)',background:'var(--surf)',paddingBottom:'env(safe-area-inset-bottom)'}}>
+          {MAIN_TABS.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)}
+                    className="flex-1 flex flex-col items-center py-2.5 transition-colors"
+                    style={tab===t.id?{color:'var(--acc)'}:{color:'var(--muted)'}}>
+              <span className="text-xl leading-none mb-0.5">{t.icon}</span>
+              <span className="font-medium" style={{fontSize:'.58rem'}}>{t.label}</span>
+              {tab===t.id&&<div className="w-4 h-0.5 rounded-full mt-1" style={{background:'var(--acc)'}}/>}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<script>
+  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
