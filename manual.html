@@ -169,7 +169,6 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
   <button class="tb-btn" onclick="zoomOut()" title="Diminuir (−)">−</button>
   <div class="tb-zoom-label" id="zoom-label">—</div>
   <button class="tb-btn" onclick="zoomIn()" title="Aumentar (+)">+</button>
-  <button class="tb-btn" onclick="fitWidth()" style="font-size:11px;width:auto;padding:0 9px;" title="Ajustar à largura (F)">Ajustar</button>
 
   <div class="tb-search">
     <span class="tb-search-ico">🔍</span>
@@ -227,6 +226,9 @@ async function init() {
 
     document.getElementById('page-total').textContent  = pdfDoc.numPages;
     document.getElementById('page-input').max          = pdfDoc.numPages;
+
+    // Wait one frame so the iframe container is fully sized
+    await new Promise(r => requestAnimationFrame(r));
 
     // Calculate fit-width scale before first render
     const firstPage = await pdfDoc.getPage(1);
@@ -375,6 +377,13 @@ document.addEventListener('keydown', e => {
   if (e.key === '+' || e.key === '=') zoomIn();
   if (e.key === '-') zoomOut();
   if (e.key === 'f' || e.key === 'F') fitWidth();
+});
+
+// Auto-fit on window resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(fitWidth, 200);
 });
 
 init();
