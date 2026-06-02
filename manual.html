@@ -174,7 +174,7 @@ html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;backgroun
     <span class="tb-search-ico">🔍</span>
     <input type="text" id="search-input" placeholder="Pesquisar no manual..."
            oninput="onSearchInput(this.value)"
-           onblur="setTimeout(()=>closeDropdown(),200)">
+           onblur="setTimeout(()=>closeDropdown(),300)">
     <div class="search-dropdown" id="search-dropdown"></div>
   </div>
 </div>
@@ -321,12 +321,34 @@ async function fitWidth() {
 
 /* ── TEXT INDEX ── */
 async function indexAll() {
+  const input = document.getElementById('search-input');
+  let totalChars = 0;
+
   for (let i = 1; i <= pdfDoc.numPages; i++) {
     try {
       const page = await pdfDoc.getPage(i);
       const tc   = await page.getTextContent();
-      pageTexts[i] = tc.items.map(x => x.str).join(' ');
+      const text = tc.items.map(x => x.str).filter(s => s.trim()).join(' ');
+      pageTexts[i] = text;
+      totalChars  += text.length;
     } catch(e) {}
+
+    // Update placeholder every 10 pages
+    if (i % 10 === 0 || i === pdfDoc.numPages) {
+      if (input && document.activeElement !== input)
+        input.placeholder = `A indexar... ${i}/${pdfDoc.numPages}`;
+    }
+  }
+
+  if (!input) return;
+
+  if (totalChars < 200) {
+    // PDF é digitalizado — sem texto extraível
+    input.placeholder = 'PDF digitalizado — pesquisa indisponível';
+    input.disabled    = true;
+    input.title       = 'Este PDF é uma imagem digitalizada. O PDF.js não consegue extrair texto de scans.';
+  } else {
+    input.placeholder = `Pesquisar no manual... (${pdfDoc.numPages} págs. indexadas)`;
   }
 }
 
@@ -354,7 +376,11 @@ function runSearch(q) {
 
   if (!res.length) {
     const indexed = Object.keys(pageTexts).length;
-    dd.innerHTML = `<div class="sr-empty">Sem resultados${indexed < (pdfDoc?.numPages||0) ? ` — indexadas ${indexed}/${pdfDoc.numPages} págs.` : '.'}</div>`;
+    const total   = pdfDoc?.numPages || 0;
+    const still   = indexed < total;
+    dd.innerHTML  = still
+      ? `<div class="sr-empty">A indexar... ${indexed}/${total} págs.<br><span style="font-size:11px;opacity:.6">Aguarda e pesquisa de novo.</span></div>`
+      : `<div class="sr-empty">Sem resultados para "<strong>${q}</strong>".</div>`;
   } else {
     dd.innerHTML = res.map(r => `
       <div class="sr-item" onclick="renderPage(${r.page});closeDropdown()">
