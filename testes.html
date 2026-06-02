@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Testes NS</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{font-family:'DM Sans',sans-serif;background:#061426;color:#fff;min-height:100%;}
@@ -22,7 +21,25 @@ html,body{font-family:'DM Sans',sans-serif;background:#061426;color:#fff;min-hei
 .tb-logout:hover{color:#fff;background:rgba(255,255,255,0.08);}
 .tb-login-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:7px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;}
 .tb-login-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
-.tb-login-btn svg{flex-shrink:0;}
+
+/* MODAL LOGIN */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:#0d1e32;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:28px 28px 24px;width:100%;max-width:380px;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin-bottom:4px;}
+.modal-sub{font-size:12px;color:rgba(255,255,255,0.38);margin-bottom:20px;}
+.modal-tabs{display:flex;gap:4px;margin-bottom:20px;}
+.modal-tab{flex:1;padding:7px;border-radius:6px;border:none;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.45);font-size:13px;font-weight:500;cursor:pointer;transition:all .14s;}
+.modal-tab.active{background:rgba(192,57,43,0.2);color:#fff;border:1px solid rgba(192,57,43,0.3);}
+.modal-field{margin-bottom:12px;}
+.modal-field label{display:block;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.modal-field input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:7px;padding:9px 12px;color:#fff;font-size:14px;outline:none;font-family:inherit;}
+.modal-field input:focus{border-color:rgba(192,57,43,0.5);}
+.modal-err{font-size:12px;color:#f1948a;margin-bottom:12px;min-height:16px;}
+.modal-submit{width:100%;padding:11px;border-radius:8px;border:none;background:#c0392b;color:#fff;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;}
+.modal-submit:hover{background:#a93226;}
+.modal-submit:disabled{opacity:0.5;cursor:not-allowed;}
+.modal-anon{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;}
+.modal-anon:hover{color:#fff;background:rgba(255,255,255,0.06);}
 
 /* SCREENS */
 .screen{display:none;}
@@ -137,6 +154,33 @@ circle{fill:none;stroke-width:8;}
 </head>
 <body>
 
+<!-- MODAL LOGIN -->
+<div class="modal-overlay hidden" id="modal-auth">
+  <div class="modal-box">
+    <div class="modal-title">NS Testes</div>
+    <div class="modal-sub">Guarda o teu progresso entre sessões</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">Entrar</button>
+      <button class="modal-tab" id="tab-reg" onclick="switchTab('reg')">Criar conta</button>
+    </div>
+    <div id="field-nome" class="modal-field hidden">
+      <label>Nome</label>
+      <input type="text" id="inp-nome" placeholder="O teu nome" autocomplete="name">
+    </div>
+    <div class="modal-field">
+      <label>Email</label>
+      <input type="email" id="inp-email" placeholder="email@exemplo.com" autocomplete="email">
+    </div>
+    <div class="modal-field">
+      <label>Password</label>
+      <input type="password" id="inp-pass" placeholder="Mínimo 6 caracteres" autocomplete="current-password">
+    </div>
+    <div class="modal-err" id="modal-err"></div>
+    <button class="modal-submit" id="modal-submit" onclick="submitAuth()">Entrar</button>
+    <button class="modal-anon" onclick="closeModal()">Continuar sem conta (progresso não guardado)</button>
+  </div>
+</div>
+
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="tb-brand"><span>NS</span> Testes</div>
@@ -229,9 +273,8 @@ circle{fill:none;stroke-width:8;}
 
 <script>
 // ── CONFIG ──
-const SB_URL = 'https://tzleanbmyanpkbqueovy.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6bGVhbmJteWFucGticXVlb3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0Mjg0ODIsImV4cCI6MjA5NjAwNDQ4Mn0.-_nXcqTvRuX1Dvi9FgmRFMtMCxUfpra6C6GYauv5ArM';
 const LS_KEY = 'ns_quiz_v1';
+const API    = 'api.php'; // mesmo directório no VPS
 
 // ── QUESTION DATA ──
 const CHAPTERS = {
@@ -377,52 +420,115 @@ function rLabel(p){ if(p===null) return '—'; if(p<40) return '🔴 Iniciante';
 function rColor(p){ if(p===null) return '#333'; if(p<40) return '#e74c3c'; if(p<65) return '#f39c12'; if(p<85) return '#58d68d'; return '#f1c40f'; }
 
 // ── AUTH ──
-function initSupabase(){
-  sb = window.supabase.createClient(SB_URL, SB_KEY);
-  sb.auth.onAuthStateChange((event, session)=>{
-    currentUser = session?.user || null;
-    updateAuthUI();
-  });
+let modalMode = 'login';
+
+async function apiCall(action, data={}) {
+  try {
+    const body = new URLSearchParams({action, ...data});
+    const res  = await fetch(API, {method:'POST', credentials:'include', body});
+    return res.json();
+  } catch(e) { return {ok:false, error:'Sem ligação ao servidor.'}; }
 }
 
-function updateAuthUI(){
-  const area = document.getElementById('auth-area');
-  if(currentUser){
-    const name = currentUser.user_metadata?.full_name || currentUser.email || 'Utilizador';
-    const initial = name[0].toUpperCase();
-    area.innerHTML = `<div class="tb-user"><div class="tb-avatar">${initial}</div><div class="tb-name">${name.split(' ')[0]}</div><button class="tb-logout" onclick="doLogout()">Sair</button></div>`;
+async function initAuth() {
+  const r = await apiCall('sessao');
+  if(r.ok && r.data.id) {
+    currentUser = {id: r.data.id, nome: r.data.nome};
+    updateAuthUI();
+    await loadServerStats();
   } else {
-    area.innerHTML = `<button class="tb-login-btn" onclick="doLogin()"><svg width="14" height="14" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>Entrar com Google</button>`;
+    updateAuthUI();
+    document.getElementById('modal-auth').classList.remove('hidden');
   }
 }
 
-async function doLogin(){
-  if(!sb) return;
-  const { data, error } = await sb.auth.signInWithOAuth({
-    provider:'google',
-    options:{ redirectTo:'https://bernardocmcruz-ctrl.github.io/NS-Formacao/auth.html', skipBrowserRedirect:true }
-  });
-  if(data?.url) (window.top||window).location.href = data.url;
-}
-async function doLogout(){
-  await sb.auth.signOut();
+function updateAuthUI() {
+  const area = document.getElementById('auth-area');
+  if(currentUser) {
+    const initial = currentUser.nome[0].toUpperCase();
+    area.innerHTML = `<div class="tb-user"><div class="tb-avatar">${initial}</div><div class="tb-name">${currentUser.nome.split(' ')[0]}</div><button class="tb-logout" onclick="doLogout()">Sair</button></div>`;
+  } else {
+    area.innerHTML = `<button class="tb-login-btn" onclick="openModal()">Entrar</button>`;
+  }
 }
 
-// ── SUPABASE SAVE (background, silent) ──
+function openModal() {
+  switchTab('login');
+  document.getElementById('modal-auth').classList.remove('hidden');
+}
+function closeModal() {
+  document.getElementById('modal-auth').classList.add('hidden');
+}
+function switchTab(t) {
+  modalMode = t;
+  document.getElementById('tab-login').classList.toggle('active', t==='login');
+  document.getElementById('tab-reg').classList.toggle('active', t==='reg');
+  document.getElementById('field-nome').classList.toggle('hidden', t==='login');
+  document.getElementById('modal-submit').textContent = t==='login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('modal-err').textContent = '';
+}
+async function submitAuth() {
+  const btn   = document.getElementById('modal-submit');
+  const errEl = document.getElementById('modal-err');
+  const email = document.getElementById('inp-email').value.trim();
+  const pass  = document.getElementById('inp-pass').value;
+  const nome  = document.getElementById('inp-nome').value.trim();
+
+  errEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  const data = modalMode==='login'
+    ? {email, password: pass}
+    : {nome, email, password: pass};
+  const r = await apiCall(modalMode==='login' ? 'login' : 'registar', data);
+
+  btn.disabled = false;
+  btn.textContent = modalMode==='login' ? 'Entrar' : 'Criar conta';
+
+  if(!r.ok) { errEl.textContent = r.error; return; }
+
+  currentUser = {id: r.data.id, nome: r.data.nome};
+  updateAuthUI();
+  closeModal();
+  await loadServerStats();
+  renderDash();
+}
+
+async function doLogout() {
+  await apiCall('logout');
+  currentUser = null;
+  updateAuthUI();
+  renderDash();
+}
+
+// ── SINCRONIZAÇÃO COM O SERVIDOR ──
+async function loadServerStats() {
+  const r = await apiCall('carregar_stats');
+  if(!r.ok) return;
+  const d = getLS();
+  // Mescla sessões do servidor no localStorage
+  for(const s of r.data.sessoes) {
+    d.sessions.push({ch:s.capitulo, mode:s.modo, score:s.score, total:s.total,
+      earnedPts:s.earned_pts, totalPts:s.total_pts, pct:s.pct, ts:+s.ts, dur:s.duracao});
+  }
+  // Mescla stats de perguntas
+  for(const p of r.data.perguntas) {
+    if(!d.qstats[p.pergunta_id]) d.qstats[p.pergunta_id]={c:0,w:0};
+    d.qstats[p.pergunta_id].c = Math.max(d.qstats[p.pergunta_id].c, p.corretas);
+    d.qstats[p.pergunta_id].w = Math.max(d.qstats[p.pergunta_id].w, p.erradas);
+  }
+  saveLS(d);
+}
+
+// ── GUARDAR NO SERVIDOR (background) ──
 async function sbSaveSession(chId, mode, score, total, dur){
-  if(!currentUser||!sb) return;
-  try{ await sb.from('quiz_sessions').insert({user_id:currentUser.id,chapter_id:chId,mode,score,total,duration_seconds:dur}); }catch(e){}
+  if(!currentUser) return;
+  apiCall('guardar_sessao',{capitulo:chId, modo:mode, score, total, pct:Math.round(score/total*100), duracao:dur});
 }
 async function sbSaveQStat(qid, correct){
-  if(!currentUser||!sb) return;
-  try{
-    const {data} = await sb.from('question_stats').select('id,correct_count,wrong_count').eq('user_id',currentUser.id).eq('question_id',qid).maybeSingle();
-    if(data){
-      await sb.from('question_stats').update({correct_count:data.correct_count+(correct?1:0),wrong_count:data.wrong_count+(correct?0:1),last_seen:new Date().toISOString()}).eq('id',data.id);
-    } else {
-      await sb.from('question_stats').insert({user_id:currentUser.id,question_id:qid,correct_count:correct?1:0,wrong_count:correct?0:1});
-    }
-  }catch(e){}
+  if(!currentUser) return;
+  apiCall('guardar_pergunta',{pergunta_id:qid, correct: correct?1:0});
 }
 
 // ── DASHBOARD ──
@@ -633,8 +739,8 @@ function goHome(){
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded',()=>{
-  initSupabase();
   renderDash();
+  initAuth();
 });
 </script>
 </body>
