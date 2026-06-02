@@ -130,12 +130,12 @@ iframe{
     <button class="tab" onclick="switchTab('manual', this)">
       <span class="tab-icon">📖</span>
       Manual NS
-      <span class="tab-badge">Em breve</span>
+      <span class="tab-badge">PDF interativo</span>
     </button>
     <button class="tab" onclick="switchTab('testes', this)">
       <span class="tab-icon">✏️</span>
       Testes
-      <span class="tab-badge">Em breve</span>
+      <span class="tab-badge">79 perguntas</span>
     </button>
   </div>
 </nav>
@@ -149,22 +149,12 @@ iframe{
 
   <!-- MANUAL -->
   <div class="page" id="page-manual">
-    <div class="soon">
-      <div class="soon-icon">📖</div>
-      <div class="pill">Em construção</div>
-      <h2>Manual Técnico NS</h2>
-      <p>O manual completo em formato dinâmico e interativo está a ser desenvolvido. Envia o PDF do manual para começarmos.</p>
-    </div>
+    <iframe src="manual.html" id="frame-manual"></iframe>
   </div>
 
   <!-- TESTES -->
   <div class="page" id="page-testes">
-    <div class="soon">
-      <div class="soon-icon">✏️</div>
-      <div class="pill">Em construção</div>
-      <h2>Testes e Simulações</h2>
-      <p>A secção de testes com os formulários do professor estilo "Bom Condutor" está a ser desenvolvida. Envia as perguntas para começarmos.</p>
-    </div>
+    <iframe src="testes.html" id="frame-testes"></iframe>
   </div>
 
 </div>
