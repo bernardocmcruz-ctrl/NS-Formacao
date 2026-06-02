@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nadador-Salvador</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;}
+body{background:linear-gradient(155deg,#0a2744 0%,#0a3d62 45%,#0e4f7a 75%,#155a8a 100%);}
+
+/* TOP NAV */
+.topnav{
+  position:fixed;top:0;left:0;right:0;
+  height:56px;
+  background:rgba(6,20,38,0.97);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;
+  z-index:200;
+  padding:0 24px;
+  gap:0;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  margin-right:32px;flex-shrink:0;
+}
+.brand-icon{
+  width:32px;height:32px;
+  background:#c0392b;
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.brand-text{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:1px;color:#fff;
+  line-height:1;
+}
+.brand-text span{
+  display:block;font-family:'DM Sans',sans-serif;
+  font-size:9px;font-weight:400;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,255,255,0.35);
+  margin-top:2px;
+}
+.tabs{display:flex;gap:4px;align-items:center;}
+.tab{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;font-weight:500;
+  color:rgba(255,255,255,0.5);
+  border:none;background:transparent;
+  transition:all .18s;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.tab:hover{background:rgba(255,255,255,0.06);color:#fff;}
+.tab.active{background:rgba(192,57,43,0.18);color:#fff;border:1px solid rgba(192,57,43,0.3);}
+.tab .tab-icon{font-size:16px;}
+.tab .tab-badge{
+  font-size:9px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:2px 6px;
+  border-radius:3px;
+  background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.4);
+}
+.tab.active .tab-badge{background:rgba(192,57,43,0.3);color:#f1948a;}
+
+/* CONTENT */
+.content{
+  position:fixed;
+  top:56px;left:0;right:0;bottom:0;
+}
+.page{
+  display:none;
+  width:100%;height:100%;
+}
+.page.active{display:block;}
+iframe{
+  width:100%;height:100%;
+  border:none;
+}
+
+/* COMING SOON */
+.soon{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  height:100%;
+  color:#fff;gap:16px;
+  text-align:center;padding:40px;
+}
+.soon-icon{font-size:56px;opacity:0.4;}
+.soon h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;letter-spacing:2px;
+  color:rgba(255,255,255,0.8);
+}
+.soon p{font-size:14px;color:rgba(255,255,255,0.4);max-width:380px;line-height:1.7;}
+.soon .pill{
+  display:inline-block;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  background:rgba(192,57,43,0.2);
+  color:#f1948a;
+  border:1px solid rgba(192,57,43,0.3);
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">
+    <div class="brand-icon">🛟</div>
+    <div class="brand-text">
+      Nadador-Salvador
+      <span>Plataforma de Estudo</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('formacao', this)">
+      <span class="tab-icon">📚</span>
+      Formação
+      <span class="tab-badge">28 módulos</span>
+    </button>
+    <button class="tab" onclick="switchTab('manual', this)">
+      <span class="tab-icon">📖</span>
+      Manual NS
+      <span class="tab-badge">Em breve</span>
+    </button>
+    <button class="tab" onclick="switchTab('testes', this)">
+      <span class="tab-icon">✏️</span>
+      Testes
+      <span class="tab-badge">Em breve</span>
+    </button>
+  </div>
+</nav>
+
+<div class="content">
+
+  <!-- FORMAÇÃO -->
+  <div class="page active" id="page-formacao">
+    <iframe src="NS-estudo.html" id="frame-formacao"></iframe>
+  </div>
+
+  <!-- MANUAL -->
+  <div class="page" id="page-manual">
+    <div class="soon">
+      <div class="soon-icon">📖</div>
+      <div class="pill">Em construção</div>
+      <h2>Manual Técnico NS</h2>
+      <p>O manual completo em formato dinâmico e interativo está a ser desenvolvido. Envia o PDF do manual para começarmos.</p>
+    </div>
+  </div>
+
+  <!-- TESTES -->
+  <div class="page" id="page-testes">
+    <div class="soon">
+      <div class="soon-icon">✏️</div>
+      <div class="pill">Em construção</div>
+      <h2>Testes e Simulações</h2>
+      <p>A secção de testes com os formulários do professor estilo "Bom Condutor" está a ser desenvolvida. Envia as perguntas para começarmos.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(id, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testes — Nadador-Salvador</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(155deg,#0a2744 0%,#0a3d62 45%,#0e4f7a 75%,#155a8a 100%);color:#fff;min-height:100vh;}
+
+/* HOME */
+.home{max-width:760px;margin:0 auto;padding:48px 24px;}
+.home-header{text-align:center;margin-bottom:40px;}
+.home-header .badge{display:inline-block;background:#c0392b;color:#fff;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:3px;margin-bottom:12px;}
+.home-header h1{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px;color:#fff;line-height:1;}
+.home-header p{font-size:14px;color:rgba(255,255,255,0.5);margin-top:10px;line-height:1.7;}
+
+.tests-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:32px;}
+.test-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:12px;padding:20px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.test-card:hover{background:rgba(255,255,255,0.11);border-color:rgba(255,255,255,0.22);transform:translateY(-2px);}
+.test-card.locked{opacity:0.5;cursor:not-allowed;}
+.test-card.locked:hover{transform:none;}
+.test-card .tc-cap{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.test-card h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.5px;color:#fff;margin-bottom:6px;}
+.test-card p{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;}
+.test-card .tc-meta{display:flex;gap:8px;margin-top:12px;align-items:center;}
+.test-card .tc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(192,57,43,0.2);color:#f1948a;}
+.test-card .tc-badge.green{background:rgba(88,214,141,0.15);color:#82e0aa;}
+.test-card .tc-badge.blue{background:rgba(93,173,226,0.15);color:#85c1e9;}
+.test-card .tc-badge.locked-b{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.3);}
+.tc-lock{position:absolute;top:14px;right:14px;font-size:18px;opacity:0.4;}
+
+/* QUIZ */
+.quiz-wrap{max-width:680px;margin:0 auto;padding:32px 24px 60px;}
+.q-back{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.5);cursor:pointer;margin-bottom:24px;border:none;background:none;padding:0;}
+.q-back:hover{color:#fff;}
+.q-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:#fff;margin-bottom:6px;}
+.q-sub{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:24px;}
+
+.q-progress{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.q-bar{flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+.q-fill{height:100%;background:#c0392b;border-radius:2px;transition:width .3s;}
+.q-counter{font-size:12px;color:rgba(255,255,255,0.4);white-space:nowrap;}
+
+.q-num{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.q-text{font-size:16px;font-weight:500;color:#fff;margin-bottom:20px;line-height:1.6;}
+.q-pts{font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;}
+
+.opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.opt{padding:13px 16px;border:1px solid rgba(255,255,255,0.13);border-radius:10px;cursor:pointer;font-size:14px;color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.05);text-align:left;transition:all .15s;line-height:1.4;}
+.opt:hover:not(:disabled){background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.22);}
+.opt.correct{background:rgba(88,214,141,0.15);border-color:rgba(88,214,141,0.4);color:#82e0aa;}
+.opt.wrong{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.4);color:#f1948a;}
+.opt.show-correct{background:rgba(88,214,141,0.1);border-color:rgba(88,214,141,0.3);color:#82e0aa;}
+.opt:disabled{cursor:default;}
+
+.q-feedback{padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.6;margin-bottom:16px;display:none;}
+.q-feedback.ok{background:rgba(88,214,141,0.12);border:1px solid rgba(88,214,141,0.3);color:#82e0aa;}
+.q-feedback.err{background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:#f1948a;}
+
+.q-next{padding:11px 24px;border-radius:8px;border:none;background:#c0392b;color:#fff;font-size:14px;font-weight:500;cursor:pointer;display:none;}
+.q-next:hover{background:#a93226;}
+
+/* RESULTS */
+.results{text-align:center;padding:40px 0;}
+.r-score{font-family:'Bebas Neue',sans-serif;font-size:72px;color:#c0392b;line-height:1;}
+.r-total{font-size:20px;color:rgba(255,255,255,0.4);margin-bottom:8px;}
+.r-msg{font-size:16px;color:rgba(255,255,255,0.6);margin-bottom:32px;}
+.r-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:32px;text-align:left;}
+.r-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;}
+.r-item-label{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;}
+.r-item-val{font-size:18px;font-weight:500;color:#fff;}
+.r-btns{display:flex;gap:10px;justify-content:center;}
+.btn{padding:11px 24px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:#fff;}
+.btn:hover{background:rgba(255,255,255,0.12);}
+.btn-primary{background:#c0392b;border-color:#c0392b;}
+.btn-primary:hover{background:#a93226;}
+
+.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home">
+  <div class="home">
+    <div class="home-header">
+      <div class="badge">Testes de Treino</div>
+      <h1>SIMULAÇÃO DE EXAMES</h1>
+      <p>Testes com as perguntas dos formulários do professor. Escolhe um capítulo para treinar.</p>
+    </div>
+
+    <div class="tests-grid" id="tests-grid">
+
+      <div class="test-card" onclick="startTest('c3')">
+        <div class="tc-cap">Capítulo 3</div>
+        <h3>O Afogamento</h3>
+        <p>Definição, fases, classificação por graus, temperatura da água.</p>
+        <div class="tc-meta">
+          <span class="tc-badge green">19 perguntas</span>
+          <span class="tc-badge blue">disponível</span>
+        </div>
+      </div>
+
+      <div class="test-card" onclick="startTest('c4')">
+        <div class="tc-cap">Capítulo 4</div>
+        <h3>Praias</h3>
+        <p>Ondas, correntes, marés, material e sinalética.</p>
+        <div class="tc-meta">
+          <span class="tc-badge green">31 perguntas</span>
+          <span class="tc-badge blue">disponível</span>
+        </div>
+      </div>
+
+      <div class="test-card" onclick="startTest('c6')">
+        <div class="tc-cap">Capítulo 6</div>
+        <h3>O Salvamento</h3>
+        <p>Fases, náufragos, técnicas, meios e sinalética.</p>
+        <div class="tc-meta">
+          <span class="tc-badge green">29 perguntas</span>
+          <span class="tc-badge blue">disponível</span>
+        </div>
+      </div>
+
+      <div class="test-card locked">
+        <div class="tc-lock">🔒</div>
+        <div class="tc-cap">Capítulo 1/2</div>
+        <h3>ISN e NS</h3>
+        <p>Aguarda as perguntas do professor.</p>
+        <div class="tc-meta">
+          <span class="tc-badge locked-b">em breve</span>
+        </div>
+      </div>
+
+      <div class="test-card locked">
+        <div class="tc-lock">🔒</div>
+        <div class="tc-cap">Capítulo 7</div>
+        <h3>Socorro ao Náufrago</h3>
+        <p>Aguarda as perguntas do professor.</p>
+        <div class="tc-meta">
+          <span class="tc-badge locked-b">em breve</span>
+        </div>
+      </div>
+
+      <div class="test-card locked">
+        <div class="tc-lock">🔒</div>
+        <div class="tc-cap">Capítulo 8</div>
+        <h3>Acidentes Frequentes</h3>
+        <p>Aguarda as perguntas do professor.</p>
+        <div class="tc-meta">
+          <span class="tc-badge locked-b">em breve</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="hidden">
+  <div class="quiz-wrap">
+    <button class="q-back" onclick="goHome()">← Voltar aos testes</button>
+    <div class="q-title" id="q-title"></div>
+    <div class="q-sub" id="q-sub"></div>
+    <div class="q-progress">
+      <div class="q-bar"><div class="q-fill" id="q-fill" style="width:0%"></div></div>
+      <div class="q-counter" id="q-counter"></div>
+    </div>
+    <div id="quiz-area">
+      <div class="q-num" id="q-num"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-pts" id="q-pts"></div>
+      <div class="opts" id="opts"></div>
+      <div class="q-feedback" id="q-feedback"></div>
+      <button class="q-next" id="q-next" onclick="nextQ()">Próxima pergunta →</button>
+    </div>
+    <div id="results" class="results hidden">
+      <div class="r-score" id="r-score"></div>
+      <div class="r-total" id="r-total"></div>
+      <div class="r-msg" id="r-msg"></div>
+      <div class="r-breakdown" id="r-breakdown"></div>
+      <div class="r-btns">
+        <button class="btn" onclick="goHome()">Escolher outro teste</button>
+        <button class="btn btn-primary" onclick="restartTest()">Repetir este teste</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tests = {
+  c3: {
+    title: "Capítulo 3 — O Afogamento",
+    sub: "19 perguntas · Formulário do Professor",
+    questions: [
+      {q:"O que é o Afogamento?",pts:5,opts:["É o processo que resulta em insuficiência respiratória por imersão ou submersão em meio líquido","É o processo que resulta em insuficiência cardíaca por imersão ou submersão em meio líquido","É o processo que resulta em insuficiência cerebral por imersão ou submersão em meio líquido","É o processo que resulta em insuficiência cardio-celular por imersão ou submersão em meio líquido"],c:0,exp:"O afogamento é o processo que resulta em insuficiência respiratória primária por imersão ou submersão em meio líquido (OMS, 2002)."},
+      {q:"Quais são as consequências do afogamento?",pts:6,opts:["Morte, rigidez e ausência de rigidez","Morte, óbito e ausência de morte","Morte, morbidez e ausência de morbidez","Apneia voluntária, aspiração do líquido, apneia terminal e espasmo glótico"],c:2,exp:"As consequências do afogamento são: morte (imediata ou após ressuscitação), morbidez (sobrevivência com lesão permanente) e ausência de morbidez (sobrevivência sem lesão)."},
+      {q:"O organismo humano consegue sobreviver em situações adversas extremas e meios inóspitos, até cerca de?",pts:5,opts:["5 minutos sem oxigénio","5 minutos sem proteção e abrigo","3 minutos sem oxigénio e 3 horas sem proteção e abrigo","3 minutos sem oxigénio e 3 dias sem comida"],c:2,exp:"3 minutos sem oxigénio · 3 horas sem proteção e abrigo · 3 dias sem água · 3 semanas sem comida."},
+      {q:"A hipóxia ocorre devido a:",pts:5,opts:["Oxigénio a mais no cérebro","Falta de sangue no cérebro","Diminuição de oxigénio no sangue","Oxigénio a mais no sangue"],c:2,exp:"A hipóxia é a diminuição de oxigénio no sangue/tecidos. A anóxia é a ausência total de oxigénio."},
+      {q:"Quais são as fases que caracterizam o afogamento?",pts:5,opts:["Apneia voluntária, aspiração inicial de líquido, apneia terminal e espasmo glótico","É a apneia involuntária, aspiração inicial, apneia e espasmo glótico","É a entrada de água nos pulmões, paragem do coração e falência cerebral","É a apneia voluntária, aspiração final de líquido e espasmo pulmonar"],c:0,exp:"As 4 fases são: Apneia voluntária → Aspiração inicial de líquido → Apneia terminal → Espasmo glótico (variável)."},
+      {q:"Em que fase do afogamento a vítima encontra-se em pânico total e luta com todas as forças para se manter à superfície, esta etapa pode durar entre 10 a 60 segundos?",pts:5,opts:["Apneia voluntária","Aspiração inicial de líquido","Espasmo glótico","Todas as respostas estão corretas"],c:0,exp:"A apneia voluntária é a 1ª fase — pânico total, luta para se manter à superfície, dura 10–60 segundos."},
+      {q:"A vítima começa a perder as forças, existe aspiração de maior quantidade de líquido podendo ocorrer um laringospasmo. Qual a fase que pode durar entre 60 a 90 segundos?",pts:6,opts:["Apneia terminal","Espasmo glótico","Aspiração inicial de líquido","Apneia voluntária"],c:2,exp:"A aspiração inicial de líquido é a 2ª fase — 60 a 90 segundos."},
+      {q:"Em que fase do afogamento acontece a inconsciência da vítima? (Há água nos pulmões e estômago, podendo haver relaxamento dos esfíncteres)?",pts:5,opts:["Apneia voluntária","Espasmo glótico","Apneia terminal","Aspiração inicial do líquido"],c:2,exp:"A apneia terminal é a 3ª fase — inconsciência, água nos pulmões, possível relaxamento dos esfíncteres. Dura 90 segundos a 3 minutos."},
+      {q:"Em que fase do afogamento a vítima não faz qualquer tipo de movimento e continua a fazer grandes aspirações de água para o pulmão?",pts:5,opts:["Aspiração inicial de líquido","Apneia voluntária","Espasmo glótico","Apneia terminal"],c:2,exp:"O espasmo glótico é a 4ª fase — vítima não faz qualquer movimento, grandes aspirações, PCR iminente."},
+      {q:"Em que fase do afogamento a vítima não faz qualquer tipo de movimento?",pts:5,opts:["Apneia voluntária","Aspiração inicial de líquido","Espasmo glótico","Todas as respostas estão corretas"],c:2,exp:"No espasmo glótico a vítima não faz qualquer tipo de movimento."},
+      {q:"Na classificação do afogamento qual o grau em que a sintomatologia da vítima se encontra sem tosse, nem espuma na boca/nariz, nem dificuldades na respiração, nem paragem respiratória nem PCR?",pts:5,opts:["Grau 1","Grau 2","Resgate aquático","Grau 4"],c:2,exp:"O Resgate Aquático é quando não há tosse, nem espuma, nem dificuldade respiratória, nem PCR. Procedimento: avaliar e dispensar no local."},
+      {q:"Quais os sintomas de um náufrago afogado em grau 2?",pts:5,opts:["Pouca espuma na boca e/ou nariz","Pouca espuma na boca","Muita espuma na boca e/ou nariz","Muita espuma na boca"],c:0,exp:"Grau 2: pouca espuma na boca e/ou nariz. Procedimento: O₂ nasal 5L/min, aquecimento, observação hospitalar 6–24h."},
+      {q:"Quais os sintomas de um náufrago afogado em grau 4?",pts:5,opts:["Pouca espuma na boca e/ou nariz","Pouca espuma na boca","Muita espuma na boca e/ou nariz sem pulso periférico palpável","Muita espuma na boca e/ou nariz com pulso periférico palpável"],c:2,exp:"Grau 4: muita espuma na boca e/ou nariz SEM pulso periférico palpável."},
+      {q:"Na classificação de afogamento grau 3, como se apresenta o náufrago e quais os procedimentos a tomar?",pts:5,opts:["Pouca espuma na boca e/ou nariz, administrar O₂ a 15 Litros/min, PLS e aquecimento corporal","Muita espuma na boca e/ou nariz com pulso periférico palpável, administrar O₂ a 15 Litros/min no local, PLS e internamento hospitalar","Pouca espuma na boca e/ou nariz; administrar O₂ nasal a 5 Litros/min, aquecimento corporal, repouso, tranquilização e observação hospitalar","Muita espuma na boca e/ou nariz sem pulso periférico palpável, administrar O₂ a 15 Litros/min no local, PLS e internamento hospitalar"],c:1,exp:"Grau 3: muita espuma COM pulso periférico palpável. O₂ máscara 15L/min, PLS, internamento UCI."},
+      {q:"Na classificação do afogamento em que grau a vítima se encontra em paragem cardiorrespiratória (PCR)?",pts:6,opts:["Grau 5","Grau 1 e grau 2","Grau 4","Grau 6"],c:3,exp:"Grau 6: paragem cardiorrespiratória (PCR). Procedimento: RCP 2 ventilações + 30 compressões."},
+      {q:"Quais os perigos associados à temperatura da água?",pts:6,opts:["Hidrocussão e Hipertermia","Hipotermia e paragem digestiva","Hipotermia e Hidrocussão","Todas as respostas anteriores estão certas"],c:2,exp:"Os perigos associados à temperatura da água são a Hipotermia e a Hidrocussão (síndrome de imersão)."},
+      {q:"Que nome se dá a um acidente provocado pela súbita exposição à água com a temperatura 5°C abaixo da temperatura corporal?",pts:6,opts:["Hipotermia ou hidrocussão","Hipotermia ou síndrome de imersão","Hidrocussão ou síndrome de imersão","Hipotermia moderada ou hidrocussão"],c:2,exp:"Hidrocussão ou síndrome de imersão — choque termodiferencial por exposição súbita a água 5ºC abaixo da temperatura corporal."},
+      {q:"A hipotermia ocorre quando a temperatura corporal baixa para além dos?",pts:5,opts:["35°C","32°C","38°C","Limites"],c:0,exp:"A hipotermia ocorre quando a temperatura corporal baixa para além dos 35ºC. Abaixo de 32ºC pode ser fatal."},
+      {q:"Qual é o tempo médio de sobrevivência de um náufrago, exposto a uma temperatura da água de 21°C?",pts:5,opts:["24 horas","48 horas","2 a 3 dias","Nunca mais de 2 dias"],c:0,exp:"Segundo a Tabela de Jolly, a 21ºC a sobrevivência média é de 24 horas."}
+    ]
+  },
+  c4: {
+    title: "Capítulo 4 — Praias",
+    sub: "31 perguntas · Formulário do Professor",
+    questions: [
+      {q:"Nos casos em que a frente de praia tem uma extensão igual ou superior a 100 metros, é obrigatório manter quantos Nadadores-Salvadores (NS)?",pts:4,opts:["Obrigatório manter um NS por cada 50 metros","Obrigatório manter dois NS por cada 50 metros","Obrigatório manter um NS por cada 25 metros","Nenhumas destas respostas estão corretas"],c:0,exp:"Se a frente de praia ≥100m, é obrigatório 1 NS por cada 50 metros."},
+      {q:"Ao período de acalmia entre cada set, dá-se o nome de?",pts:4,opts:["Mar chão","Correntes de maré","Sota","Correntes de mar"],c:2,exp:"Sota é o período de acalmia entre cada set (mar total)."},
+      {q:"De quem é a responsabilidade de içar a bandeira, conforme a avaliação do estado do mar, condições ambientais e/ou por determinação da Autoridade Marítima Nacional (AMN)?",pts:3,opts:["Nadador-Salvador","Concessionário","Banhista","Todas as respostas estão corretas"],c:0,exp:"É da responsabilidade do Nadador-Salvador içar a bandeira correta conforme as condições do mar e/ou determinação da AMN."},
+      {q:"Para delimitar a área de banhos, deverão ser colocadas próximo da linha de água e de forma visível duas bandeirolas. Quais as cores destas?",pts:4,opts:["Amarela e Laranja","Vermelha e Amarela","Xadrez de Preto e Branco","Verde e Amarela"],c:3,exp:"As bandeirolas de zona de banhos são de cor amarela (duas bandeirolas amarelas)."},
+      {q:"Quais os sinais chaves que são indicadores de estar na presença de uma 'rip current', agueiro ou golas?",pts:3,opts:["Ondas maiores e mais frequentes nos dois lados desta corrente","Tremura da Água no agueiro, quando à sua volta é lisa","Cor da água acastanhada devido ao arrastamento da areia do fundo","Todas as respostas estão corretas"],c:3,exp:"Todos são indicadores de um agueiro: ondas maiores nos lados, tremura da água, cor acastanhada."},
+      {q:"De quem é a responsabilidade da aquisição dos materiais e equipamentos destinados à assistência a banhistas numa zona de apoio balnear (ZAB)?",pts:3,opts:["Da Autoridade Marítima","Do Nadador Salvador","Do Instituto de Socorros a Náufragos","Do Concessionário"],c:3,exp:"A aquisição dos materiais e equipamentos é da responsabilidade do Concessionário da ZAB."},
+      {q:"O retorno ao mar da água das ondas, causa um tipo de correntes normalmente mais fortes onde a praia tem o gradiente mais acentuado. Estamos a falar de que tipo de correntes?",pts:3,opts:["Correntes alternas","Correntes amovíveis","Correntes de maré","Correntes de mar"],c:3,exp:"São as correntes de mar — o retorno ao mar da água causa correntes mais fortes em praias com gradiente mais acentuado."},
+      {q:"A água transportada para a praia acumula-se e procura retornar para o mar aberto, na zona de maior profundidade. Estamos a falar de que tipo de correntes?",pts:3,opts:["Agueiros ou 'Rip Current'","Correntes amovíveis","Correntes de maré","Correntes de mar"],c:0,exp:"São os agueiros (rip currents) — correntes de retorno formadas quando a água acumulada na praia regressa ao mar pela zona de maior profundidade."},
+      {q:"Classifique as correntes nas praias fluviais:",pts:4,opts:["Retornos, Funil, Agueiros","Funil ou Escoadouro, Corrente de Mar","Agueiros, Retornos, Remoinhos","Remoinhos, Retornos, Funil ou Escoadouro"],c:3,exp:"As correntes nas praias fluviais classificam-se em: Remoinhos, Retornos e Funil ou Escoadouro."},
+      {q:"De que bandeira estamos a falar quando há 'condições aceitáveis para a prática de banhos, assumindo as regras e recomendações de segurança'?",pts:4,opts:["Bandeira amarela","Bandeira vermelha","Bandeira azul","Bandeira verde"],c:0,exp:"A bandeira amarela significa condições perigosas para natação mas aceitáveis para banhos assumindo as regras de segurança."},
+      {q:"O que entende por mar total (set)?",pts:3,opts:["É um conjunto de sete ondas que vai aumentando de tamanho","Ondas geradas pelo vento com aspeto mais ou menos regular","Sobreposição de grupos de ondas geradas pelo vento na superfície do mar","Ondas que se propagam para fora da zona de geração com aspeto regular e cristas longas"],c:2,exp:"Mar total (SET) é a sobreposição de grupos de ondas (ondulação e vaga) geradas pelo vento na superfície do mar."},
+      {q:"A onda mergulhante caracteriza-se por:",pts:3,opts:["Onda que rebenta sempre com força e pode, facilmente, atirar um nadador para o fundo e ocorre na maré baixa","Onda que rebenta com muita força enrola facilmente um nadador e ocorre na preia-mar","Onda que rebenta à frente da sua crista e ocorre na vazante","Onda que surge quando o mar fica encrespado e ocorre na enchente"],c:0,exp:"A onda mergulhante rebenta sempre com força, pode atirar para o fundo, e ocorre na maré baixa quando os bancos de areia são baixos."},
+      {q:"Do seguinte material, qual não é obrigatório no posto de praia?",pts:3,opts:["Carretel e mastro de sinais","Mala de 1° socorros","Binóculos e telemóvel","Bandeiras de sinais"],c:2,exp:"Binóculos e telemóvel são material complementar (não obrigatório). Todo o resto é obrigatório."},
+      {q:"A bandeira xadrez tem as seguintes cores:",pts:3,opts:["Preto e branco","Vermelho e amarelo","Azul e branca","Vermelho e branco"],c:0,exp:"A bandeira xadrez é de preto e branco — indica praia temporariamente sem vigilância."},
+      {q:"Ao conceito de onda, associam-se três em que o nadador salvador deve conhecer, para compreender as informações sobre a previsão do estado mar e atuar em conformidade. Estamos a falar de que conceitos?",pts:3,opts:["Comprimento da onda, período da onda e amplitude de onda","A vaga, ondulação e mar total (SET)","Onda mergulhante, onda progressiva e onda espraiada","Correntes de mar, correntes de maré e agueiros"],c:0,exp:"Os 3 conceitos associados à onda são: comprimento, período e amplitude."},
+      {q:"O Nadador-Salvador (NS) perante um cenário de nevoeiro, que bandeira deve içar?",pts:3,opts:["Verde, se as condições de mar estivessem boas","Amarela, porque existe algum perigo","Vermelha, porque é uma situação de risco","Aquela que as condições de mar assim exigirem"],c:3,exp:"Perante nevoeiro, o NS deve içar a bandeira que as condições de mar assim exigirem — o nevoeiro não determina por si só a bandeira."},
+      {q:"Nas praias fluviais existem vários perigos, sendo característica de um deles '...a água a cair de um obstáculo forma uma corrente de retorno sobre ele próprio...'. Estamos a falar de que perigo?",pts:3,opts:["Remoinhos","Funil ou escoadouro","Agueiros","Retornos"],c:3,exp:"Retornos — a água a cair de um obstáculo forma uma corrente de retorno sobre ele próprio."},
+      {q:"A maré de quadratura ou maré morta ocorre quando:",pts:4,opts:["O Sol e a Lua estão alinhados com a Terra","Após 12 horas de preia-mar","A Terra completa uma volta no seu próprio eixo","A Lua e o Sol estão posicionados num ângulo de 90º com a Terra"],c:3,exp:"A maré de quadratura (maré morta) ocorre quando a Lua e o Sol estão a 90° com a Terra — fases de Quarto Crescente e Minguante."},
+      {q:"Onda que apenas rebenta quando chega à linha de praia, devido a uma grande profundidade de água, de forma a que a onda não perde velocidade e, portanto, não ganha altura, denomina-se por:",pts:3,opts:["Na onda mergulhante","Na onda espraiada","Em todo o tipo de ondas","Na onda progressiva"],c:3,exp:"A onda progressiva propaga-se sem grande alteração de forma. Rebenta à frente da sua crista, surge na vazante."},
+      {q:"O cercado de proteção serve para cercar todo o material que faz parte do posto de praia. Quantos metros tem?",pts:3,opts:["6 metros quadrados","5 metros quadrados","2,5 metros quadrados","Quatro metros quadrados"],c:1,exp:"O cercado de proteção tem um espaço de 5m². São 4 postes vermelhos com cabo de 10mm."},
+      {q:"Quais são os fatores que influenciam o declive numa praia marítima?",pts:3,opts:["O tamanho das partículas de sedimentos e a intensidade da ação das ondas","O tamanho e a intensidade da ação das ondas","O tamanho e a intensidade da ação das ondas, assim como, o tipo de areia","O vento, as ondas, tipo de areia e o fundo"],c:0,exp:"Os fatores que influenciam o declive são: o tamanho das partículas de sedimentos e a intensidade da ação das ondas."},
+      {q:"Que tipos de agueiros conhece?",pts:3,opts:["Os estacionários, móveis e súbitos","Os estacionários, os móveis e 'ripcurrent'","Os móveis e os imóveis","Os perigosos e os não perigosos"],c:0,exp:"Os tipos de agueiros são: estacionários (fundo rochoso), móveis (fundo arenoso) e súbitos (aparecem subitamente, curta duração)."},
+      {q:"Existe um conjunto de materiais complementares ao posto de praia que não são obrigatórios. Quais são?",pts:3,opts:["Cercado de proteção, boia torpedo, cinto de salvamento e bandeiras de sinais","Prancha, carretel, vara e mala de 1° socorros","Boia circular, boia torpedo e armação de praia","Mota de água, viatura 4x4, embarcação de pequeno porte, moto 4x4 e apito"],c:3,exp:"Os materiais complementares (não obrigatórios) incluem mota de água, viatura 4x4, embarcação e moto 4x4."},
+      {q:"Os agueiros podem ser?",pts:3,opts:["Móveis quando aparecem subitamente, podendo ser muito fortes","Estacionários quando estão no mesmo local todo o ano, devido ao seu fundo arenoso","Móveis quando mudam de local diariamente, sendo extremamente perigosos","Estacionários quando o fundo é rochoso, mantêm-se permanentes ao longo do ano"],c:3,exp:"Estacionários quando o fundo é rochoso — mantêm-se no mesmo local. Móveis quando mudam ao longo de um segmento de praia antes de desaparecerem."},
+      {q:"Como é medida a amplitude (altura) da onda?",pts:3,opts:["Medida do distúrbio máximo durante um ciclo completo de oscilação","É medida em relação à linha de equilíbrio da onda","É medida em metros","Todas as respostas estão corretas"],c:3,exp:"A amplitude é medida do distúrbio máximo durante um ciclo completo de oscilação, em relação à linha de equilíbrio, em metros."},
+      {q:"Em Portugal, ocorrem duas marés altas e 2 marés baixas por dia, com intervalo de cerca de?",pts:3,opts:["12h25m entre a maré alta e a maré baixa e 6h12m entre duas marés altas consecutivas","Só existe uma maré baixa e uma maré alta","6h12m entre cada maré alta e maré baixa e 24h50 minutos entre 2 marés altas consecutivas","6h12m entre cada maré alta e baixa e 12h25m entre 2 marés altas consecutivas"],c:3,exp:"Em Portugal: 6h12m entre maré alta e baixa · 12h25m entre duas marés altas consecutivas."},
+      {q:"Qual a cor das bandeirolas de zona de banhos?",pts:3,opts:["Vermelha e Amarela","Amarela e verde","Vermelha","Amarela"],c:3,exp:"As bandeirolas de zona de banhos são de cor amarela."},
+      {q:"Quando a crista da onda rebenta à frente da mesma e surge principalmente na vazante. Identifique qual o tipo de onda descrita?",pts:3,opts:["Onda progressiva","Onda mergulhante","Onda de maré","Onda espraiada"],c:0,exp:"A onda progressiva rebenta à frente da sua crista e surge principalmente na vazante."},
+      {q:"O posto de praia e demais materiais complementares destinado à informação, vigilância e prestação de salvamento, é instalado nas ZAB nos termos determinados por?",pts:3,opts:["O Instituto de Socorros a Náufragos","O Edital da Capitania do Porto","Os concessionários","A Polícia Marítima"],c:1,exp:"O posto de praia é instalado nas ZAB nos termos determinados pelo Edital da Capitania do Porto (ou administração regional hidrográfica), de acordo com as instruções técnicas do ISN."},
+      {q:"É da responsabilidade do Nadador-Salvador (NS):",pts:3,opts:["Içar/arriar as bandeiras de sinais","Içar/arriar a bandeira azul","Içar/arriar a bandeira de ouro","Todas as respostas anteriores estão corretas"],c:0,exp:"É da responsabilidade do NS içar/arriar as bandeiras de sinais conforme a avaliação das condições."},
+      {q:"A maré de sizígia ou maré viva ocorre quando:",pts:4,opts:["Sol e a Lua estão alinhados com a Terra","O Sol e a Lua formam um ângulo de 90º com a Terra","A Terra completa uma volta ao Sol","A Terra completa uma volta no seu próprio eixo"],c:0,exp:"A maré de sizígia (maré viva) ocorre quando o Sol e a Lua estão alinhados com a Terra — fases de Lua Cheia e Lua Nova."}
+    ]
+  },
+  c6: {
+    title: "Capítulo 6 — O Salvamento",
+    sub: "29 perguntas · Formulário do Professor",
+    questions: [
+      {q:"Como deve proceder o Nadador-Salvador (NS) na abordagem ao náufrago consciente?",pts:4,opts:["Dar indicações curtas, claras e precisas","Ceder o meio de salvamento","Evitar situações de submersão","Todas as respostas estão corretas"],c:3,exp:"Perante náufrago consciente: dar indicações curtas e precisas, ceder o meio de salvamento criando barreira de interposição, e evitar submersão."},
+      {q:"Em que fase do salvamento se encontra 'reconhecer as prioridades da emergência e quais os procedimentos necessários'?",pts:3,opts:["Ação","Planeamento","Evacuação","Reconhecimento"],c:3,exp:"Reconhecer as prioridades e os procedimentos necessários é parte da fase de Reconhecimento."},
+      {q:"Perante um náufrago consciente, o Nadador-Salvador (NS) deverá?",pts:3,opts:["Acionar a 2ª ajuda","Ceder o meio de salvamento ao náufrago, criando uma barreira de interposição entre o NS e o náufrago","Dar-lhe 5 insuflações","Verificar se respira espontaneamente"],c:1,exp:"Perante náufrago consciente, ceder o meio de salvamento criando barreira de interposição entre NS e náufrago."},
+      {q:"Quais as técnicas de extração de náufragos em piscina?",pts:4,opts:["Técnica de arrasto e a 2 nadadores salvadores","Técnica de declive suave e de declive acentuado","Técnica de bombeiro e por arrasto","Técnica de declive suave e a 2 nadadores salvadores"],c:1,exp:"As técnicas de extração em piscina são: Declive Suave e Declive Acentuado."},
+      {q:"Após o Nadador-Salvador alcançar o náufrago, verificar que está aparentemente inconsciente e que não respira, como deverá proceder?",pts:4,opts:["Dá-lhe 3 insuflações, inicia o resgate para terra com 5 insuflações de 15 em 15 segundos","Resgate sem insuflações","Dá-lhe 5 insuflações, inicia o resgate para terra com 3 insuflações de 15 em 15 segundos","Dá-lhe 10 insuflações e inicia o resgate para terra"],c:3,exp:"Náufrago inconsciente que não respira: dar 10 insuflações e iniciar o resgate para terra."},
+      {q:"Na cadeia de sobrevivência do afogamento, qual dos elos se considera de maior importância?",pts:3,opts:["Prevenção","Reconhecer o afogado e ligar 112","Suporte Básico de Vida","Todos são de igual modo importantes"],c:3,exp:"Todos os elos da cadeia de sobrevivência são de igual importância."},
+      {q:"As componentes do resgate aquático na fase de ação são?",pts:4,opts:["Entrada, aproximação, reboque e transporte","Reconhecimento, planeamento e ação","Entrada, 2ª ajuda, aproximação e reboque","Seleção do meio, entrada, reboque e transporte"],c:0,exp:"As componentes do resgate na fase de ação são: entrada, aproximação, reboque e transporte."},
+      {q:"Qual dos métodos de salvamento oferece menos perigo para o Nadador-Salvador?",pts:3,opts:["Remar","Rebocar","Lançar","Caminhar"],c:1,exp:"Lançar é o segundo método mais seguro. Alcançar é o menos perigoso de todos (NS mantém-se em terra)."},
+      {q:"Dos métodos de salvamento abaixo, indique o de menor e o de maior risco para o Nadador-Salvador.",pts:3,opts:["Lançar e rebocar","Caminhar e nadar","Alcançar e rebocar","Nadar e rebocar"],c:2,exp:"Alcançar é o de menor risco (NS em terra) e rebocar é o de maior risco (contacto direto na água)."},
+      {q:"Na fase da ação, existem várias formas de efetuar o salvamento. Qual é o método que utilizamos em que o meio é a vara de salvamento?",pts:3,opts:["Alcançar","Lançar","Caminhar","Nadar até a vítima"],c:0,exp:"Alcançar — o NS usa um objeto (vara, ramo) para alcançar a vítima mantendo-se em terra ou num ponto fixo."},
+      {q:"Quais os elos da cadeia de sobrevivência do afogamento?",pts:4,opts:["112, SBV, DAE e SAV","Reconheça o afogado, SAV, fornecer flutuação e prevenção","Prevenção, reconheça o afogado, forneça flutuação, retire da água e SBV","112, reconheça o afogado, SBV e DAE"],c:2,exp:"Os 5 elos são: Prevenção → Reconhecer o afogado → Fornecer flutuação → Retirar da água → SBV."},
+      {q:"No sistema de sinalização com apito, é utilizado qual código?",pts:4,opts:["1 sopro curto para chamar à atenção de outros NS. 3 sopros longos para sinalizar o inicio de procedimento de salvamento e emergência","2 sopros curtos para chamar à atenção de utentes e banhistas. 1 sopro curto para chamar à atenção de outros NS","1 sopro curto para chamar à atenção individualmente de utentes e banhistas. 3 sopros longos para sinalizar o inicio de procedimento de salvamento e emergência","2 sopros curtos para sinalizar o inicio de procedimento de salvamento e emergência. 3 sopros longos para chamar à atenção de outros NS"],c:2,exp:"1 sopro curto = advertir banhista individualmente. 2 sopros curtos = chamar outros NS. 3 sopros longos = salvamento em curso."},
+      {q:"Existe sinalética específica entre NS. O NS que está em terra, ao verificar que o outro NS se virou para terra e tem os dois braços cruzados acima da cabeça, fora de água, o que lhe está a transmitir?",pts:3,opts:["O NS necessita de apoio","Pedido de 2° ajuda","Náufrago encontra-se mais para trás","Náufrago submerso"],c:3,exp:"Dois braços cruzados acima da cabeça = náufrago submerso — não foi encontrado."},
+      {q:"Quais os cuidados a ter durante os reboques?",pts:4,opts:["Que a vítima tenha sempre as vias respiratórias fora de água","Que seja seguro para o nadador-salvador e para o náufrago","Que seja eficiente para o NS, de forma a que ao chegar a terra não esteja exausto para efetuar manobras de SBV","Todas as respostas estão corretas"],c:3,exp:"Todos os cuidados são importantes: vias aéreas fora de água, segurança para ambos, e eficiência do NS."},
+      {q:"Perante uma vítima com suspeita de trauma cervical, na ausência de alternativa e tendo de extrair a vítima da água, que reboque utilizaria?",pts:4,opts:["Reboque convencional","Reboque pelos maxilares","Reboque com boia circular","Reboque braços em V"],c:3,exp:"O reboque com braços em V confere algum apoio à zona cervical — é o indicado em suspeita de trauma vertebro-medular."},
+      {q:"Em que fase do salvamento, o Nadador-Salvador deve escolher o meio de salvamento?",pts:3,opts:["No reconhecimento","Na ação","No planeamento","Na entrada na água"],c:2,exp:"A escolha do meio de salvamento é feita na fase de Planeamento."},
+      {q:"Perante uma situação de múltiplos náufragos, o Nadador-Salvador deverá considerar qual seguinte triagem?",pts:3,opts:["Primeiro os náufragos inconscientes","Primeiro os náufragos conscientes que sabem nadar","Primeiro os náufragos conscientes, entre estes, os não nadadores","Deverá efetuar o salvamento sem qualquer ordem porque o importante é salvar vidas"],c:2,exp:"Triagem: 1º náufragos conscientes não nadadores → 2º náufragos conscientes nadadores → 3º náufragos inconscientes."},
+      {q:"Em que fase do salvamento, o Nadador-Salvador confirma o número de vítimas?",pts:3,opts:["Na evasão","No reconhecimento","No planeamento","Na ação"],c:1,exp:"A confirmação do número de vítimas é feita na fase de Reconhecimento."},
+      {q:"Qual destes métodos de salvamento oferece mais perigo para o Nadador-Salvador?",pts:3,opts:["Remar","Lançar","Nadar","Caminhar"],c:2,exp:"Nadar até à vítima é o 5º método na escada de perigosidade. Rebocar é o mais perigoso (6º)."},
+      {q:"Quantos elos tem a cadeia de sobrevivência no afogamento?",pts:3,opts:["6","4","5","3"],c:2,exp:"A cadeia de sobrevivência no afogamento tem 5 elos: Prevenção → Reconhecer → Fornecer flutuação → Retirar da água → SBV."},
+      {q:"Ao chegar à distância de segurança e verificar que o náufrago está aparentemente inconsciente, qual deverá ser o procedimento?",pts:4,opts:["Pedir ajuda, retirar as vias respiratórias fora água e rebocá-lo","Acionar a 2ª ajuda","Pede-lhe colaboração no resgate","Agarrar o náufrago, trazendo-o à superfície se estiver submerso"],c:0,exp:"Náufrago aparentemente inconsciente: pedir ajuda (2ª ajuda), retirar vias aéreas fora de água e rebocar."},
+      {q:"Existem três fases do salvamento. Em que fase o Nadador-salvador tem que 'pensar antes de agir'?",pts:3,opts:["Reconhecimento","Ação e planeamento","Ação","Planeamento"],c:3,exp:"'Pensar antes de agir' é um princípio da fase de Planeamento."},
+      {q:"Nos princípios do salvamento aquático, em que fase se encontra o 'constatar a emergência e assumir a responsabilidade'?",pts:3,opts:["Planeamento","Evasão","Reconhecimento","Ação"],c:2,exp:"Constatar a emergência e assumir a responsabilidade faz parte da fase de Reconhecimento."},
+      {q:"Na cadeia de sobrevivência no afogamento, 'caso necessário ligar 112', refere-se a que elo?",pts:4,opts:["Prevenção","Reconheça o afogado","Forneça flutuação","Retire da água"],c:1,exp:"'Ligar 112' está associado ao elo 'Reconheça o afogado'."},
+      {q:"No algoritmo de salvamento aquático, indique por ordem, as operações a realizar na fase de reconhecimento?",pts:4,opts:["Alerta SOS, aproximar, resgatar, relatar","Localizar, transportar, avaliar, resgatar","Verificar nº de náufragos, localizar, planear, abordar, transportar","Alerta SOS, verificar o nº de náufragos, localizar, avaliar condições de mar"],c:3,exp:"Reconhecimento: Alerta SOS → verificar nº de náufragos → localizar → avaliar condições de mar e ambiente (atos contínuos)."},
+      {q:"Após alcançar o náufrago e verificar que está aparentemente inconsciente como deverá proceder?",pts:4,opts:["Iniciar o reboque para terra e dar 2 insuflações de 15 em 15 segundos","Resgatar para terra sem insuflações","Retirar as vias respiratórias fora de água e dar 5 insuflações","Segurar o náufrago em reboque convencional, retirar as vias respiratórias fora de água, verificar a respiração espontânea e se não ventilar, dar 10 insuflações"],c:3,exp:"Reboque convencional, vias aéreas fora de água, verificar respiração. Se não ventila → 10 insuflações e resgatar."},
+      {q:"Na caracterização das fases do salvamento, no reconhecimento, qual a primeira ação que o NS deve tomar?",pts:3,opts:["Escolher o método de salvamento adequado à situação","Alerta SOS - 1° ajuda","Avaliar as condições do mar e ambientais","Entrar na água com o meio de salvamento escolhido"],c:1,exp:"A primeira ação no Reconhecimento é o Alerta SOS — 1ª Ajuda (outros NS, autoridades, meios complementares)."},
+      {q:"A máscara de reanimação (pocket mask) deve ser utilizada como mecanismo de barreira?",pts:4,opts:["Para diminuir a transmissão de bactérias","Para aumentar as probabilidades de sucesso","Para evitar a troca de oxigénio com o dióxido de carbono","Para a vítima reanimar mais rapidamente"],c:0,exp:"A máscara de reanimação é um dispositivo de barreira para diminuir a transmissão de bactérias e doenças."},
+      {q:"Tendo em conta a sinalética usada entre NS, quando este está na água virado para terra a efetuar movimentos com o braço lateralizado para cima e para baixo, batendo com a mão na água, significa que?",pts:3,opts:["Está-se a afogar","Necessita de apoio","O náufrago está submerso","Está a efetuar o 2° pedido de ajuda"],c:1,exp:"Braço lateralizado a bater na água (NS na água) = necessita de apoio de outro NS."}
+    ]
+  }
+};
+
+let currentTest = null;
+let currentQ = 0;
+let score = 0;
+let totalPts = 0;
+let earnedPts = 0;
+let answered = false;
+let shuffledQs = [];
+
+function startTest(id) {
+  currentTest = tests[id];
+  currentQ = 0;
+  score = 0;
+  earnedPts = 0;
+  totalPts = currentTest.questions.reduce((a, q) => a + q.pts, 0);
+  shuffledQs = [...currentTest.questions].sort(() => Math.random() - 0.5);
+
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('quiz-area').classList.remove('hidden');
+  document.getElementById('q-title').textContent = currentTest.title;
+  document.getElementById('q-sub').textContent = currentTest.sub;
+  renderQ();
+}
+
+function renderQ() {
+  answered = false;
+  const q = shuffledQs[currentQ];
+  const total = shuffledQs.length;
+  const pct = ((currentQ + 1) / total * 100).toFixed(0);
+
+  document.getElementById('q-fill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = (currentQ + 1) + ' / ' + total;
+  document.getElementById('q-num').textContent = 'Pergunta ' + (currentQ + 1);
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-pts').textContent = q.pts + ' pontos';
+  document.getElementById('q-feedback').style.display = 'none';
+  document.getElementById('q-next').style.display = 'none';
+
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = o;
+    b.onclick = () => answer(i);
+    opts.appendChild(b);
+  });
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const q = shuffledQs[currentQ];
+  const opts = document.getElementById('opts').querySelectorAll('.opt');
+  opts.forEach(o => o.disabled = true);
+
+  const fb = document.getElementById('q-feedback');
+  if (i === q.c) {
+    opts[i].classList.add('correct');
+    score++;
+    earnedPts += q.pts;
+    fb.className = 'q-feedback ok';
+    fb.textContent = '✓ Correto! ' + q.exp;
+  } else {
+    opts[i].classList.add('wrong');
+    opts[q.c].classList.add('show-correct');
+    fb.className = 'q-feedback err';
+    fb.textContent = '✗ Errado. ' + q.exp;
+  }
+  fb.style.display = 'block';
+
+  const next = document.getElementById('q-next');
+  next.style.display = 'inline-block';
+  next.textContent = currentQ + 1 < shuffledQs.length ? 'Próxima pergunta →' : 'Ver resultado →';
+}
+
+function nextQ() {
+  currentQ++;
+  if (currentQ >= shuffledQs.length) {
+    showResults();
+  } else {
+    renderQ();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-area').classList.add('hidden');
+  document.getElementById('results').classList.remove('hidden');
+
+  const pct = Math.round(score / shuffledQs.length * 100);
+  document.getElementById('r-score').textContent = score + '/' + shuffledQs.length;
+  document.getElementById('r-total').textContent = earnedPts + ' de ' + totalPts + ' pontos';
+
+  let msg = pct >= 80 ? '🎉 Excelente! Estás muito bem preparado.' :
+            pct >= 60 ? '👍 Bom resultado! Revê as perguntas que erraste.' :
+            '📚 Continua a estudar — foca-te nos temas com mais erros.';
+  document.getElementById('r-msg').textContent = msg;
+
+  const breakdown = document.getElementById('r-breakdown');
+  breakdown.innerHTML = `
+    <div class="r-item"><div class="r-item-label">Respostas corretas</div><div class="r-item-val">${score} / ${shuffledQs.length}</div></div>
+    <div class="r-item"><div class="r-item-label">Pontuação</div><div class="r-item-val">${earnedPts} / ${totalPts}</div></div>
+    <div class="r-item"><div class="r-item-label">Percentagem</div><div class="r-item-val">${pct}%</div></div>
+    <div class="r-item"><div class="r-item-label">Classificação</div><div class="r-item-val">${pct >= 80 ? 'Excelente' : pct >= 60 ? 'Bom' : 'A melhorar'}</div></div>
+  `;
+}
+
+function restartTest() {
+  const id = Object.keys(tests).find(k => tests[k] === currentTest);
+  startTest(id);
+}
+
+function goHome() {
+  document.getElementById('home').classList.remove('hidden');
+  document.getElementById('quiz').classList.add('hidden');
+}
+</script>
+</body>
+</html>
