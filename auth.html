@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>A processar login…</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#061426;color:#fff;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;}
+.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);
+  border-top-color:#c0392b;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+p{font-size:14px;color:rgba(255,255,255,0.4);}
+</style>
+</head>
+<body>
+<div class="spinner"></div>
+<p>A processar login…</p>
+<script>
+const sb = window.supabase.createClient(
+  'https://tzleanbmyanpkbqueovy.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6bGVhbmJteWFucGticXVlb3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0Mjg0ODIsImV4cCI6MjA5NjAwNDQ4Mn0.-_nXcqTvRuX1Dvi9FgmRFMtMCxUfpra6C6GYauv5ArM'
+);
+
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+    window.location.href = 'index.html';
+  }
+});
+
+// Fallback if no auth event fires
+setTimeout(() => { window.location.href = 'index.html'; }, 4000);
+</script>
+</body>
+</html>
